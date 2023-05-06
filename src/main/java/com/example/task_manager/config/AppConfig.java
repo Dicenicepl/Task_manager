@@ -1,6 +1,5 @@
 package com.example.task_manager.config;
 
-import com.example.task_manager.config.passwords.EmailData;
 import com.sun.mail.util.MailSSLSocketFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
