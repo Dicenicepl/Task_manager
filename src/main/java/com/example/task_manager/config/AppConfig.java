@@ -13,7 +13,7 @@ import java.util.Properties;
 @Configuration
 @ConfigurationProperties(prefix = "spring.mail")
 public class AppConfig {
-    private EmailData emailData = new EmailData();
+    private final EmailData emailData = new EmailData();
     @Bean
     public JavaMailSender getJavaMailSender() throws GeneralSecurityException {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

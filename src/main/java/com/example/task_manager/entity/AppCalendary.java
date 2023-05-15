@@ -2,7 +2,6 @@ package com.example.task_manager.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.sql.Date;
 
 @Getter
@@ -28,9 +27,9 @@ public class AppCalendary {
     private Date date;
     private String eventName;
     private String eventDescription;
-
     private String eventOwnerEmail;
     private String eventGuestsEmails;
+    private Boolean isSended = false;
 
     public AppCalendary(Date date, String eventName, String eventDescription, String eventOwner, String eventGuests) {
         this.date = date;

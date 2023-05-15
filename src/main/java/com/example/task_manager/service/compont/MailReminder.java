@@ -30,7 +30,10 @@ public class MailReminder {
     public void notificationSender() throws GeneralSecurityException {
         Date todayDate = new Date(System.currentTimeMillis());
         for (AppCalendary event : calendaryRepository.findAllAppCalendariesByDate(todayDate)) {
-            sentSimpleMail(event.getEventOwnerEmail(), event.getEventName(), todayDate + " today you have event");
+            if (!event.getIsSended()) {
+                sentSimpleMail(event.getEventOwnerEmail(), event.getEventName(), todayDate + " today you have event");
+                calendaryRepository.updateIsSended(event.getId(), Boolean.TRUE);
+            }
         }
     }
 }
