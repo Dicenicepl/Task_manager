@@ -16,7 +16,7 @@ public class RepeatTask {
         this.calendaryRepository = calendaryRepository;
     }
 
-    @Scheduled(fixedDelay = 10000)
+//    @Scheduled(fixedDelay = 10000)
     public void settingRepeater() {
         try {
             MailReminder mailReminder = new MailReminder(new AppConfig().getJavaMailSender(), calendaryRepository);

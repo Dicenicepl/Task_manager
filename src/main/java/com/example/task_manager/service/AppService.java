@@ -5,6 +5,8 @@ import com.example.task_manager.entity.AppUser;
 import com.example.task_manager.repository.CalendaryRepository;
 import com.example.task_manager.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -18,12 +20,26 @@ public class AppService {
         this.userRepository = userRepository;
     }
 
-    public void saveEventToDatabase(AppCalendary appCalendary) {
-        calendaryRepository.save(appCalendary);
+    public ResponseEntity<String> saveEventToDatabase(AppCalendary appCalendary){
+        try {
+            if (!appCalendary.getEventName().isBlank() && !appCalendary.getDate().toString().isBlank() && !appCalendary.getEventOwnerEmail().isBlank()) {
+                calendaryRepository.save(appCalendary);
+                return new ResponseEntity<>("Event created", HttpStatus.OK);
+            } else return new ResponseEntity<>("Some of data is blank", HttpStatus.BAD_REQUEST);
+        }catch (NullPointerException message){
+            System.out.println("SAVE EVENT TO DATABASE: ERROR - " + message.getMessage());
+            return new ResponseEntity<>("You missing something cause we have Null here", HttpStatus.BAD_REQUEST);
+        }
     }
-    public void saveUserToDatabase(AppUser appUser){
-        if (checkUserData(appUser)) {
-            userRepository.save(appUser);
+    public ResponseEntity<String> saveUserToDatabase(AppUser appUser){
+        try {
+            if (!appUser.getEmail().isBlank() && !appUser.getPassword().isBlank()){
+                userRepository.save(appUser);
+                return new ResponseEntity<>("User created", HttpStatus.OK);
+            }else return new ResponseEntity<>("Some of data is blank", HttpStatus.BAD_REQUEST);
+        }catch (NullPointerException message){
+            System.out.println("SAVE USER TO DATABASE: ERROR - " + message.getMessage());
+            return new ResponseEntity<>("You missing something cause we have Null here", HttpStatus.BAD_REQUEST);
         }
     }
 

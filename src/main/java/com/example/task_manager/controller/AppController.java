@@ -18,20 +18,11 @@ public class AppController {
         this.appService = appService;
     }
 
-    @PostMapping("/createevent")
+    @PostMapping("/create/event")
     public ResponseEntity<String> saveEventToDatabase(@RequestBody AppCalendary appCalendary){
-        if (appCalendary.getEventName() != null && appCalendary.getEventOwnerEmail() != null){
-            appService.saveEventToDatabase(new AppCalendary(
-                    appCalendary.getDate(),
-                    appCalendary.getEventName(),
-                    appCalendary.getEventDescription(),
-                    appCalendary.getEventOwnerEmail(),
-                    appCalendary.getEventGuestsEmails()));
-            return new ResponseEntity<>("Event created", HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>("Error: event name or event owner name is blank", HttpStatus.BAD_REQUEST);
-        }
+        return appService.saveEventToDatabase(appCalendary);
     }
+
     @GetMapping("/allusers")
     public ResponseEntity<List<AppUser>> showAllUsers(){
         return new ResponseEntity<>(appService.showAllUsers(), HttpStatus.OK);
@@ -46,19 +37,8 @@ public class AppController {
             return new ResponseEntity<>("User deleted!", HttpStatus.OK);
         } else return new ResponseEntity<>("User not found", HttpStatus.GONE);
     }
-    @PostMapping("/createuser")
+    @PostMapping("/create/user")
     public ResponseEntity<String> saveUserToDatabase(@RequestBody AppUser appUser){
-        if (appUser.getEmail() != null && appUser.getPassword() != null) {
-            appService.saveUserToDatabase(new AppUser(
-                    appUser.getFirstName(),
-                    appUser.getLastName(),
-                    appUser.getNickName(),
-                    appUser.getEmail(),
-                    appUser.getPassword())
-            );
-            return new ResponseEntity<>("User created", HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>("Error: email or password is blank", HttpStatus.BAD_REQUEST);
-        }
+        return appService.saveUserToDatabase(appUser);
     }
 }
