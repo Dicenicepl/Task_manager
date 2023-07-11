@@ -3,7 +3,7 @@ package com.example.task_manager.security;
 import com.example.task_manager.user.User;
 import com.example.task_manager.user.UserRepository;
 import org.springframework.stereotype.Service;
-
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -15,9 +15,9 @@ public class LoginService {
     }
 
     public String login(String email, String password) {
-        User user = userRepository.findUserByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            return user.getId() + "_" + generatorToken(user.getId());
+        Optional<User> user = userRepository.findUserByEmail(email);
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
+            return user.get().getId() + "_" + generatorToken(user.get().getId());
         }
         return "Bad Request";
     }
@@ -33,5 +33,14 @@ public class LoginService {
         }
         userRepository.addToken(id,String.valueOf(token));
         return token.toString();
+    }
+
+    //TODO wytwarzanie błędu opisujące konkretnie co nie działa
+    public String register(String username, String email, String password) {
+        if (userRepository.findUserByEmail(email).isEmpty()){
+            userRepository.save(new User(username,email,password));
+            return "User registered";
+        }
+        return "Something went wrong";
     }
 }

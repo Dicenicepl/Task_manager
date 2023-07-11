@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/login")
+@RequestMapping(value = "/sign")
 public class LoginController {
     private final LoginService loginService;
 
@@ -13,8 +13,12 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @GetMapping
+    @GetMapping("/in")
     public String login(String email, String password){
         return loginService.login(email,password);
+    }
+    @GetMapping("/up")
+    public String register(String username, String email, String password){
+        return loginService.register(username,email,password);
     }
 }
