@@ -1,4 +1,4 @@
-package com.example.task_manager.event;
+package com.example.task_manager.entity.event;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,11 +10,15 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "events")
-class Event {
+public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String name;
     String description;
+    public Event(String name, String description){
+        this.name = name;
+        this.description = description;
+    }
 
 }

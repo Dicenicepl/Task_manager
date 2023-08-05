@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Aktywacja skryptu</title>
+</head>
+<body>
+
+<button id="myButton">Kliknij mnie</button>
+
+<script>
+    // Dodaj obsługę zdarzenia kliknięcia przycisku
+    document.getElementById('myButton').addEventListener('click', function() {
+        let url = 'localhost:3000/auth/login?email=dicenicepl@gmail.com&password=1234';
+        let request = new XMLHttpRequest();
+
+        request.onload = function () {
+            if (request.status === 200) {
+                let data = request.responseText;
+                document.cookie = 'token=${data}';
+                console.log(data)
+            } else {
+                console.log('nieudane przypisanie tokenu')
+            }
+        };
+
+        request.open('GET', url);
+        request.send();
+        alert('Skrypt został aktywowany!');
+    });
+</script>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
-package com.example.task_manager.user;
+package com.example.task_manager.entity.user;
 
+import com.example.task_manager.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findUserById(Long id);
+    Optional<User> findUserById(Long id);
     Optional<User> findUserByEmail(String email);
 
     @Transactional
@@ -20,4 +21,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     @Query("update User u set u.token = :token where u.id = :id")
     void addToken(Long id, String token);
+
+    Optional<User> findUserByToken(String token);
 }

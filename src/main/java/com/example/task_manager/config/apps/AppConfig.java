@@ -1,5 +1,6 @@
-package com.example.task_manager.config;
+package com.example.task_manager.config.apps;
 
+import com.example.task_manager.config.EmailData;
 import com.sun.mail.util.MailSSLSocketFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -28,7 +29,7 @@ public class AppConfig {
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.ssl.trust", "poczta.interia.pl");
+        props.put("mail.smtp.ssl.trust", emailData.host);
 
         return mailSender;
     }
