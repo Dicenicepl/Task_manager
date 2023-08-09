@@ -48,7 +48,7 @@ public class AuthorizeAccessController {
         return authService.saveEvent(event);
     }
     @GetMapping("/event/get/")
-    public Event getByIdEvent(String token, Long id){
+    public ResponseEntity<Event> getByIdEvent(String token, Long id){
         return authService.getByIdEvent(token,id);
     }
     @GetMapping("/event/get/all")
@@ -57,8 +57,8 @@ public class AuthorizeAccessController {
     }
 
     @DeleteMapping("/event/delete/{token}/{id}")
-    public void deleteEvent(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete){
-        authService.deleteEvent(idUserToDelete,token);
+    public ResponseEntity<String> deleteEvent(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete){
+        return authService.deleteEvent(idUserToDelete,token);
     }
 
 }

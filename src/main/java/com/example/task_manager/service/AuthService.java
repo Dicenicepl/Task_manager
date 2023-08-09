@@ -52,28 +52,30 @@ public class AuthService {
         }
     }
 
-    public void deleteEvent(Long id, String token) {
-        if (eventRepository.findById(id).isPresent()
-                && userRepository.findUserByToken(token).isPresent()) {
+    public ResponseEntity<String> deleteEvent(Long id, String token) {
+        Optional<User> user = userRepository.findUserById(id);
+        if (user.isPresent() && userRepository.findUserByToken(token).isPresent()) {
             eventRepository.deleteById(id);
+            return new ResponseEntity<>("User: " + user + "deleted", HttpStatus.OK);
         }
+        return new ResponseEntity<>("Error, user is not created or token is invalid", HttpStatus.NOT_ACCEPTABLE);
     }
 
-    public ResponseEntity<String> saveEvent( Event event) {
-        if(event.getName() != null && !eventRepository.existsEventByName(event.getName())){
+    public ResponseEntity<String> saveEvent(Event event) {
+        if (event.getName() != null && !eventRepository.existsEventByName(event.getName())) {
             eventRepository.save(event);
             return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("We can`t save event data", HttpStatus.BAD_REQUEST);
     }
-    public List<Event> getAllEvents(){
+
+    public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
 
-    public Event getByIdEvent(String token, Long id) {
-        Optional<Event> event = eventRepository.findById(id);
-        if (event.isPresent()) {
-            return eventRepository.findById(id).get();
+    public ResponseEntity<Event> getByIdEvent(String token, Long id) {
+        if (eventRepository.findById(id).isPresent() && userRepository.findUserByToken(token).isPresent()) {
+            return new ResponseEntity<>(eventRepository.findById(id), HttpStatus.OK);
         }
         return null;
     }
