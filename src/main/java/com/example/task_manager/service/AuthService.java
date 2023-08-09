@@ -35,10 +35,6 @@ public class AuthService {
         return token.toString();
     }
 
-    private String clearIdFromToken(String rawToken) {
-        return rawToken.replace("[0-9]", "");
-    }
-
     public String login(String email, String password) {
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
@@ -51,14 +47,14 @@ public class AuthService {
 
     public void deleteUser(Long idUserToDelete, String token) {
         if (userRepository.findUserById(idUserToDelete).isPresent()
-                && userRepository.findUserByToken(clearIdFromToken(token)).isPresent()) {
+                && userRepository.findUserByToken(token).isPresent()) {
             userRepository.deleteById(idUserToDelete);
         }
     }
 
     public void deleteEvent(Long id, String token) {
         if (eventRepository.findById(id).isPresent()
-                && userRepository.findUserByToken(clearIdFromToken(token)).isPresent()) {
+                && userRepository.findUserByToken(token).isPresent()) {
             eventRepository.deleteById(id);
         }
     }

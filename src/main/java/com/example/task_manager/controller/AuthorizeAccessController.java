@@ -55,6 +55,9 @@ public class AuthorizeAccessController {
     public List<Event> getAllEvents(String token){
         return authService.getAllEvents();
     }
+
+    //Method can`t be executed cause of:
+    //Required request body is missing: public void com.example.task_manager.controller.AuthorizeAccessController.deleteEvent(java.lang.String,java.lang.Long)]
     @DeleteMapping("/event/delete/{id}")
     public void deleteEvent(@RequestBody String token, @PathVariable("id") Long idUserToDelete){
         authService.deleteEvent(idUserToDelete,token);
