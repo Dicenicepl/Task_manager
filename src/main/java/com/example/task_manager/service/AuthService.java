@@ -43,6 +43,8 @@ public class AuthService {
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
             return user.get().getId() + "_" + generatorToken(user.get().getId());
+        } else if (user.isEmpty()) {
+            return "We can`t find user";
         }
         return "Bad Request";
     }

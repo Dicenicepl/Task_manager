@@ -28,12 +28,12 @@ public class AuthorizeAccessController {
 
     // User controller
 
-    @GetMapping("/login")
+    @GetMapping("/user/login/")
     public String login(String email, String password) {
         return authService.login(email, password);
     }
 
-    @DeleteMapping("delete/user/{id}")
+    @DeleteMapping("/delete/user/{id}")
     public void deleteUser(String token, @PathVariable("id") Long idUserToDelete) {
         authService.deleteUser(idUserToDelete,token);
     }

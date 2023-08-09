@@ -3,6 +3,7 @@ package com.example.task_manager.service;
 import com.example.task_manager.entity.user.User;
 import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.user.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,8 @@ public class NoAuthService {
             }
         } catch (NullPointerException e) {
             return new ResponseEntity<>("Ups, we got exception" + e, HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            return new ResponseEntity<>("User with this email is already exists", HttpStatus.OK);
         }
         return new ResponseEntity<>("User name: " + user.getUsername()
                 + "\nUser email: " + user.getEmail() + "\nis created", HttpStatus.CREATED);
@@ -42,7 +45,7 @@ public class NoAuthService {
     }
     public ResponseEntity<String> getAll(){
         List<User> users = userRepository.findAll();
-        if (users.size() != 0){
+        if (!users.isEmpty()){
             return new ResponseEntity<>("Here is your users:" + users, HttpStatus.OK);
         }
         return new ResponseEntity<>("We can`t find any users", HttpStatus.NOT_FOUND);
