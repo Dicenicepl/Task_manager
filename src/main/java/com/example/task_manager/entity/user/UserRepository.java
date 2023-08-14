@@ -23,4 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void addToken(Long id, String token);
 
     Optional<User> findUserByToken(String token);
+
+
+    @Query("update User u set u.token = null where u.token = :token")
+    void logout(String token);
 }

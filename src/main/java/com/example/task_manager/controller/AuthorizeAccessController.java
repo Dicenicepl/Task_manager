@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,33 +33,39 @@ public class AuthorizeAccessController {
     public String login(String email, String password) {
         return authService.login(email, password);
     }
+    @GetMapping("/user/logout/")
+    public void logout(String token){
+        authService.logout(token);
+    }
 
-    @DeleteMapping("/delete/user/{id}")
-    public void deleteUser(String token, @PathVariable("id") Long idUserToDelete) {
-        authService.deleteUser(idUserToDelete,token);
+    @DeleteMapping("/user/delete/{token}/{id}")
+    public void deleteUser(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete) {
+        authService.deleteUser(idUserToDelete, token);
     }
     // Event controller
 
 
     @PostMapping("/event/create")
-    public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json){
+    public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
         String token = json.get("token");
 //        String[] eventJsonSplit = json.get("event").split("\",");
         Event event = new Event(json.get("name"), json.get("description"));
         return authService.saveEvent(event);
     }
+
     @GetMapping("/event/get/")
-    public ResponseEntity<Event> getByIdEvent(String token, Long id){
-        return authService.getByIdEvent(token,id);
+    public ResponseEntity<Optional<Event>> getByIdEvent(String token, Long id) {
+        return authService.getByIdEvent(token, id);
     }
+
     @GetMapping("/event/get/all")
-    public List<Event> getAllEvents(String token){
+    public List<Event> getAllEvents(String token) {
         return authService.getAllEvents();
     }
 
     @DeleteMapping("/event/delete/{token}/{id}")
-    public ResponseEntity<String> deleteEvent(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete){
-        return authService.deleteEvent(idUserToDelete,token);
+    public ResponseEntity<String> deleteEvent(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete) {
+        return authService.deleteEvent(idUserToDelete, token);
     }
 
 }

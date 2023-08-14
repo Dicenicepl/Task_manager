@@ -73,10 +73,14 @@ public class AuthService {
         return eventRepository.findAll();
     }
 
-    public ResponseEntity<Event> getByIdEvent(String token, Long id) {
+    public ResponseEntity<Optional<Event>> getByIdEvent(String token, Long id) {
         if (eventRepository.findById(id).isPresent() && userRepository.findUserByToken(token).isPresent()) {
             return new ResponseEntity<>(eventRepository.findById(id), HttpStatus.OK);
         }
         return null;
+    }
+
+    public void logout(String token) {
+        userRepository.logout(token);
     }
 }
