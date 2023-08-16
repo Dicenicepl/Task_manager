@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,9 +25,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findUserByToken(String token);
 
+    List<User> findAllByExpireTokenBefore(Time expireToken);
 
+    @Modifying
+    @Transactional
     @Query("update User u set u.token = null where u.token = :token")
-    void logout(String token);
-
-    User findUserByExpireToken(Time expireToken);
+    void updateTokenToNull(String token);
 }
