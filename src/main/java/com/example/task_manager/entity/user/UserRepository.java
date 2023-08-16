@@ -1,12 +1,12 @@
 package com.example.task_manager.entity.user;
 
-import com.example.task_manager.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
 import java.util.Optional;
 
 @Repository
@@ -27,4 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("update User u set u.token = null where u.token = :token")
     void logout(String token);
+
+    User findUserByExpireToken(Time expireToken);
 }

@@ -3,6 +3,8 @@ package com.example.task_manager.entity.user;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Time;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,8 +22,8 @@ public class User {
     String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @Column(name = "token")
     String token;
+    Time expireToken = new Time(System.currentTimeMillis() + 10000L);
 
     public User(String username, String email, String password) {
         this.username = username;
