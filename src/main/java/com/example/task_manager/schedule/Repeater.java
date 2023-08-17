@@ -18,7 +18,7 @@ public class Repeater {
 
     @Scheduled(fixedDelay = 10000L)
     void checkExpireToken(){
-        List<User> users = userRepository.findAllByExpireTokenBefore(new Time(System.currentTimeMillis()));
+        List<User> users = userRepository.findAllByExpireTimeBefore(new Time(System.currentTimeMillis()));
         for (User user : users){
             userRepository.updateTokenToNull(user.getToken());
         }

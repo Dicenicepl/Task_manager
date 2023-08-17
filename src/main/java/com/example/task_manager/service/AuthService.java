@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -33,6 +34,9 @@ public class AuthService {
         }
         userRepository.addToken(id, String.valueOf(token));
         return token.toString();
+    }
+    private void updateExpireTimeToken(String token){
+        userRepository.updateExpireTokenToActive(token,new Time(System.currentTimeMillis() + 30000L));
     }
 
     public String login(String email, String password) {

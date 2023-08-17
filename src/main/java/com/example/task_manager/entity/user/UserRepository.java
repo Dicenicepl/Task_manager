@@ -25,10 +25,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findUserByToken(String token);
 
-    List<User> findAllByExpireTokenBefore(Time expireToken);
+    List<User> findAllByExpireTimeBefore(Time expireTime);
 
     @Modifying
     @Transactional
     @Query("update User u set u.token = null where u.token = :token")
     void updateTokenToNull(String token);
+
+    @Modifying
+    @Transactional
+    @Query("update User u set u.expireTime = :newExpireTime where u.token = :token")
+    void updateExpireTokenToActive(String token, Time newExpireTime);
 }

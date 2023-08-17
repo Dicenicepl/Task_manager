@@ -23,7 +23,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
     String token;
-    Time expireToken = new Time(System.currentTimeMillis() + 10000L);
+    Time expireTime = new Time(System.currentTimeMillis() + 10000L);
 
     public User(String username, String email, String password) {
         this.username = username;
