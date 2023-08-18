@@ -44,10 +44,13 @@ public class AuthService {
         }
     }
 
+    // TODO: 18.08.2023 przeprowadzić test czy jeżeli użytkownik po tym jak się wylogował i jeszcze raz się zalogował
+    //  to czy expireTime nie usunie tokenu, jeśli tak to dodać jeszcze 'updateExpireTimeToken(generatorToken(user.get().getId()))'
+
     public String login(String email, String password) {
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
-            return user.get().getId() + "_" + generatorToken(user.get().getId());
+            return generatorToken(user.get().getId());
         } else if (user.isEmpty()) {
             return "We can`t find user";
         }
@@ -64,6 +67,7 @@ public class AuthService {
     public ResponseEntity<String> deleteEvent(Long id, String token) {
         Optional<User> user = userRepository.findUserById(id);
         if (user.isPresent() && userRepository.findUserByToken(token).isPresent()) {
+            updateExpireTimeToken(token);
             eventRepository.deleteById(id);
             return new ResponseEntity<>("User: " + user + "deleted", HttpStatus.OK);
         }
@@ -74,6 +78,7 @@ public class AuthService {
         String token = json.get("token");
         Event event = new Event(json.get("name"), json.get("description"));
         if (userRepository.findUserByToken(token).isPresent() && event.getName() != null && !eventRepository.existsEventByName(event.getName())) {
+            updateExpireTimeToken(token);
             eventRepository.save(event);
             return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
         }
@@ -86,6 +91,7 @@ public class AuthService {
 
     public ResponseEntity<Optional<Event>> getByIdEvent(String token, Long id) {
         if (eventRepository.findById(id).isPresent() && userRepository.findUserByToken(token).isPresent()) {
+            updateExpireTimeToken(token);
             return new ResponseEntity<>(eventRepository.findById(id), HttpStatus.OK);
         }
         return null;

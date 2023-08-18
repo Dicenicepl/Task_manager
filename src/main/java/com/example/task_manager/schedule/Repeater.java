@@ -13,8 +13,11 @@ import java.util.List;
 @Configuration
 @EnableScheduling
 public class Repeater {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public Repeater(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Scheduled(fixedDelay = 10000L)
     void checkExpireToken(){
