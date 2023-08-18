@@ -36,7 +36,11 @@ public class AuthService {
         return token.toString();
     }
     private void updateExpireTimeToken(String token){
-        userRepository.updateExpireTokenToActive(token,new Time(System.currentTimeMillis() + 30000L));
+        try {
+            userRepository.updateExpireTokenToActive(token, new Time(System.currentTimeMillis() + 30000L));
+        }catch (Exception e){
+            System.out.println("updateExpireTimeToken: "+e);
+        }
     }
 
     public String login(String email, String password) {
@@ -65,7 +69,7 @@ public class AuthService {
         return new ResponseEntity<>("Error, user is not created or token is invalid", HttpStatus.NOT_ACCEPTABLE);
     }
 
-    public ResponseEntity<String> saveEvent(Event event) {
+    public ResponseEntity<String> saveEvent(Event event, String token) {
         if (event.getName() != null && !eventRepository.existsEventByName(event.getName())) {
             eventRepository.save(event);
             return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);

@@ -2,6 +2,7 @@ package com.example.task_manager.controller;
 
 import com.example.task_manager.entity.event.Event;
 import com.example.task_manager.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,9 +49,11 @@ public class AuthorizeAccessController {
     @PostMapping("/event/create")
     public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
         String token = json.get("token");
-//        String[] eventJsonSplit = json.get("event").split("\",");
         Event event = new Event(json.get("name"), json.get("description"));
-        return authService.saveEvent(event);
+        if (!token.isBlank() && event != null) {
+            return authService.saveEvent(event, token);
+        }
+        return new ResponseEntity<>("Error", HttpStatus.OK);
     }
 
     @GetMapping("/event/get/")
