@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Time;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -69,8 +70,10 @@ public class AuthService {
         return new ResponseEntity<>("Error, user is not created or token is invalid", HttpStatus.NOT_ACCEPTABLE);
     }
 
-    public ResponseEntity<String> saveEvent(Event event, String token) {
-        if (event.getName() != null && !eventRepository.existsEventByName(event.getName())) {
+    public ResponseEntity<String> saveEvent(Map<String, String> json) {
+        String token = json.get("token");
+        Event event = new Event(json.get("name"), json.get("description"));
+        if (userRepository.findUserByToken(token).isPresent() && event.getName() != null && !eventRepository.existsEventByName(event.getName())) {
             eventRepository.save(event);
             return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
         }

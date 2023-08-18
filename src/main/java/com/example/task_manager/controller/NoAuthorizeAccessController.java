@@ -3,12 +3,10 @@ package com.example.task_manager.controller;
 import com.example.task_manager.entity.user.User;
 import com.example.task_manager.service.NoAuthService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/")
 public class NoAuthorizeAccessController {
     private final NoAuthService noAuthService;
 
@@ -21,7 +19,6 @@ public class NoAuthorizeAccessController {
         return noAuthService.register(user);
     }
 
-    //delete getToken from return cause of security
     @GetMapping("/user/get/")
     public ResponseEntity<String> getById(Long id){
         return noAuthService.getById(id);

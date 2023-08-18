@@ -11,16 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthorizeAccessController {
-    //TODO wykonać aby body przyjmowało token i object
-    //wykorzystać Map<Object key, Object value>
-    // "holder": {
-    //        "token": "ASDGDFQWEE",
-    //        "name": "spotkanie",
-    //        "description": "dadasdasdas dasdasdasdas ,dasdasdasdasd .dasdasdasdasd"
-    //    }
-    //holder.get("token") (== "test one")?-nie wiadomo czy potrzebne
 
     private final AuthService authService;
 
@@ -48,12 +40,13 @@ public class AuthorizeAccessController {
 
     @PostMapping("/event/create")
     public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
-        String token = json.get("token");
-        Event event = new Event(json.get("name"), json.get("description"));
-        if (!token.isBlank() && event != null) {
-            return authService.saveEvent(event, token);
-        }
-        return new ResponseEntity<>("Error", HttpStatus.OK);
+//        String token = json.get("token");
+//        Event event = new Event(json.get("name"), json.get("description"));
+//        if (!token.isBlank() && event.getName() != null) {
+//            return authService.saveEvent(event, token);
+//        }
+//        return new ResponseEntity<>("Error", HttpStatus.OK);
+        return authService.saveEvent(json);
     }
 
     @GetMapping("/event/get/")
