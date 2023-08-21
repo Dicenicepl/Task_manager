@@ -8,31 +8,31 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class HtmlController {
     @GetMapping("/user/get/")
     public String getUserById(){
-        return "profile.html";
+        return "profile";
     }
     @GetMapping("/user/get/all")
     public String getAllUsers(){
-        return "listusers.html";
+        return "listusers";
     }
-    @PostMapping("/user/register")
+    @GetMapping("/user/register")
     public String register(){
-        return "register.html";
+        return "register";
     }
-    @PostMapping("/event/create")
+    @GetMapping("/event/create")
     public String createEvent(){
-        return "createevent.html";
+        return "createevent";
     }
     @GetMapping("/event/get")
     public String getEventById(){
-        return "event.html";
+        return "event";
     }
     @GetMapping("/event/get/all")
     public String getAllEvents(){
-        return "listEvents.html";
+        return "listevents";
     }
     @GetMapping("/login")
     public String login(){
-        return "login.html";
+        return "login";
     }
 
 }
