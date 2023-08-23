@@ -1,20 +1,27 @@
 package com.example.task_manager.controller;
 
+import com.example.task_manager.entity.event.EventRepository;
+import com.example.task_manager.entity.user.User;
+import com.example.task_manager.entity.user.UserRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 public class HtmlController {
-    @GetMapping("/user/get/")
-    public String getUserById(){
+    private UserRepository userRepository;
+    private EventRepository eventRepository;
+
+    @GetMapping("/user/get/{id}")
+    public String getUserById(@PathVariable Long id, Model model){
         return "profile";
     }
     @GetMapping("/user/get/all")
     public String getAllUsers(){
         return "listusers";
     }
-    @GetMapping("/user/register")
+    @GetMapping("/register")
     public String register(){
         return "register";
     }

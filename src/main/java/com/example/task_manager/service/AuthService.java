@@ -50,7 +50,9 @@ public class AuthService {
     public String login(String email, String password) {
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
-            return generatorToken(user.get().getId());
+            String token = generatorToken(user.get().getId());
+            updateExpireTimeToken(token);
+            return token;
         } else if (user.isEmpty()) {
             return "We can`t find user";
         }
