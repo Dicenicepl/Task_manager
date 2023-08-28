@@ -15,15 +15,15 @@ import java.sql.Time;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    String username;
+    private Long id;
+    private String username;
     @Column(unique = true)
-    String email;
-    String password;
+    private String email;
+    private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
-    String token;
-    Time expireTime = new Time(System.currentTimeMillis() + 10000L);
+    private String token;
+    private Time expireTime = new Time(System.currentTimeMillis() + 10000L);
 
     public User(String username, String email, String password) {
         this.username = username;
