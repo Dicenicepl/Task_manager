@@ -1,8 +1,10 @@
 package com.example.task_manager.service;
 
 import com.example.task_manager.entity.event.Event;
+import com.example.task_manager.entity.event.EventDTO;
 import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.user.User;
+import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.entity.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -87,14 +89,21 @@ public class AuthService {
         return new ResponseEntity<>("We can`t save event data", HttpStatus.BAD_REQUEST);
     }
 
-    public List<Event> getAllEvents() {
-        return eventRepository.findAll();
+    public List<EventDTO> getAllEvents(String token) {
+        List<EventDTO> eventDTOList = null;
+        updateExpireTimeToken(token);
+        for (Event event:eventRepository.findAll()){
+            eventDTOList.add(new EventDTO(event.getName(), event.getDescription()));
+        }
+        return eventDTOList;
+
     }
 
-    public ResponseEntity<Optional<Event>> getByIdEvent(String token, Long id) {
-        if (eventRepository.findById(id).isPresent() && userRepository.findUserByToken(token).isPresent()) {
+    public ResponseEntity<EventDTO> getByIdEvent(String token, Long id) {
+        Optional<Event> event = eventRepository.findById(id);
+        if (event.isPresent() && userRepository.findUserByToken(token).isPresent()) {
             updateExpireTimeToken(token);
-            return new ResponseEntity<>(eventRepository.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(new EventDTO(event.get().getName(), event.get().getDescription()), HttpStatus.OK);
         }
         return null;
     }

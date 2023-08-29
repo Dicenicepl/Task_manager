@@ -1,6 +1,7 @@
 package com.example.task_manager.controller;
 
 import com.example.task_manager.entity.event.Event;
+import com.example.task_manager.entity.event.EventDTO;
 import com.example.task_manager.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,13 +51,13 @@ public class AuthorizeAccessController {
     }
 
     @GetMapping("/event/get/")
-    public ResponseEntity<Optional<Event>> getByIdEvent(String token, Long id) {
+    public ResponseEntity<EventDTO> getByIdEvent(String token, Long id) {
         return authService.getByIdEvent(token, id);
     }
 
     @GetMapping("/event/get/all")
-    public List<Event> getAllEvents(String token) {
-        return authService.getAllEvents();
+    public List<EventDTO> getAllEvents(String token) {
+        return authService.getAllEvents(token);
     }
 
     @DeleteMapping("/event/delete/{token}/{id}")
