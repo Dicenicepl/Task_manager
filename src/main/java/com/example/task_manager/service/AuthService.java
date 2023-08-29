@@ -4,7 +4,6 @@ import com.example.task_manager.entity.event.Event;
 import com.example.task_manager.entity.event.EventDTO;
 import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.user.User;
-import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.entity.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,9 +26,7 @@ public class AuthService {
     }
 
     private String generatorToken(Long id) {
-        String[] array = new String[]{"A", "B", "C", "D", "E", "F", "G",
-                "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S",
-                "T", "U", "V", "W", "X", "Y", "Z"};
+        String[] array = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
         StringBuilder token = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < 10; i++) {
@@ -38,11 +35,12 @@ public class AuthService {
         userRepository.addToken(id, String.valueOf(token));
         return token.toString();
     }
-    private void updateExpireTimeToken(String token){
+
+    private void updateExpireTimeToken(String token) {
         try {
             userRepository.updateExpireTokenToActive(token, new Time(System.currentTimeMillis() + 30000L));
-        }catch (Exception e){
-            System.out.println("updateExpireTimeToken: "+e);
+        } catch (Exception e) {
+            System.out.println("updateExpireTimeToken: " + e);
         }
     }
 
@@ -62,8 +60,7 @@ public class AuthService {
     }
 
     public void deleteUser(Long idUserToDelete, String token) {
-        if (userRepository.findUserById(idUserToDelete).isPresent()
-                && userRepository.findUserByToken(token).isPresent()) {
+        if (userRepository.findUserById(idUserToDelete).isPresent() && userRepository.findUserByToken(token).isPresent()) {
             userRepository.deleteById(idUserToDelete);
         }
     }
@@ -92,7 +89,7 @@ public class AuthService {
     public List<EventDTO> getAllEvents(String token) {
         List<EventDTO> eventDTOList = null;
         updateExpireTimeToken(token);
-        for (Event event:eventRepository.findAll()){
+        for (Event event : eventRepository.findAll()) {
             eventDTOList.add(new EventDTO(event.getName(), event.getDescription()));
         }
         return eventDTOList;
