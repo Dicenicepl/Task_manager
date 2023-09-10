@@ -39,7 +39,7 @@ public class AuthorizeAccessController {
     // Event controller
 
 
-    @PostMapping("/event/create")
+    @PostMapping("/event/create/")
     public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
 //        String token = json.get("token");
 //        Event event = new Event(json.get("name"), json.get("description"));
@@ -55,7 +55,7 @@ public class AuthorizeAccessController {
         return authService.getByIdEvent(token, id);
     }
 
-    @GetMapping("/event/get/all")
+    @GetMapping("/event/get/all/")
     public List<EventDTO> getAllEvents(String token) {
         return authService.getAllEvents(token);
     }

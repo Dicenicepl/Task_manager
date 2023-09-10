@@ -19,7 +19,7 @@ public class Repeater {
         this.userRepository = userRepository;
     }
 
-    @Scheduled(fixedDelay = 10000L)
+    @Scheduled(fixedDelay = 60000L)
     void checkExpireToken(){
         List<User> users = userRepository.findAllByExpireTimeBefore(new Time(System.currentTimeMillis()));
         for (User user : users){

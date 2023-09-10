@@ -10,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class AuthService {
@@ -44,19 +41,13 @@ public class AuthService {
         }
     }
 
-    // TODO: 18.08.2023 przeprowadzić test czy jeżeli użytkownik po tym jak się wylogował i jeszcze raz się zalogował
-    //  to czy expireTime nie usunie tokenu, jeśli tak to dodać jeszcze 'updateExpireTimeToken(generatorToken(user.get().getId()))'
-
     public String login(String email, String password) {
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isPresent() && user.get().getPassword().equals(password)) {
             String token = generatorToken(user.get().getId());
             updateExpireTimeToken(token);
             return token;
-        } else if (user.isEmpty()) {
-            return "We can`t find user";
-        }
-        return "Bad Request";
+        } else return "We can`t find user";
     }
 
     public void deleteUser(Long idUserToDelete, String token) {
@@ -66,11 +57,11 @@ public class AuthService {
     }
 
     public ResponseEntity<String> deleteEvent(Long id, String token) {
-        Optional<User> user = userRepository.findUserById(id);
-        if (user.isPresent() && userRepository.findUserByToken(token).isPresent()) {
+        Optional<Event> event = eventRepository.findById(id);
+        if (event.isPresent() && userRepository.findUserByToken(token).isPresent()) {
             updateExpireTimeToken(token);
             eventRepository.deleteById(id);
-            return new ResponseEntity<>("User: " + user + "deleted", HttpStatus.OK);
+            return new ResponseEntity<>("Event: " +  new EventDTO(event.get().getName(), event.get().getDescription()) + "deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Error, user is not created or token is invalid", HttpStatus.NOT_ACCEPTABLE);
     }
@@ -87,7 +78,7 @@ public class AuthService {
     }
 
     public List<EventDTO> getAllEvents(String token) {
-        List<EventDTO> eventDTOList = null;
+        List<EventDTO> eventDTOList = new ArrayList<>();
         updateExpireTimeToken(token);
         for (Event event : eventRepository.findAll()) {
             eventDTOList.add(new EventDTO(event.getName(), event.getDescription()));
