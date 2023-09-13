@@ -37,8 +37,8 @@ public class NoAuthService {
 
     public ResponseEntity<String> getById(Long id) {
         try {
-            Optional<User> user = userRepository.findUserById(id);
-            return new ResponseEntity<>("Here is your user: " + user.get(), HttpStatus.FOUND);
+            User user = userRepository.findUserById(id);
+            return new ResponseEntity<>("Here is your user: " + new UserDTO(user.getUsername(), user.getEmail(), null), HttpStatus.FOUND);
         } catch (NullPointerException e){
             return new ResponseEntity<>("We can`t find user with id: " + id, HttpStatus.NOT_FOUND);
         }
@@ -48,7 +48,7 @@ public class NoAuthService {
             List<User> users = userRepository.findAll();
             List<UserDTO> userDTOList = new ArrayList<>();
             for (User user : users) {
-                userDTOList.add(new UserDTO(user.getUsername(), user.getEmail(), user.getRole()));
+                userDTOList.add(new UserDTO(user.getUsername(), user.getEmail(), null));
             }
             return new ResponseEntity<>("Here is your users:" + userDTOList, HttpStatus.OK);
         } catch (NullPointerException ignored){}

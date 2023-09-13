@@ -42,16 +42,17 @@ public class AuthService {
     }
 
     public String login(String email, String password) {
-        Optional<User> user = userRepository.findUserByEmail(email);
-        if (user.isPresent() && user.get().getPassword().equals(password)) {
-            String token = generatorToken(user.get().getId());
+        User user = userRepository.findUserByEmail(email);
+        if (user != null && user.getPassword().equals(password)) {
+            String token = generatorToken(user.getId());
             updateExpireTimeToken(token);
             return token;
         } else return "We can`t find user";
     }
 
     public void deleteUser(Long idUserToDelete, String token) {
-        if (userRepository.findUserById(idUserToDelete).isPresent() && userRepository.findUserByToken(token).isPresent()) {
+        if (userRepository.findUserById(idUserToDelete) != null
+                && userRepository.findUserByToken(token).isPresent()) {
             userRepository.deleteById(idUserToDelete);
         }
     }
@@ -61,7 +62,7 @@ public class AuthService {
         if (event.isPresent() && userRepository.findUserByToken(token).isPresent()) {
             updateExpireTimeToken(token);
             eventRepository.deleteById(id);
-            return new ResponseEntity<>("Event: " +  new EventDTO(event.get().getName(), event.get().getDescription()) + "deleted", HttpStatus.OK);
+            return new ResponseEntity<>("Event: " + new EventDTO(event.get().getName(), event.get().getDescription()) + "deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Error, user is not created or token is invalid", HttpStatus.NOT_ACCEPTABLE);
     }

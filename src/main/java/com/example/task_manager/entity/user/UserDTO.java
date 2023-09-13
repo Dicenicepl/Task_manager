@@ -1,5 +1,7 @@
 package com.example.task_manager.entity.user;
 
+import com.example.task_manager.entity.role.Role;
+import jakarta.persistence.OneToOne;
 import lombok.*;
 
 @Getter
@@ -10,5 +12,6 @@ import lombok.*;
 public class UserDTO {
     private String username;
     private String email;
+    @OneToOne
     private Role role;
 }

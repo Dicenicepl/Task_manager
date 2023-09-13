@@ -1,5 +1,6 @@
 package com.example.task_manager.entity.user;
 
+import com.example.task_manager.entity.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,20 +15,16 @@ import java.sql.Time;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
     private Long id;
     private String username;
     @Column(unique = true)
     private String email;
     private String password;
-    @Enumerated(EnumType.STRING)
+    @OneToOne(mappedBy = "users")
     private Role role;
+
     private String token;
     private Time expireTime = new Time(System.currentTimeMillis() + 10000L);
 
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
 }
