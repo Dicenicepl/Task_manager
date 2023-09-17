@@ -3,6 +3,8 @@ package com.example.task_manager.service;
 import com.example.task_manager.entity.event.Event;
 import com.example.task_manager.entity.event.EventDTO;
 import com.example.task_manager.entity.event.EventRepository;
+import com.example.task_manager.entity.role.Role;
+import com.example.task_manager.entity.role.RoleRepository;
 import com.example.task_manager.entity.user.User;
 import com.example.task_manager.entity.user.UserRepository;
 import org.springframework.http.HttpStatus;
@@ -16,10 +18,12 @@ import java.util.*;
 public class AuthService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public AuthService(EventRepository eventRepository, UserRepository userRepository) {
+    public AuthService(EventRepository eventRepository, UserRepository userRepository, RoleRepository roleRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     private String generatorToken(Long id) {
@@ -41,6 +45,35 @@ public class AuthService {
         }
     }
 
+    private boolean isEnableModifyEvents(Long id, String token) {
+        Optional<User> user = userRepository.findUserByToken(token);
+        if (user.isEmpty()) {
+            System.out.println("ISENABLEMODIFY: NULL");
+            return false;
+        }
+
+        Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
+        Optional<Event> event = eventRepository.findById(id);
+
+        if (event.isEmpty()) {
+            return false;
+        }
+
+        String userEmail = user.get().getEmail();
+        String eventEmail = event.get().getEmail();
+
+        return userEmail.equals(eventEmail) || userRole.equals(Role.ADMIN);
+    }
+    private boolean isEnableModifyUsers(Long id, String token) {
+        Optional<User> user = userRepository.findUserByToken(token);
+        if (user.isEmpty()) {
+            System.out.println("ISENABLEMODIFY: NULL");
+            return false;
+        }
+        Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
+        return user.get().getId().equals(id) || userRole.equals(Role.ADMIN);
+    }
+
     public String login(String email, String password) {
         User user = userRepository.findUserByEmail(email);
         if (user != null && user.getPassword().equals(password)) {
@@ -50,19 +83,21 @@ public class AuthService {
         } else return "We can`t find user";
     }
 
-    public void deleteUser(Long idUserToDelete, String token) {
-        if (userRepository.findUserById(idUserToDelete) != null
-                && userRepository.findUserByToken(token).isPresent()) {
+    public ResponseEntity<String> deleteUser(Long idUserToDelete, String token) {
+        updateExpireTimeToken(token);
+        if (isEnableModifyUsers(idUserToDelete,token)) {
             userRepository.deleteById(idUserToDelete);
+            return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
         }
+        return new ResponseEntity<>("We can`t done operation, please try check id, or update your token", HttpStatus.OK);
     }
 
     public ResponseEntity<String> deleteEvent(Long id, String token) {
+        updateExpireTimeToken(token);
         Optional<Event> event = eventRepository.findById(id);
-        if (event.isPresent() && userRepository.findUserByToken(token).isPresent()) {
-            updateExpireTimeToken(token);
+        if (isEnableModifyEvents(id, token)) {
             eventRepository.deleteById(id);
-            return new ResponseEntity<>("Event: " + new EventDTO(event.get().getName(), event.get().getDescription()) + "deleted", HttpStatus.OK);
+            return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Error, user is not created or token is invalid", HttpStatus.NOT_ACCEPTABLE);
     }

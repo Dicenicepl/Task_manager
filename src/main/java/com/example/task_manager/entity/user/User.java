@@ -1,10 +1,10 @@
 package com.example.task_manager.entity.user;
 
-import com.example.task_manager.entity.role.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Time;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -21,10 +21,13 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    @OneToOne(mappedBy = "users")
-    private Role role;
-
     private String token;
     private Time expireTime = new Time(System.currentTimeMillis() + 10000L);
+
+    public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
 
 }

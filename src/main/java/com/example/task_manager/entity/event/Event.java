@@ -14,6 +14,7 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
+    String email;
     String name;
     String description;
     public Event(String name, String description){

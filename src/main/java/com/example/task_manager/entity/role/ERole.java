@@ -1,6 +1,5 @@
 package com.example.task_manager.entity.role;
 
-import com.example.task_manager.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,9 +17,16 @@ public class ERole {
     @GeneratedValue
     private Integer id_role;
     @Column(unique = true)
-    private String user_email;
+    private String email;
     @Enumerated(EnumType.STRING)
     private Role role;
-    @JoinColumn(name = "user_email")
-    private User user;
+
+    public ERole(String email, String role) {
+        this.email = email;
+        this.role = switch (role){
+            case "USER" -> Role.USER;
+            case "ADMIN" -> Role.ADMIN;
+            default -> throw new IllegalStateException("Unexpected value: " + role);
+        };
+    }
 }

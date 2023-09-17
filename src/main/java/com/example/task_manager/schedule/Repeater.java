@@ -22,8 +22,14 @@ public class Repeater {
     @Scheduled(fixedDelay = 60000L)
     void checkExpireToken(){
         List<User> users = userRepository.findAllByExpireTimeBefore(new Time(System.currentTimeMillis()));
-        for (User user : users){
-            userRepository.updateTokenToNull(user.getToken());
+        try {
+            for (User user : users) {
+                if (!user.getToken().equals("AAAAAAAA")) {
+                    userRepository.updateTokenToNull(user.getToken());
+                }
+            }
+        }catch (NullPointerException e){
+            System.out.println("CHECKEXPIRETOKEN: NULL");
         }
     }
 }
