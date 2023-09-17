@@ -94,7 +94,6 @@ public class AuthService {
 
     public ResponseEntity<String> deleteEvent(Long id, String token) {
         updateExpireTimeToken(token);
-        Optional<Event> event = eventRepository.findById(id);
         if (isEnableModifyEvents(id, token)) {
             eventRepository.deleteById(id);
             return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
@@ -104,9 +103,9 @@ public class AuthService {
 
     public ResponseEntity<String> saveEvent(Map<String, String> json) {
         String token = json.get("token");
+        updateExpireTimeToken(token);
         Event event = new Event(json.get("name"), json.get("description"));
         if (userRepository.findUserByToken(token).isPresent() && event.getName() != null && !eventRepository.existsEventByName(event.getName())) {
-            updateExpireTimeToken(token);
             eventRepository.save(event);
             return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
         }
@@ -114,8 +113,8 @@ public class AuthService {
     }
 
     public List<EventDTO> getAllEvents(String token) {
-        List<EventDTO> eventDTOList = new ArrayList<>();
         updateExpireTimeToken(token);
+        List<EventDTO> eventDTOList = new ArrayList<>();
         for (Event event : eventRepository.findAll()) {
             eventDTOList.add(new EventDTO(event.getName(), event.getDescription()));
         }
@@ -123,13 +122,12 @@ public class AuthService {
 
     }
 
-    public ResponseEntity<EventDTO> getByIdEvent(String token, Long id) {
-        Optional<Event> event = eventRepository.findById(id);
-        if (event.isPresent() && userRepository.findUserByToken(token).isPresent()) {
-            updateExpireTimeToken(token);
-            return new ResponseEntity<>(new EventDTO(event.get().getName(), event.get().getDescription()), HttpStatus.OK);
+    public ResponseEntity<String> getByIdEvent(String token, Long id) {
+        updateExpireTimeToken(token);
+        if (isEnableModifyEvents(id, token)) {
+            return new ResponseEntity<>("Your event:" + eventRepository.findById(id), HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity<>("We can`t find any events", HttpStatus.OK);
     }
 
     public void logout(String token) {

@@ -48,7 +48,7 @@ public class AuthorizeAccessController {
     }
 
     @GetMapping("/event/get/")
-    public ResponseEntity<EventDTO> getByIdEvent(String token, Long id) {
+    public ResponseEntity<String> getByIdEvent(String token, Long id) {
         return authService.getByIdEvent(token, id);
     }
 
