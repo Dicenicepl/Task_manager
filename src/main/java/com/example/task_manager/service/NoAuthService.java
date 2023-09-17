@@ -28,7 +28,7 @@ public class NoAuthService {
     public ResponseEntity<String> register(User user) {
         try {
             if (user.getUsername() != null && user.getEmail() != null && user.getPassword() != null) {
-                userRepository.save(new User(user.getUsername(), user.getEmail()));
+                userRepository.save(new User(user.getUsername(), user.getEmail(), user.getPassword()));
                 roleRepository.save(new ERole(user.getEmail(), "USER"));
                 return new ResponseEntity<>("User name: " + user.getUsername() + "\nUser email: " + user.getEmail() + "\nis created", HttpStatus.CREATED);
             }
@@ -45,7 +45,7 @@ public class NoAuthService {
             User user = userRepository.findUserByEmail(email);
             return new ResponseEntity<>("Here is your user: " + new UserDTO(user.getUsername(), user.getEmail(), roleRepository.findERoleByEmail(email).getRole()), HttpStatus.FOUND);
         } catch (NullPointerException e){
-            return new ResponseEntity<>("We can`t find user with id: " + email, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("We can`t find user with email: " + email, HttpStatus.NOT_FOUND);
         }
     }
     public ResponseEntity<String> getAll(){
@@ -59,7 +59,9 @@ public class NoAuthService {
                         roleRepository.findERoleByEmail(user.getEmail()).getRole()));
             }
             return new ResponseEntity<>("Here is your users:" + userDTOList, HttpStatus.OK);
-        } catch (NullPointerException ignored){}
-        return new ResponseEntity<>("We can`t find any users", HttpStatus.NOT_FOUND);
+        } catch (NullPointerException e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("We can`t find any users", HttpStatus.NOT_FOUND);
+        }
     }
 }

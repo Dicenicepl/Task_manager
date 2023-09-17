@@ -104,7 +104,7 @@ public class AuthService {
     public ResponseEntity<String> saveEvent(Map<String, String> json) {
         String token = json.get("token");
         updateExpireTimeToken(token);
-        Event event = new Event(json.get("name"), json.get("description"));
+        Event event = new Event(json.get("email"), json.get("name"), json.get("description"));
         if (userRepository.findUserByToken(token).isPresent() && event.getName() != null && !eventRepository.existsEventByName(event.getName())) {
             eventRepository.save(event);
             return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);

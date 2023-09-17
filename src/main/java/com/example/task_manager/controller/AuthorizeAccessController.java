@@ -30,20 +30,14 @@ public class AuthorizeAccessController {
     }
 
     @DeleteMapping("/user/delete/{token}/{id}")
-    public void deleteUser(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete) {
-        authService.deleteUser(idUserToDelete, token);
+    public ResponseEntity<String> deleteUser(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete) {
+        return authService.deleteUser(idUserToDelete, token);
     }
     // Event controller
 
 
     @PostMapping("/event/create/")
     public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
-//        String token = json.get("token");
-//        Event event = new Event(json.get("name"), json.get("description"));
-//        if (!token.isBlank() && event.getName() != null) {
-//            return authService.saveEvent(event, token);
-//        }
-//        return new ResponseEntity<>("Error", HttpStatus.OK);
         return authService.saveEvent(json);
     }
 

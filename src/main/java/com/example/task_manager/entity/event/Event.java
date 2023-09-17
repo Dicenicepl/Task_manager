@@ -17,7 +17,8 @@ public class Event {
     String email;
     String name;
     String description;
-    public Event(String name, String description){
+    public Event(String email, String name, String description){
+        this.email = email;
         this.name = name;
         this.description = description;
     }
