@@ -39,7 +39,7 @@ public class AuthService {
 
     private void updateExpireTimeToken(String token) {
         try {
-            userRepository.updateExpireTokenToActive(token, new Time(System.currentTimeMillis() + 30000L));
+            userRepository.updateExpireTokenToActive(token, new Time(System.currentTimeMillis() + 50000L));
         } catch (Exception e) {
             System.out.println("updateExpireTimeToken: " + e);
         }
@@ -64,6 +64,7 @@ public class AuthService {
 
         return userEmail.equals(eventEmail) || userRole.equals(Role.ADMIN);
     }
+
     private boolean isEnableModifyUsers(Long id, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
         if (user.isEmpty()) {
@@ -85,7 +86,7 @@ public class AuthService {
 
     public ResponseEntity<String> deleteUser(Long idUserToDelete, String token) {
         updateExpireTimeToken(token);
-        if (isEnableModifyUsers(idUserToDelete,token)) {
+        if (isEnableModifyUsers(idUserToDelete, token)) {
             userRepository.deleteById(idUserToDelete);
             return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
         }
@@ -102,14 +103,22 @@ public class AuthService {
     }
 
     public ResponseEntity<String> saveEvent(Map<String, String> json) {
+        String name = json.get("name");
+        if (name.equals(null)) {
+            return new ResponseEntity<>("You need input a name for event", HttpStatus.BAD_REQUEST);
+        }
         String token = json.get("token");
         updateExpireTimeToken(token);
-        Event event = new Event(json.get("email"), json.get("name"), json.get("description"));
-        if (userRepository.findUserByToken(token).isPresent() && event.getName() != null && !eventRepository.existsEventByName(event.getName())) {
-            eventRepository.save(event);
-            return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
+        if (userRepository.findUserByToken(token).isEmpty()) {
+            return new ResponseEntity<>("You need to update your token", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>("We can`t save event data", HttpStatus.BAD_REQUEST);
+        if (eventRepository.existsEventByName(name)) {
+            return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.BAD_REQUEST);
+        }
+        String description = json.get("description");
+        Event event = new Event(userRepository.findUserByToken(token).get().getEmail(),name, description);
+        eventRepository.save(event);
+        return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
     }
 
     public List<EventDTO> getAllEvents(String token) {
