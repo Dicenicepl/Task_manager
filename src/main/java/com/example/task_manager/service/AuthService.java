@@ -43,17 +43,17 @@ public class AuthService {
             System.out.println("updateExpireTimeToken: " + e);
         }
     }
-    private boolean isNotExpiredToken(String token){
+    private boolean isExpiredToken(String token){
         Optional<User> user = userRepository.findUserByToken(token);
         if (user.isEmpty()){
             System.out.println("CAUTION - TOKEN IS EXPIRED FOR" + user);
-            return false;
+            return true;
         }
-        return user.get().getExpireTime().getTime() + 1000L > System.currentTimeMillis();
+        return !(user.get().getExpireTime().getTime() + 1000L <= System.currentTimeMillis());
     }
     private boolean isEnableModifyEvents(Long id, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
-        if (!isNotExpiredToken(token)) {
+        if (isExpiredToken(token)) {
             return false;
         }
 
@@ -72,7 +72,7 @@ public class AuthService {
 
     private boolean isEnableModifyUsers(Long id, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
-        if (!isNotExpiredToken(token)) {
+        if (isExpiredToken(token)) {
             return false;
         }
         Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
@@ -125,7 +125,7 @@ public class AuthService {
     }
 
     public List<EventDTO> getAllEvents(String token) {
-        if (!isNotExpiredToken(token)){
+        if (isExpiredToken(token)){
             return new ArrayList<>();
         }
         List<EventDTO> eventDTOList = new ArrayList<>();

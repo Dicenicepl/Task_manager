@@ -21,6 +21,7 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
+    @Column(unique = true)
     private String token;
     private Time expireTime = new Time(System.currentTimeMillis() + 10000L);
 
