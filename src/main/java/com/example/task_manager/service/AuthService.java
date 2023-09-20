@@ -44,11 +44,20 @@ public class AuthService {
             System.out.println("updateExpireTimeToken: " + e);
         }
     }
-
+    private boolean isNotExpiredToken(String token){
+        Optional<User> user = userRepository.findUserByToken(token);
+        if (user.isEmpty()){
+            System.out.println("CAUTION - TOKEN IS EXPIRED FOR" + user);
+            return false;
+        }
+        if (user.get().getExpireTime().getTime() + 1000L <= System.currentTimeMillis()){
+            return false;
+        }
+        return true;
+    }
     private boolean isEnableModifyEvents(Long id, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
-        if (user.isEmpty()) {
-            System.out.println("ISENABLEMODIFY: NULL");
+        if (isNotExpiredToken(token)) {
             return false;
         }
 
@@ -67,8 +76,7 @@ public class AuthService {
 
     private boolean isEnableModifyUsers(Long id, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
-        if (user.isEmpty()) {
-            System.out.println("ISENABLEMODIFY: NULL");
+        if (isNotExpiredToken(token)) {
             return false;
         }
         Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
