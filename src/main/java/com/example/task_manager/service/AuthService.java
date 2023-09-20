@@ -36,7 +36,6 @@ public class AuthService {
         userRepository.addToken(id, String.valueOf(token));
         return token.toString();
     }
-
     private void updateExpireTimeToken(String token) {
         try {
             userRepository.updateExpireTokenToActive(token, new Time(System.currentTimeMillis() + 50000L));
@@ -50,14 +49,11 @@ public class AuthService {
             System.out.println("CAUTION - TOKEN IS EXPIRED FOR" + user);
             return false;
         }
-        if (user.get().getExpireTime().getTime() + 1000L <= System.currentTimeMillis()){
-            return false;
-        }
-        return true;
+        return user.get().getExpireTime().getTime() + 1000L > System.currentTimeMillis();
     }
     private boolean isEnableModifyEvents(Long id, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
-        if (isNotExpiredToken(token)) {
+        if (!isNotExpiredToken(token)) {
             return false;
         }
 
@@ -70,16 +66,17 @@ public class AuthService {
 
         String userEmail = user.get().getEmail();
         String eventEmail = event.get().getEmail();
-
+        updateExpireTimeToken(token);
         return userEmail.equals(eventEmail) || userRole.equals(Role.ADMIN);
     }
 
     private boolean isEnableModifyUsers(Long id, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
-        if (isNotExpiredToken(token)) {
+        if (!isNotExpiredToken(token)) {
             return false;
         }
         Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
+        updateExpireTimeToken(token);
         return user.get().getId().equals(id) || userRole.equals(Role.ADMIN);
     }
 
@@ -93,7 +90,6 @@ public class AuthService {
     }
 
     public ResponseEntity<String> deleteUser(Long idUserToDelete, String token) {
-        updateExpireTimeToken(token);
         if (isEnableModifyUsers(idUserToDelete, token)) {
             userRepository.deleteById(idUserToDelete);
             return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
@@ -102,7 +98,6 @@ public class AuthService {
     }
 
     public ResponseEntity<String> deleteEvent(Long id, String token) {
-        updateExpireTimeToken(token);
         if (isEnableModifyEvents(id, token)) {
             eventRepository.deleteById(id);
             return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
@@ -112,7 +107,7 @@ public class AuthService {
 
     public ResponseEntity<String> saveEvent(Map<String, String> json) {
         String name = json.get("name");
-        if (name.equals(null)) {
+        if (name.length()<=1) {
             return new ResponseEntity<>("You need input a name for event", HttpStatus.BAD_REQUEST);
         }
         String token = json.get("token");
@@ -130,17 +125,19 @@ public class AuthService {
     }
 
     public List<EventDTO> getAllEvents(String token) {
-        updateExpireTimeToken(token);
+        if (!isNotExpiredToken(token)){
+            return new ArrayList<>();
+        }
         List<EventDTO> eventDTOList = new ArrayList<>();
         for (Event event : eventRepository.findAll()) {
             eventDTOList.add(new EventDTO(event.getName(), event.getDescription()));
         }
+        updateExpireTimeToken(token);
         return eventDTOList;
 
     }
 
     public ResponseEntity<String> getByIdEvent(String token, Long id) {
-        updateExpireTimeToken(token);
         if (isEnableModifyEvents(id, token)) {
             return new ResponseEntity<>("Your event:" + eventRepository.findById(id), HttpStatus.OK);
         }
