@@ -36,6 +36,7 @@ public class AuthService {
         userRepository.addToken(id, String.valueOf(token));
         return token.toString();
     }
+
     private void updateExpireTimeToken(String token) {
         try {
             userRepository.updateExpireTokenToActive(token, new Time(System.currentTimeMillis() + 50000L));
@@ -43,14 +44,16 @@ public class AuthService {
             System.out.println("updateExpireTimeToken: " + e);
         }
     }
-    private boolean isExpiredToken(String token){
+
+    private boolean isExpiredToken(String token) {
         Optional<User> user = userRepository.findUserByToken(token);
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             System.out.println("CAUTION - TOKEN IS EXPIRED FOR" + user);
             return true;
         }
         return !(user.get().getExpireTime().getTime() + 1000L <= System.currentTimeMillis());
     }
+
     private boolean isEnableModifyEvents(Long id, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
         if (isExpiredToken(token)) {
@@ -80,10 +83,20 @@ public class AuthService {
         return user.get().getId().equals(id) || userRole.equals(Role.ADMIN);
     }
 
+    private Optional<User> findUser(String data) {
+        Optional<User> user = Optional.empty();
+        if (data.contains("@")) {
+            user = userRepository.findUserByEmail(data);
+        } else if (data.length() == 10) {
+            user = userRepository.findUserByToken(data);
+        }
+        return user;
+    }
+
     public String login(String email, String password) {
-        User user = userRepository.findUserByEmail(email);
-        if (user != null && user.getPassword().equals(password)) {
-            String token = generatorToken(user.getId());
+        Optional<User> user = findUser(email);
+        if (user.isPresent() && user.get().getPassword().equals(password)) {
+            String token = generatorToken(user.get().getId());
             updateExpireTimeToken(token);
             return token;
         } else return "We can`t find user";
@@ -97,9 +110,9 @@ public class AuthService {
         return new ResponseEntity<>("We can`t done operation, please try check id, or update your token", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> deleteEvent(Long id, String token) {
-        if (isEnableModifyEvents(id, token)) {
-            eventRepository.deleteById(id);
+    public ResponseEntity<String> deleteEvent(Long idEventToDelete, String token) {
+        if (isEnableModifyEvents(idEventToDelete, token)) {
+            eventRepository.deleteById(idEventToDelete);
             return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Error, user is not created or token is invalid", HttpStatus.NOT_ACCEPTABLE);
@@ -107,41 +120,47 @@ public class AuthService {
 
     public ResponseEntity<String> saveEvent(Map<String, String> json) {
         String name = json.get("name");
-        if (name.length()<=1) {
+        Optional<User> user = userRepository.findUserByToken(json.get("token"));
+        if (name.length() <= 1) {
             return new ResponseEntity<>("You need input a name for event", HttpStatus.BAD_REQUEST);
         }
-        String token = json.get("token");
-        updateExpireTimeToken(token);
-        if (userRepository.findUserByToken(token).isEmpty()) {
+
+        if (user.isEmpty()) {
             return new ResponseEntity<>("You need to update your token", HttpStatus.BAD_REQUEST);
         }
+
         if (eventRepository.existsEventByName(name)) {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.BAD_REQUEST);
         }
         String description = json.get("description");
-        Event event = new Event(userRepository.findUserByToken(token).get().getEmail(),name, description);
+        Event event = new Event(user.get().getEmail(), name, description);
         eventRepository.save(event);
+        updateExpireTimeToken(user.get().getToken());
+
         return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
     }
 
     public List<EventDTO> getAllEvents(String token) {
-        if (isExpiredToken(token)){
+        List<EventDTO> eventDTOList = new ArrayList<>();
+        if (isExpiredToken(token)) {
             return new ArrayList<>();
         }
-        List<EventDTO> eventDTOList = new ArrayList<>();
         for (Event event : eventRepository.findAll()) {
             eventDTOList.add(new EventDTO(event.getName(), event.getDescription()));
         }
         updateExpireTimeToken(token);
         return eventDTOList;
-
     }
 
     public ResponseEntity<String> getByIdEvent(String token, Long id) {
+        Optional<Event> event = eventRepository.findById(id);
         if (isEnableModifyEvents(id, token)) {
-            return new ResponseEntity<>("Your event:" + eventRepository.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>("Your event:" + event.get().getName() + " description:" + event.get().getDescription(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("We can`t find any events", HttpStatus.OK);
+        if (event.isEmpty()) {
+            return new ResponseEntity<>("We can`t find any event with id:" + id, HttpStatus.OK);
+        }
+        else return new ResponseEntity<>("Your token is expired, please log in again", HttpStatus.OK);
     }
 
     public void logout(String token) {

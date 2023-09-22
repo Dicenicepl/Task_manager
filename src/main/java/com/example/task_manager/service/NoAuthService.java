@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NoAuthService {
@@ -42,8 +43,8 @@ public class NoAuthService {
 
     public ResponseEntity<String> getByEmail(String email) {
         try {
-            User user = userRepository.findUserByEmail(email);
-            return new ResponseEntity<>("Here is your user: " + new UserDTO(user.getUsername(), user.getEmail(), roleRepository.findERoleByEmail(email).getRole()), HttpStatus.FOUND);
+            Optional<User> user = userRepository.findUserByEmail(email);
+            return new ResponseEntity<>("Here is your user: " + new UserDTO(user.get().getUsername(), user.get().getEmail(), roleRepository.findERoleByEmail(email).getRole()), HttpStatus.FOUND);
         } catch (NullPointerException e){
             return new ResponseEntity<>("We can`t find user with email: " + email, HttpStatus.NOT_FOUND);
         }
