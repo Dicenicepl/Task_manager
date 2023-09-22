@@ -30,8 +30,8 @@ public class AuthorizeAccessController {
     }
 
     @DeleteMapping("/user/delete/{token}/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete) {
-        return authService.deleteUser(idUserToDelete, token);
+    public ResponseEntity<String> deleteUser(@PathVariable("token") String token, @PathVariable("email") String email) {
+        return authService.deleteUser(email, token);
     }
     // Event controller
 

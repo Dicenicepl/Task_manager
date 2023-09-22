@@ -102,11 +102,14 @@ public class AuthService {
         } else return "We can`t find user";
     }
 
-    public ResponseEntity<String> deleteUser(Long idUserToDelete, String token) {
-        if (isEnableModifyUsers(idUserToDelete, token)) {
-            userRepository.deleteById(idUserToDelete);
-            return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
-        }
+    public ResponseEntity<String> deleteUser(String email, String token) {
+        Optional<User> user = userRepository.findUserByEmail(email);
+        try {
+            if (isEnableModifyUsers(user.get().getId(), token)) {
+                userRepository.deleteByEmail(user.get().getEmail());
+                return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
+            }
+        }catch (Exception ignored){}
         return new ResponseEntity<>("We can`t done operation, please try check id, or update your token", HttpStatus.OK);
     }
 
