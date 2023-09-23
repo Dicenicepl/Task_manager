@@ -3,6 +3,8 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+/src/main/java/com/example/task_manager/config/EmailData.java
+/src/main/resources/application.properties
 
 ### STS ###
 .apt_generated
@@ -31,6 +33,5 @@ build/
 
 ### VS Code ###
 .vscode/
-/src/main/java/com/example/task_manager/config/EmailData.java
-/src/main/resources/application.properties
+
 
