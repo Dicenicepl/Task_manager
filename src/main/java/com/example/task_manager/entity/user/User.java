@@ -15,7 +15,13 @@ import java.util.Optional;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue
+    @SequenceGenerator(
+            name = "sequence",
+            sequenceName = "sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
+
     private Long id;
     private String username;
     @Column(unique = true)
