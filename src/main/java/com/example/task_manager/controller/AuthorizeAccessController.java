@@ -55,5 +55,9 @@ public class AuthorizeAccessController {
     public ResponseEntity<String> deleteEvent(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete) {
         return authService.deleteEvent(idUserToDelete, token);
     }
+    @PutMapping("/event/update/")
+    public ResponseEntity<String> updateEvent(){
+        return null;
+    }
 
 }
