@@ -169,4 +169,5 @@ public class AuthService {
     public void logout(String token) {
         userRepository.updateTokenToNull(token);
     }
+
 }
