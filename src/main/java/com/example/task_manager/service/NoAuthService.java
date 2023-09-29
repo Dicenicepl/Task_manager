@@ -1,7 +1,8 @@
 package com.example.task_manager.service;
 
+import com.example.task_manager.entity.event.Event;
+import com.example.task_manager.entity.event.EventDTO;
 import com.example.task_manager.entity.role.ERole;
-import com.example.task_manager.entity.role.Role;
 import com.example.task_manager.entity.role.RoleRepository;
 import com.example.task_manager.entity.user.User;
 import com.example.task_manager.entity.event.EventRepository;
@@ -20,10 +21,12 @@ import java.util.Optional;
 public class NoAuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final EventRepository eventRepository;
 
-    public NoAuthService(UserRepository userRepository, RoleRepository roleRepository) {
+    public NoAuthService(UserRepository userRepository, RoleRepository roleRepository, EventRepository eventRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.eventRepository = eventRepository;
     }
     private Optional<User> getUserByEmail(String email){
         try{
@@ -77,5 +80,15 @@ public class NoAuthService {
         } catch (NullPointerException e) {
             return new ResponseEntity<>("We can`t find any users", HttpStatus.NOT_FOUND);
         }
+    }
+
+    public ResponseEntity<String> getEventByName(String name) {
+        Event event = eventRepository.findEventsByName(name);
+        if (event.getName().length() > 1) {
+            EventDTO sEvent = new EventDTO(event.getEmail(), event.getName(), event.getDescription());
+            return new ResponseEntity<>("Events:" + sEvent, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("We can`t find any event", HttpStatus.OK);
+
     }
 }

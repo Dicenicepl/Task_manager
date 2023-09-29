@@ -26,6 +26,10 @@ public class NoAuthorizeAccessController {
     public ResponseEntity<String> register(@RequestBody User user){
         return noAuthService.register(user);
     }
-
+    // TODO: 29.09.2023 profile
+    @GetMapping("/event/get/")
+    public ResponseEntity<String> getEventByName(String name) {
+        return noAuthService.getEventByName(name);
+    }
 
 }

@@ -8,6 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class EventDTO {
+    private String email;
     private String name;
     private String description;
 }

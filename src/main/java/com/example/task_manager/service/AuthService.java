@@ -116,7 +116,7 @@ public class AuthService {
         }catch (Exception ignored){}
         return new ResponseEntity<>("We can`t done operation, please try check id, or update your token", HttpStatus.OK);
     }
-    public ResponseEntity<String> updateUser(UserDTO user, String token) {
+    public ResponseEntity<String> updateUser(Map<String, String> json) {
         Optional<User> previoslyUser = userRepository.findUserByEmail(user.getEmail());
         if (previoslyUser.isEmpty()){
             return new ResponseEntity<>("User with that email is not found please check for mistakes", HttpStatus.NOT_FOUND);
@@ -130,9 +130,10 @@ public class AuthService {
         return null;
     }
 
-    public ResponseEntity<String> deleteEvent(Long idEventToDelete, String token) {
-        if (isEnableModifyEvents(idEventToDelete, token)) {
-            eventRepository.deleteById(idEventToDelete);
+    public ResponseEntity<String> deleteEvent(String name, String token) {
+        Event event = eventRepository.findEventsByName(name);
+        if (isEnableModifyEvents(event.getId(), token)) {
+            eventRepository.deleteById(event.getId());
             return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Error, user is not created or token is invalid", HttpStatus.NOT_ACCEPTABLE);
@@ -172,16 +173,7 @@ public class AuthService {
         return eventDTOList;
     }
 
-    public ResponseEntity<String> getByIdEvent(String token, Long id) {
-        Optional<Event> event = eventRepository.findById(id);
-        if (isEnableModifyEvents(id, token)) {
-            return new ResponseEntity<>("Your event:" + event.get().getName() + " description:" + event.get().getDescription(), HttpStatus.OK);
-        }
-        if (event.isEmpty()) {
-            return new ResponseEntity<>("We can`t find any event with id:" + id, HttpStatus.OK);
-        }
-        else return new ResponseEntity<>("Your token is expired, please log in again", HttpStatus.OK);
-    }
+
 
     public void logout(String token) {
         userRepository.updateTokenToNull(token);

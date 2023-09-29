@@ -19,8 +19,6 @@ public class AuthorizeAccessController {
         this.authService = authService;
     }
 
-    // User controller
-
     @GetMapping("/user/login/")
     public String login(String email, String password) {
         return authService.login(email, password);
@@ -30,35 +28,31 @@ public class AuthorizeAccessController {
         authService.logout(token);
     }
 
-    @DeleteMapping("/user/delete/{token}/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable("token") String token, @PathVariable("email") String email) {
+    @DeleteMapping("/user/delete/{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable("email") String email,
+                                             @RequestBody String token) {
         return authService.deleteUser(email, token);
     }
-    @PutMapping("/user/update/{token}")
-    public ResponseEntity<String> updateUser(@RequestBody UserDTO user, @PathVariable("token") String token){
-        return authService.updateUser(user, token);
+    @PutMapping("/user/update/")
+    public ResponseEntity<String> updateUser(@RequestBody Map<String, String> json){
+        return authService.updateUser(json);
     }
     // Event controller
-
-
     @PostMapping("/event/create/")
     public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
         return authService.saveEvent(json);
     }
 
-    @GetMapping("/event/get/")
-    public ResponseEntity<String> getByIdEvent(String token, Long id) {
-        return authService.getByIdEvent(token, id);
-    }
-
+    // TODO: 29.09.2023 change method for sending events where current user is pinged
     @GetMapping("/event/get/all/")
-    public List<EventDTO> getAllEvents(String token) {
+    public List<EventDTO> getAllEventsWhereUserIsPinged(String token) {
         return authService.getAllEvents(token);
     }
 
-    @DeleteMapping("/event/delete/{token}/{id}")
-    public ResponseEntity<String> deleteEvent(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete) {
-        return authService.deleteEvent(idUserToDelete, token);
+    @DeleteMapping("/event/delete/{name}")
+    public ResponseEntity<String> deleteEvent(@PathVariable("name") String name,
+                                              @RequestBody String token) {
+        return authService.deleteEvent(name, token);
     }
     @PostMapping("/event/update/")
     public ResponseEntity<String> updateEvent(){
