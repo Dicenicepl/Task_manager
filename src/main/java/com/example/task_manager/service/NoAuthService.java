@@ -25,29 +25,44 @@ public class NoAuthService {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
+    private Optional<User> getUserByEmail(String email){
+        try{
+            return userRepository.findUserByEmail(email);
+        }catch (NullPointerException ignored){}
+        return Optional.empty();
+    }
 
     public ResponseEntity<String> register(User user) {
+        String username = user.getUsername();
+        String email = user.getEmail();
+        String password = user.getPassword();
         try {
-            if (user.getUsername() != null && user.getEmail() != null && user.getPassword() != null) {
-                userRepository.save(new User(user.getUsername(), user.getEmail(), user.getPassword()));
-                roleRepository.save(new ERole(user.getEmail(), "USER"));
+            if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                userRepository.save(new User(username, email, password));
+                roleRepository.save(new ERole(email, "USER"));
                 return new ResponseEntity<>("User name: " + user.getUsername() + "\nUser email: " + user.getEmail() + "\nis created", HttpStatus.CREATED);
             }
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>("User with this email is already exists", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Ups, we got problem", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Ups, we got problem" + e.getMessage(), HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("Eeee, lol even server developer don`t know what happened", HttpStatus.NOT_FOUND);
     }
 
     public ResponseEntity<String> getByEmail(String email) {
         try {
-            Optional<User> user = userRepository.findUserByEmail(email);
-            return new ResponseEntity<>("Here is your user: " + new UserDTO(user.get().getUsername(), user.get().getEmail(), roleRepository.findERoleByEmail(email).getRole()), HttpStatus.FOUND);
-        } catch (NullPointerException e){
+            Optional<User> user = getUserByEmail(email);
+            if (user.isPresent()) {
+                return new ResponseEntity<>("Here is your user: " + new UserDTO(user.get().getUsername(), user.get().getEmail()), HttpStatus.FOUND);
+            }
+        } catch (NullPointerException e) {
             return new ResponseEntity<>("We can`t find user with email: " + email, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("GETBYEMAIL: We got exception on: "+e.getMessage(), HttpStatus.OK);
+
         }
+        return new ResponseEntity<>("XD, I will not debug this code because you found somehow this error", HttpStatus.OK);
     }
     public ResponseEntity<String> getAll(){
         try {
@@ -56,12 +71,10 @@ public class NoAuthService {
             for (User user : users) {
                 userDTOList.add(new UserDTO(
                         user.getUsername(),
-                        user.getEmail(),
-                        roleRepository.findERoleByEmail(user.getEmail()).getRole()));
+                        user.getEmail()));
             }
             return new ResponseEntity<>("Here is your users:" + userDTOList, HttpStatus.OK);
         } catch (NullPointerException e) {
-            System.out.println(e.getMessage());
             return new ResponseEntity<>("We can`t find any users", HttpStatus.NOT_FOUND);
         }
     }

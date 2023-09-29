@@ -6,6 +6,7 @@ import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.role.Role;
 import com.example.task_manager.entity.role.RoleRepository;
 import com.example.task_manager.entity.user.User;
+import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.entity.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,6 +79,9 @@ public class AuthService {
         if (isExpiredToken(token)) {
             return false;
         }
+        if (user.isEmpty()){
+            return false;
+        }
         Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
         updateExpireTimeToken(token);
         return user.get().getId().equals(id) || userRole.equals(Role.ADMIN);
@@ -111,6 +115,19 @@ public class AuthService {
             }
         }catch (Exception ignored){}
         return new ResponseEntity<>("We can`t done operation, please try check id, or update your token", HttpStatus.OK);
+    }
+    public ResponseEntity<String> updateUser(UserDTO user, String token) {
+        Optional<User> previoslyUser = userRepository.findUserByEmail(user.getEmail());
+        if (previoslyUser.isEmpty()){
+            return new ResponseEntity<>("User with that email is not found please check for mistakes", HttpStatus.NOT_FOUND);
+        }
+        if (isEnableModifyUsers(previoslyUser.get().getId(), token)){
+            User userToSave = new User(user.getUsername(), user.getEmail(), user.getPassword());
+            userToSave.setId(previoslyUser.get().getId());
+            userRepository.save(userToSave);
+            return new ResponseEntity<>("Successfully updated user data", HttpStatus.OK);
+        }
+        return null;
     }
 
     public ResponseEntity<String> deleteEvent(Long idEventToDelete, String token) {

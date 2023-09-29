@@ -5,11 +5,16 @@ import lombok.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@RequiredArgsConstructor
 @AllArgsConstructor
 @ToString
 public class UserDTO {
     private String username;
     private String email;
-    private Role role;
+    private String password;
+
+    public UserDTO(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
 }

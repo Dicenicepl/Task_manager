@@ -24,7 +24,7 @@ public class Repeater {
         List<User> users = userRepository.findAllByExpireTimeBefore(new Time(System.currentTimeMillis()));
         try {
             for (User user : users) {
-                if (!user.getToken().equals("AAAAAAAA")) {
+                if (!user.getToken().equals("AAAAAAAAAA")) {
                     userRepository.updateTokenToNull(user.getToken());
                 }
             }

@@ -1,6 +1,7 @@
 package com.example.task_manager.controller;
 
 import com.example.task_manager.entity.event.EventDTO;
+import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,10 @@ public class AuthorizeAccessController {
     public ResponseEntity<String> deleteUser(@PathVariable("token") String token, @PathVariable("email") String email) {
         return authService.deleteUser(email, token);
     }
+    @PutMapping("/user/update/{token}")
+    public ResponseEntity<String> updateUser(@RequestBody UserDTO user, @PathVariable("token") String token){
+        return authService.updateUser(user, token);
+    }
     // Event controller
 
 
@@ -55,7 +60,7 @@ public class AuthorizeAccessController {
     public ResponseEntity<String> deleteEvent(@PathVariable("token") String token, @PathVariable("id") Long idUserToDelete) {
         return authService.deleteEvent(idUserToDelete, token);
     }
-    @PutMapping("/event/update/")
+    @PostMapping("/event/update/")
     public ResponseEntity<String> updateEvent(){
         return null;
     }

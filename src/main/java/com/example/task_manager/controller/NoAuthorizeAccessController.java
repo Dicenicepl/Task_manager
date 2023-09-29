@@ -13,12 +13,6 @@ public class NoAuthorizeAccessController {
     public NoAuthorizeAccessController(NoAuthService noAuthService) {
         this.noAuthService = noAuthService;
     }
-
-   @PostMapping("/user/register/")
-    public ResponseEntity<String> register(@RequestBody User user){
-        return noAuthService.register(user);
-    }
-
     @GetMapping("/user/get/")
     public ResponseEntity<String> getByEmail(String email){
         return noAuthService.getByEmail(email);
@@ -28,4 +22,10 @@ public class NoAuthorizeAccessController {
     public ResponseEntity<String> getAll(){
         return noAuthService.getAll();
     }
+    @PostMapping("/user/register/")
+    public ResponseEntity<String> register(@RequestBody User user){
+        return noAuthService.register(user);
+    }
+
+
 }
