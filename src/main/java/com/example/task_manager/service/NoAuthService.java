@@ -85,7 +85,7 @@ public class NoAuthService {
     public ResponseEntity<String> getEventByName(String name) {
         Event event = eventRepository.findEventsByName(name);
         if (event.getName().length() > 1) {
-            EventDTO sEvent = new EventDTO(event.getEmail(), event.getName(), event.getDescription());
+            EventDTO sEvent = new EventDTO(event.getOwner_email(), event.getName(), event.getDescription());
             return new ResponseEntity<>("Events:" + sEvent, HttpStatus.OK);
         }
         return new ResponseEntity<>("We can`t find any event", HttpStatus.OK);

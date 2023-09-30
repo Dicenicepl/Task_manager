@@ -2,6 +2,7 @@ package com.example.task_manager.entity.event;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 @Getter
 @Setter
@@ -12,14 +13,20 @@ import lombok.*;
 @Table(name = "events")
 public class Event {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    String email;
-    String name;
-    String description;
+    @SequenceGenerator(
+            name = "sequence",
+            sequenceName = "sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
+    private Long id;
+    private String owner_email;
+    private String name;
+    private String description;
+    private String[] project_users;
 
-    public Event(String email, String name, String description){
-        this.email = email;
+    public Event(String owner_email, String name, String description){
+        this.owner_email = owner_email;
         this.name = name;
         this.description = description;
     }

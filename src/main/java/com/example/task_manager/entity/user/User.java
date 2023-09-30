@@ -21,7 +21,6 @@ public class User {
             allocationSize = 1
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
-
     private Long id;
     private String username;
     @Column(unique = true)

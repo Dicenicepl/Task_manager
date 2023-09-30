@@ -17,14 +17,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional
     void deleteByEmail(String email);
 
+    List<User> findAllByExpireTimeBefore(Time expireTime);
+
     @Modifying
     @Transactional
     @Query("update User u set u.token = :token where u.id = :id")
     void addToken(Long id, String token);
 
     Optional<User> findUserByToken(String token);
-
-    List<User> findAllByExpireTimeBefore(Time expireTime);
 
     @Modifying
     @Transactional

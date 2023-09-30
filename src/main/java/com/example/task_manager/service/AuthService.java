@@ -68,7 +68,7 @@ public class AuthService {
         }
 
         String userEmail = user.get().getEmail();
-        String eventEmail = event.get().getEmail();
+        String eventEmail = event.get().getOwner_email();
         updateExpireTimeToken(token);
         return userEmail.equals(eventEmail) || userRole.equals(Role.ADMIN);
     }
@@ -172,7 +172,7 @@ public class AuthService {
             return new ArrayList<>();
         }
         for (Event event : eventRepository.findAll()) {
-            eventDTOList.add(new EventDTO(event.getEmail(), event.getName(), event.getDescription()));
+            eventDTOList.add(new EventDTO(event.getOwner_email(), event.getName(), event.getDescription()));
         }
         updateExpireTimeToken(token);
         return eventDTOList;
