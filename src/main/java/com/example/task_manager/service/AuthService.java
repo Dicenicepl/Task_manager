@@ -6,7 +6,6 @@ import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.role.Role;
 import com.example.task_manager.entity.role.RoleRepository;
 import com.example.task_manager.entity.user.User;
-import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.entity.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,7 +78,7 @@ public class AuthService {
         if (isExpiredToken(token)) {
             return false;
         }
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             return false;
         }
         Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
@@ -113,16 +112,22 @@ public class AuthService {
                 userRepository.deleteByEmail(user.get().getEmail());
                 return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
             }
-        }catch (Exception ignored){}
+        } catch (Exception ignored) {
+        }
         return new ResponseEntity<>("We can`t done operation, please try check id, or update your token", HttpStatus.OK);
     }
+
     public ResponseEntity<String> updateUser(Map<String, String> json) {
-        Optional<User> previoslyUser = userRepository.findUserByEmail(user.getEmail());
-        if (previoslyUser.isEmpty()){
+        String email = json.get("email");
+        String username = json.get("username");
+        String password = json.get("password");
+        String token = json.get("token");
+        Optional<User> previoslyUser = userRepository.findUserByEmail(email);
+        if (previoslyUser.isEmpty()) {
             return new ResponseEntity<>("User with that email is not found please check for mistakes", HttpStatus.NOT_FOUND);
         }
-        if (isEnableModifyUsers(previoslyUser.get().getId(), token)){
-            User userToSave = new User(user.getUsername(), user.getEmail(), user.getPassword());
+        if (isEnableModifyUsers(previoslyUser.get().getId(), token)) {
+            User userToSave = new User(username, email, password);
             userToSave.setId(previoslyUser.get().getId());
             userRepository.save(userToSave);
             return new ResponseEntity<>("Successfully updated user data", HttpStatus.OK);
@@ -167,12 +172,11 @@ public class AuthService {
             return new ArrayList<>();
         }
         for (Event event : eventRepository.findAll()) {
-            eventDTOList.add(new EventDTO(event.getName(), event.getDescription()));
+            eventDTOList.add(new EventDTO(event.getEmail(), event.getName(), event.getDescription()));
         }
         updateExpireTimeToken(token);
         return eventDTOList;
     }
-
 
 
     public void logout(String token) {
