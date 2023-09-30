@@ -1,7 +1,6 @@
 package com.example.task_manager.controller;
 
 import com.example.task_manager.entity.event.EventDTO;
-import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +36,7 @@ public class AuthorizeAccessController {
     public ResponseEntity<String> updateUser(@RequestBody Map<String, String> json){
         return authService.updateUser(json);
     }
+
     // Event controller
     @PostMapping("/event/create/")
     public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
@@ -58,5 +58,25 @@ public class AuthorizeAccessController {
     public ResponseEntity<String> updateEvent(){
         return null;
     }
+    @PutMapping("/event/add/user/{email}")
+    public ResponseEntity<String> addUserToProject(@PathVariable("email") String email,
+                                                   @RequestBody String token){
+        return null;
+    }
+    @DeleteMapping("/event/delete/user/{email}")
+    public ResponseEntity<String> deleteUserFromProject(@PathVariable("email") String email,
+                                                        @RequestBody String token){
+        return null;
+    }
+    @GetMapping("/event/get/user/")
+    public ResponseEntity<String> getAllUsersFromProject(String name,
+                                                         @RequestBody String token){
+        return null;
+    }
+    @PutMapping("/test")
+    public String test(String name){
+        return name;
+    }
+
 
 }
