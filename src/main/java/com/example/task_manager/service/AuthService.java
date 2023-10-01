@@ -10,6 +10,7 @@ import com.example.task_manager.entity.user.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Time;
 import java.util.*;
@@ -54,14 +55,13 @@ public class AuthService {
         return !(user.get().getExpireTime().getTime() + 1000L <= System.currentTimeMillis());
     }
 
-    private boolean isEnableModifyEvents(Long id, String token) {
+    private boolean isEnableModifyEvents(Optional<Event> event, String token) {
         Optional<User> user = userRepository.findUserByToken(token);
         if (isExpiredToken(token)) {
             return false;
         }
 
         Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
-        Optional<Event> event = eventRepository.findById(id);
 
         if (event.isEmpty()) {
             return false;
@@ -137,7 +137,7 @@ public class AuthService {
 
     public ResponseEntity<String> deleteEvent(String name, String token) {
         Event event = eventRepository.findEventsByName(name);
-        if (isEnableModifyEvents(event.getId(), token)) {
+        if (isEnableModifyEvents(Optional.of(event), token)) {
             eventRepository.deleteById(event.getId());
             return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
         }
@@ -183,4 +183,32 @@ public class AuthService {
         userRepository.updateTokenToNull(token);
     }
 
+    public ResponseEntity<String> updateEvent(Map<String, String> json) {
+        //return when json length is 0
+        if (json.isEmpty()) {
+            return new ResponseEntity<>("Body is empty, you need to check request", HttpStatus.BAD_REQUEST);
+        }
+        String name = json.get("name");
+        String token = json.get("token");
+        String description = json.get("description");
+        Event event = eventRepository.findEventsByName(name);
+        if (isEnableModifyEvents(Optional.of(event), token)){
+            Event eventToSave = new Event(event.getOwner_email(), name, description);
+            eventRepository.save(eventToSave);
+            return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Token is expired or you don`t have permission to update", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> addUserToProject(Map<String, String> json) {
+        return null;
+    }
+
+    public ResponseEntity<String> deleteUserFromProject(Map<String, String> json) {
+        return null;
+    }
+
+    public ResponseEntity<String> getAllUsersFromProject(String name, String token) {
+        return null;
+    }
 }
