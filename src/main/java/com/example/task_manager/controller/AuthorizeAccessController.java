@@ -27,8 +27,8 @@ public class AuthorizeAccessController {
         authService.logout(token);
     }
 
-    @DeleteMapping("/user/delete/{email}")
-    public ResponseEntity<String> deleteUser(@PathVariable("email") String email,
+    @DeleteMapping("/user/delete/")
+    public ResponseEntity<String> deleteUser(String email,
                                              @RequestBody String token) {
         return authService.deleteUser(email, token);
     }
@@ -45,12 +45,12 @@ public class AuthorizeAccessController {
 
     // TODO: 29.09.2023 change method for sending events where current user is pinged
     @GetMapping("/event/get/all/")
-    public List<EventDTO> getAllEventsWhereUserIsPinged(String token) {
+    public List<EventDTO> getAllEventsWhereUserIsPinged(@RequestBody String token) {
         return authService.getAllEvents(token);
     }
 
-    @DeleteMapping("/event/delete/{name}")
-    public ResponseEntity<String> deleteEvent(@PathVariable("name") String name,
+    @DeleteMapping("/event/delete/")
+    public ResponseEntity<String> deleteEvent(String name,
                                               @RequestBody String token) {
         return authService.deleteEvent(name, token);
     }
@@ -58,13 +58,13 @@ public class AuthorizeAccessController {
     public ResponseEntity<String> updateEvent(){
         return null;
     }
-    @PutMapping("/event/add/user/{email}")
-    public ResponseEntity<String> addUserToProject(@PathVariable("email") String email,
+    @PutMapping("/event/add/user/")
+    public ResponseEntity<String> addUserToProject(String email,
                                                    @RequestBody String token){
         return null;
     }
-    @DeleteMapping("/event/delete/user/{email}")
-    public ResponseEntity<String> deleteUserFromProject(@PathVariable("email") String email,
+    @DeleteMapping("/event/delete/user/")
+    public ResponseEntity<String> deleteUserFromProject(String email,
                                                         @RequestBody String token){
         return null;
     }
@@ -73,10 +73,5 @@ public class AuthorizeAccessController {
                                                          @RequestBody String token){
         return null;
     }
-    @PutMapping("/test")
-    public String test(String name){
-        return name;
-    }
-
 
 }
