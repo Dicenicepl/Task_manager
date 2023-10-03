@@ -23,7 +23,7 @@ public class Event {
     private String owner_email;
     private String name;
     private String description;
-    private String[] project_users;
+    private String project_users;
 
     public Event(String owner_email, String name, String description){
         this.owner_email = owner_email;
@@ -31,7 +31,7 @@ public class Event {
         this.description = description;
     }
 
-    public Event(String owner_email, String name, String description, String[] project_users) {
+    public Event(String owner_email, String name, String description, String project_users) {
         this.owner_email = owner_email;
         this.name = name;
         this.description = description;

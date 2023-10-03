@@ -160,7 +160,7 @@ public class AuthService {
         }
         String description = json.get("description");
         String email = user.get().getEmail();
-        Event event = new Event(email, name, description, new String[]{email});
+        Event event = new Event(email, name, description, email + ",");
         eventRepository.save(event);
         updateExpireTimeToken(user.get().getToken());
 
@@ -217,14 +217,7 @@ public class AuthService {
         String name = json.get("name");
         String user_email = json.get("user_email");
         Event event = eventRepository.findEventsByName(name);
-        String[] users = event.getProject_users();
-        List<String> list = new ArrayList<>(Arrays.stream(users).toList());
-        list.add(user_email);
-        try{
-            event.setProject_users((String[]) list.toArray());
-        }catch (ClassCastException e){
-            System.out.println(e.getMessage());
-        }
+
         eventRepository.save(event);
 
         return new ResponseEntity<>("OK", HttpStatus.OK);
