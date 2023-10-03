@@ -31,4 +31,10 @@ public class Event {
         this.description = description;
     }
 
+    public Event(String owner_email, String name, String description, String[] project_users) {
+        this.owner_email = owner_email;
+        this.name = name;
+        this.description = description;
+        this.project_users = project_users;
+    }
 }

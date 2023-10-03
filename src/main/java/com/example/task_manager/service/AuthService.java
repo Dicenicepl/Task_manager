@@ -159,7 +159,8 @@ public class AuthService {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.BAD_REQUEST);
         }
         String description = json.get("description");
-        Event event = new Event(user.get().getEmail(), name, description);
+        String email = user.get().getEmail();
+        Event event = new Event(email, name, description, new String[]{email});
         eventRepository.save(event);
         updateExpireTimeToken(user.get().getToken());
 
@@ -201,7 +202,32 @@ public class AuthService {
     }
 
     public ResponseEntity<String> addUserToProject(Map<String, String> json) {
-        return null;
+        if (json.isEmpty()){
+            return new ResponseEntity<>("Body is empty, please fiil up a body", HttpStatus.BAD_REQUEST);
+        }
+        String token = json.get("token");
+        if (isExpiredToken(token)){
+            return new ResponseEntity<>("Token is expired, please log in again", HttpStatus.BAD_REQUEST);
+        }
+        String owner_email = json.get("owner_email");
+        Optional<User> user = userRepository.findUserByEmail(owner_email);
+        if (!user.get().getToken().equals(token)){
+            return new ResponseEntity<>("You have no permission to add a new person to project", HttpStatus.NOT_ACCEPTABLE);
+        }
+        String name = json.get("name");
+        String user_email = json.get("user_email");
+        Event event = eventRepository.findEventsByName(name);
+        String[] users = event.getProject_users();
+        List<String> list = new ArrayList<>(Arrays.stream(users).toList());
+        list.add(user_email);
+        try{
+            event.setProject_users((String[]) list.toArray());
+        }catch (ClassCastException e){
+            System.out.println(e.getMessage());
+        }
+        eventRepository.save(event);
+
+        return new ResponseEntity<>("OK", HttpStatus.OK);
     }
 
     public ResponseEntity<String> deleteUserFromProject(Map<String, String> json) {
