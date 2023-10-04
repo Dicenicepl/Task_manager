@@ -3,9 +3,6 @@ package com.example.task_manager.entity.user;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Time;
-import java.util.Optional;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,14 +18,14 @@ public class User {
             allocationSize = 1
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
-    private Long id;
+    private Long user_id;
     private String username;
     @Column(unique = true)
     private String email;
     private String password;
-    @Column(unique = true)
-    private String token;
-    private Time expireTime = new Time(System.currentTimeMillis() + 10000L);
+//    @ManyToOne
+//    @JoinColumn(name = "event_id", nullable = false)
+//    private Event event;
 
     public User(String username, String email, String password) {
         this.username = username;

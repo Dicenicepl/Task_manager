@@ -1,8 +1,7 @@
 package com.example.task_manager.schedule;
 
-import com.example.task_manager.entity.user.User;
-import com.example.task_manager.entity.user.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.task_manager.entity.token.Token;
+import com.example.task_manager.entity.token.TokenRepository;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,19 +12,20 @@ import java.util.List;
 @Configuration
 @EnableScheduling
 public class Repeater {
-    private final UserRepository userRepository;
 
-    public Repeater(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private final TokenRepository tokenRepository;
+
+    public Repeater(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
     }
 
     @Scheduled(fixedDelay = 60000L)
     void checkExpireToken(){
-        List<User> users = userRepository.findAllByExpireTimeBefore(new Time(System.currentTimeMillis()));
+        List<Token> tokens = tokenRepository.findAllByExpireTimeBefore(new Time(System.currentTimeMillis()));
         try {
-            for (User user : users) {
-                if (!user.getToken().equals("AAAAAAAAAA")) {
-                    userRepository.updateTokenToNull(user.getToken());
+            for (Token token : tokens) {
+                if (!token.getGeneratedToken().equals("AAAAAAAAAA")) {
+                   tokenRepository.updateTokenToNull(token.getGeneratedToken());
                 }
             }
         }catch (NullPointerException e){

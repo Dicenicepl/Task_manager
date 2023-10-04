@@ -58,18 +58,18 @@ public class AuthorizeAccessController {
     public ResponseEntity<String> updateEvent(@RequestBody Map<String, String> json){
         return authService.updateEvent(json);
     }
-    @PostMapping("/event/add/user/")
-    public ResponseEntity<String> addUserToProject(@RequestBody Map<String, String> json){
-        return authService.addUserToProject(json);
-    }
-    @DeleteMapping("/event/delete/user/")
-    public ResponseEntity<String> deleteUserFromProject(@RequestBody Map<String, String> json){
-        return authService.deleteUserFromProject(json);
-    }
-    @GetMapping("/event/get/user/")
-    public ResponseEntity<String> getAllUsersFromProject(String name,
-                                                         @RequestBody String token){
-        return authService.getAllUsersFromProject(name, token);
-    }
+//    @PostMapping("/event/add/user/")
+//    public ResponseEntity<String> addUserToProject(@RequestBody Map<String, String> json){
+//        return authService.addUserToProject(json);
+//    }
+//    @DeleteMapping("/event/delete/user/")
+//    public ResponseEntity<String> deleteUserFromProject(@RequestBody Map<String, String> json){
+//        return authService.deleteUserFromProject(json);
+//    }
+//    @GetMapping("/event/get/user/")
+//    public ResponseEntity<String> getAllUsersFromProject(String name,
+//                                                         @RequestBody String token){
+//        return authService.getAllUsersFromProject(name, token);
+//    }
 
 }
