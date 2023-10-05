@@ -59,10 +59,6 @@ public class AuthService {
         return !(token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis());
     }
 
-    //    private boolean isUserHaveAccess(String generatedToken, User user) {
-//        Token token = tokenRepository.findTokenByGeneratedToken(generatedToken);
-//        return token.getGeneratedToken().equals(user.getEmail());
-//    }
     private String getEmailFromToken(String generatedToken) {
         Token token = tokenRepository.findTokenByGeneratedToken(generatedToken);
         if (token != null) {
@@ -101,15 +97,19 @@ public class AuthService {
 
     public String login(String email, String password) {
         Optional<User> user = userRepository.findUserByEmail(email);
+        String token;
         if (user.isEmpty()) {
             return "We can`t find user with that email";
         }
         if (!user.get().getPassword().equals(password)) {
             return "Password is incorrect";
         }
-        String token = generatorToken(email);
+        token = generatorToken(email);
         updateExpireTimeToken(token);
         return token;
+    }
+    public void logout(String token) {
+        tokenRepository.updateTokenToNull(token);
     }
 
     public ResponseEntity<String> deleteUser(String email, String token) {
@@ -121,7 +121,7 @@ public class AuthService {
             }
         } catch (Exception ignored) {
         }
-        return new ResponseEntity<>("We can`t done operation, please try check id, or update your token", HttpStatus.OK);
+        return new ResponseEntity<>("We can`t done operation, please try check email, or update your token", HttpStatus.OK);
     }
 
     public ResponseEntity<String> updateUser(Map<String, String> json) {
@@ -129,13 +129,13 @@ public class AuthService {
         String username = json.get("username");
         String password = json.get("password");
         String token = json.get("token");
-        Optional<User> previoslyUser = userRepository.findUserByEmail(email);
-        if (previoslyUser.isEmpty()) {
+        Optional<User> previouslyUser = userRepository.findUserByEmail(email);
+        if (previouslyUser.isEmpty()) {
             return new ResponseEntity<>("User with that email is not found please check for mistakes", HttpStatus.NOT_FOUND);
         }
-        if (isEnableModifyUsers(previoslyUser, token)) {
+        if (isEnableModifyUsers(previouslyUser, token)) {
             User userToSave = new User(username, email, password);
-            userToSave.setUser_id(previoslyUser.get().getUser_id());
+            userToSave.setUser_id(previouslyUser.get().getUser_id());
             userRepository.save(userToSave);
             return new ResponseEntity<>("Successfully updated user data", HttpStatus.OK);
         }
@@ -155,23 +155,23 @@ public class AuthService {
         return new ResponseEntity<>("You have no permission to delete event", HttpStatus.BAD_REQUEST);
     }
 
-    // TODO: 05.10.2023 zmienić schemat wykrywania błędu
+    // TODO: 05.10.2023 test that
     public ResponseEntity<String> saveEvent(Map<String, String> json) {
-        String name = json.get("name");
         String generatedToken = json.get("token");
-        String email = getEmailFromToken(generatedToken);
-        Optional<User> user = userRepository.findUserByEmail(email);
-        if (user.isEmpty()) {
-            return new ResponseEntity<>("You need to update your token", HttpStatus.BAD_REQUEST);
-        }
+        String owner_email = getEmailFromToken(generatedToken);
+        String name = json.get("name");
+        String description = json.get("description");
+        Event event;
         if (eventRepository.existsEventByName(name)) {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.BAD_REQUEST);
         }
-        String description = json.get("description");
-        Event event = new Event(email, name, description);
-        eventRepository.save(event);
+        try {
+            event = new Event(owner_email, name, description);
+            eventRepository.save(event);
+        }catch (NullPointerException e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
         updateExpireTimeToken(generatedToken);
-
         return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
     }
 
@@ -198,7 +198,7 @@ public class AuthService {
             return new ResponseEntity<>("Event with that name didn`t exist", HttpStatus.NOT_FOUND);
         }
         if (isEnableModifyEvents(event, token)){
-            Event eventToSave = new Event(event.get().getOwner_email(), name, description);
+            Event eventToSave = new Event(event.get().getEvent_id(), event.get().getOwner_email(), name, description);
             eventRepository.save(eventToSave);
             return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
         }
@@ -208,9 +208,7 @@ public class AuthService {
         return new ResponseEntity<>("You don`t have permission to update this event", HttpStatus.UNAUTHORIZED);
     }
 
-    public void logout(String token) {
-        tokenRepository.updateTokenToNull(token);
-    }
+
 
 
 
