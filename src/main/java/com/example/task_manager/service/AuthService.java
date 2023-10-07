@@ -31,6 +31,7 @@ public class AuthService {
         this.tokenRepository = tokenRepository;
     }
 
+
     private String generatorToken(String email) {
         String[] array = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
         StringBuilder token = new StringBuilder();
@@ -50,7 +51,7 @@ public class AuthService {
         }
     }
 
-    private boolean isExpiredToken(String tokenToCheck) {
+    public boolean isExpiredToken(String tokenToCheck) {
         Token token = tokenRepository.findTokenByGeneratedToken(tokenToCheck);
         if (token.toString().isEmpty()) {
             System.out.println("CAUTION - TOKEN IS EXPIRED");
