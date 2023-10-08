@@ -53,11 +53,14 @@ public class AuthService {
 
     public boolean isExpiredToken(String tokenToCheck) {
         Token token = tokenRepository.findTokenByGeneratedToken(tokenToCheck);
-        if (token.toString().isEmpty()) {
-            System.out.println("CAUTION - TOKEN IS EXPIRED");
+        try{
+            if (token == null){
+                return true;
+            }
+        }catch (NullPointerException e){
             return true;
         }
-        return !(token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis());
+        return token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis();
     }
 
     private String getEmailFromToken(String generatedToken) {
