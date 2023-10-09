@@ -98,8 +98,10 @@ public class AuthService {
         return user.get().getEmail().equals(getEmailFromToken(token)) || userRole.equals(Role.ADMIN);
     }
 
-
-    public String login(String email, String password) {
+    // TODO: 09.10.2023 check if after create user || login app create new column in database tokens
+    public String login(Map<String, String> json) {
+        String email = json.get("email");
+        String password = json.get("password");
         Optional<User> user = userRepository.findUserByEmail(email);
         String token;
         if (user.isEmpty()) {

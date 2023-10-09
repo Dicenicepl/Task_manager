@@ -1,11 +1,25 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const loginButton = document.getElementById("login_button");
+    loginButton.addEventListener("click", function () {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        login_api_request(email, password);
+    });
+});
 
-function test() {
-    let email = document.getElementById("email").value
-    let password = document.getElementById("password").value
-    if (email.length !== 0 && password.length !== 0){
-        console.log("email: " + email)
-        console.log("password: " + password)
+function login_api_request(email, password) {
+    const request = new XMLHttpRequest();
+    request.open('POST', 'http://localhost:3000/api/auth/user/login/');
+    request.setRequestHeader('Content-Type', 'application/json');
+    request.onload = function () {
+        if (request.status === 200) {
+            alert('Zalogowano pomyślnie');
+        } else {
+            alert('Wystąpił błąd podczas logowania');
+        }
     }
-    document.getElementById("toChange").innerHTML = "Sup bro";
 
+    const data = JSON.stringify({ email: email, password: password });
+
+    request.send(data);
 }

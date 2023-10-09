@@ -18,9 +18,9 @@ public class AuthorizeAccessController {
         this.authService = authService;
     }
 
-    @GetMapping("/user/login/")
-    public String login(String email, String password) {
-        return authService.login(email, password);
+    @PostMapping("/user/login/")
+    public String login(@RequestBody Map<String, String> json) {
+        return authService.login(json);
     }
     @GetMapping("/user/logout/")
     public void logout(String token){
