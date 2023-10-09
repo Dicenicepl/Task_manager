@@ -1,1 +1,0 @@
-//po wciśnieciu przycisku login powinno tworzyć cookie dla tokenu i dla emaila. Token jak i email powinnien wchodzić do body dla przyjemniejszej pracy
