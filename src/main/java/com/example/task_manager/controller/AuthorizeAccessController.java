@@ -19,7 +19,7 @@ public class AuthorizeAccessController {
     }
 
     @PostMapping("/user/login/")
-    public String login(@RequestBody Map<String, String> json) {
+    public ResponseEntity<String> login(@RequestBody Map<String, String> json) {
         return authService.login(json);
     }
     @GetMapping("/user/logout/")

@@ -99,20 +99,20 @@ public class AuthService {
     }
 
     // TODO: 09.10.2023 check if after create user || login app create new column in database tokens
-    public String login(Map<String, String> json) {
+    public ResponseEntity<String> login(Map<String, String> json) {
         String email = json.get("email");
         String password = json.get("password");
         Optional<User> user = userRepository.findUserByEmail(email);
         String token;
         if (user.isEmpty()) {
-            return "We can`t find user with that email";
+            return new ResponseEntity<>("We can`t find user with that email", HttpStatus.NOT_FOUND);
         }
         if (!user.get().getPassword().equals(password)) {
-            return "Password is incorrect";
+            return new ResponseEntity<>("Password is incorrect", HttpStatus.BAD_REQUEST);
         }
         token = generatorToken(email);
         updateExpireTimeToken(token);
-        return token;
+        return new ResponseEntity<>(token, HttpStatus.OK);
     }
     public void logout(String token) {
         tokenRepository.updateTokenToNull(token);
