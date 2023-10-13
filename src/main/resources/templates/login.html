@@ -3,15 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <script type="text/javascript" src="../static/js/script.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script type="text/javascript" src="/js/login.js"></script>
 </head>
 <body>
-<form id="login_form" method="post">
-    <label for="email">Email:</label>
-    <input type="email" name="email" id="email" required>
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" required>
-    <button type="button" id="login_button">Click me</button>
-</form>
+<div class="login-menu">
+    <div class="email-column">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" placeholder="Your email...">
+    </div>
+    <div class="password-column">
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" placeholder="Your password...">
+    </div>
+    <button type="button" id="login_button">Login</button>
+    <a href="http://localhost:3000/register">Register</a>
+</div>
+
 </body>
 </html>

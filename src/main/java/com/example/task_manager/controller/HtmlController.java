@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HtmlController {
 
-    @GetMapping("/user/get/{id}")
-    public String getUserById(){
+    @GetMapping("/user/get/")
+    public String getUserByEmail(){
         return "profile";
     }
     @GetMapping("/user/get/all")
