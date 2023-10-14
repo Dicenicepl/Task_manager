@@ -1,6 +1,5 @@
 package com.example.task_manager.entity.user;
 
-import com.example.task_manager.entity.role.Role;
 import lombok.*;
 
 @Getter
