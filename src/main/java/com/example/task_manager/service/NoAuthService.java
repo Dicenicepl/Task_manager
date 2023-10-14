@@ -8,6 +8,8 @@ import com.example.task_manager.entity.user.User;
 import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.entity.user.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ public class NoAuthService {
         return Optional.empty();
     }
 
-    public ResponseEntity<String> register(User user) {
+    public ResponseEntity<String> register(UserDTO user) {
         String username = user.getUsername();
         String email = user.getEmail();
         String password = user.getPassword();
@@ -54,18 +56,19 @@ public class NoAuthService {
     }
 
     public ResponseEntity<String> getByEmail(String email) {
+        Optional<User> user = getUserByEmail(email);
         try {
-            Optional<User> user = getUserByEmail(email);
             if (user.isPresent()) {
-                return new ResponseEntity<>("Here is your user: " + new UserDTO(user.get().getUsername(), user.get().getEmail()), HttpStatus.FOUND);
+                UserDTO userDTO = new UserDTO(user.get().getUsername(), user.get().getEmail());
+                ObjectMapper mapper = new ObjectMapper();
+                String json = mapper.writeValueAsString(userDTO);
+                return new ResponseEntity<>(json, HttpStatus.OK);
             }
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>("We can`t find user with email: " + email, HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>("GETBYEMAIL: We got exception on: "+e.getMessage(), HttpStatus.OK);
-
+        }catch (JsonProcessingException e) {
+            System.out.println("GETBYEMAIL: We got exception on: "+e.getMessage());
+            return new ResponseEntity<>("Error in translating to json", HttpStatus.OK);
         }
-        return new ResponseEntity<>("XD, I will not debug this code because you found somehow this error", HttpStatus.OK);
+        return new ResponseEntity<>("We can`t find user with email: " + email, HttpStatus.NOT_FOUND);
     }
     public ResponseEntity<String> getAll(){
         try {
@@ -84,11 +87,12 @@ public class NoAuthService {
 
     public ResponseEntity<String> getEventByName(String name) {
         Event event = eventRepository.findEventsByName(name);
-        if (event.getName().length() > 1) {
-            EventDTO sEvent = new EventDTO(event.getOwner_email(), event.getName(), event.getDescription());
-            return new ResponseEntity<>("Events:" + sEvent, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("We can`t find any event", HttpStatus.OK);
-
+        try {
+            if (event.getName().length() > 1) {
+                EventDTO sEvent = new EventDTO(event.getOwner_email(), event.getName(), event.getDescription());
+                return new ResponseEntity<>("Events:" + sEvent, HttpStatus.OK);
+            }
+        }catch (NullPointerException ignored){}
+        return new ResponseEntity<>("We can`t find any event", HttpStatus.NOT_FOUND);
     }
 }
