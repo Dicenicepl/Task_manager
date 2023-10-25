@@ -97,6 +97,7 @@ public class AuthService {
         updateExpireTimeToken(token);
         return user.get().getEmail().equals(getEmailFromToken(token)) || userRole.equals(Role.ADMIN);
     }
+
     private void saveTokenToDatabase(String email, String generatedToken) {
         Token token = new Token(email, generatedToken);
         tokenRepository.save(token);
@@ -108,7 +109,7 @@ public class AuthService {
         String password = json.get("password");
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isEmpty()) {
-            return new ResponseEntity<>("We can`t find user with that email", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("We can`t find user with that email", HttpStatus.OK);
         }
         if (!user.get().getPassword().equals(password)) {
             return new ResponseEntity<>("Password is incorrect", HttpStatus.BAD_REQUEST);
@@ -119,15 +120,20 @@ public class AuthService {
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
-
-
-    public void logout(String token) {
-        tokenRepository.updateTokenToNull(token);
+    public void logout(String email, String generatedToken) {
+        Token token = tokenRepository.findTokenByGeneratedToken(generatedToken);
+        try{
+            if (token.getEmail().equals(email)) {
+                tokenRepository.updateTokenToNull(generatedToken);
+            }
+        }catch (NullPointerException e ){
+            System.out.println("LOGOUT: NULL");
+        }
     }
 
     public ResponseEntity<String> deleteUser(String email, String token) {
         Optional<User> user = userRepository.findUserByEmail(email);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return new ResponseEntity<>("We can`t user with that email", HttpStatus.OK);
         }
         if (isEnableModifyUsers(user, token)) {

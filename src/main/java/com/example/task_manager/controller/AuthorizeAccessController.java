@@ -23,8 +23,8 @@ public class AuthorizeAccessController {
         return authService.login(json);
     }
     @GetMapping("/user/logout/")
-    public void logout(String token){
-        authService.logout(token);
+    public void logout(String email, String token){
+        authService.logout(email, token);
     }
 
     @DeleteMapping("/user/delete/")
