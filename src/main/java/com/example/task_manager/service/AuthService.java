@@ -53,11 +53,11 @@ public class AuthService {
 
     public boolean isExpiredToken(String tokenToCheck) {
         Token token = tokenRepository.findTokenByGeneratedToken(tokenToCheck);
-        try{
-            if (token == null){
+        try {
+            if (token == null) {
                 return true;
             }
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return true;
         }
         return token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis();
@@ -114,18 +114,16 @@ public class AuthService {
         updateExpireTimeToken(token);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
+
     public void logout(String token) {
         tokenRepository.updateTokenToNull(token);
     }
 
     public ResponseEntity<String> deleteUser(String email, String token) {
         Optional<User> user = userRepository.findUserByEmail(email);
-        try {
-            if (isEnableModifyUsers(user, token)) {
-                userRepository.deleteByEmail(email);
-                return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
-            }
-        } catch (Exception ignored) {
+        if (isEnableModifyUsers(user, token)) {
+            userRepository.deleteByEmail(email);
+            return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("We can`t done operation, please try check email, or update your token", HttpStatus.OK);
     }
@@ -155,7 +153,7 @@ public class AuthService {
                 eventRepository.deleteByName(name);
                 return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
             }
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return new ResponseEntity<>("No event with that name", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>("You have no permission to delete event", HttpStatus.BAD_REQUEST);
@@ -174,7 +172,7 @@ public class AuthService {
         try {
             event = new Event(owner_email, name, description);
             eventRepository.save(event);
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         updateExpireTimeToken(generatedToken);
@@ -193,29 +191,27 @@ public class AuthService {
         updateExpireTimeToken(token);
         return eventDTOList;
     }
-    public ResponseEntity<String> updateEvent(Map<String, String> json){
+
+    public ResponseEntity<String> updateEvent(Map<String, String> json) {
         String name = json.get("name");
         String token = json.get("token");
         String description = json.get("description");
         Optional<Event> event;
         try {
             event = Optional.of(eventRepository.findEventsByName(name));
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             return new ResponseEntity<>("Event with that name didn`t exist", HttpStatus.NOT_FOUND);
         }
-        if (isEnableModifyEvents(event, token)){
+        if (isEnableModifyEvents(event, token)) {
             Event eventToSave = new Event(event.get().getEvent_id(), event.get().getOwner_email(), name, description);
             eventRepository.save(eventToSave);
             return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
         }
-        if (isExpiredToken(token)){
+        if (isExpiredToken(token)) {
             return new ResponseEntity<>("Your token is expired, please update your token", HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>("You don`t have permission to update this event", HttpStatus.UNAUTHORIZED);
     }
-
-
-
 
 
 //    public ResponseEntity<String> addUserToProject(Map<String, String> json) {
