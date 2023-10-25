@@ -23,7 +23,6 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final TokenRepository tokenRepository;
 
-    // TODO: 05.10.2023 check NULLPOINTEDEXCEPTION in toSTRING
     public AuthService(EventRepository eventRepository, UserRepository userRepository, RoleRepository roleRepository, TokenRepository tokenRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
@@ -51,7 +50,7 @@ public class AuthService {
         }
     }
 
-    public boolean isExpiredToken(String tokenToCheck) {
+    private boolean isExpiredToken(String tokenToCheck) {
         Token token = tokenRepository.findTokenByGeneratedToken(tokenToCheck);
         try {
             if (token == null) {
@@ -63,6 +62,7 @@ public class AuthService {
         return token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis();
     }
 
+    // TODO: 25.10.2023 set return value to null 
     private String getEmailFromToken(String generatedToken) {
         Token token = tokenRepository.findTokenByGeneratedToken(generatedToken);
         if (token != null) {
@@ -97,23 +97,29 @@ public class AuthService {
         updateExpireTimeToken(token);
         return user.get().getEmail().equals(getEmailFromToken(token)) || userRole.equals(Role.ADMIN);
     }
+    private void saveTokenToDatabase(String email, String generatedToken) {
+        Token token = new Token(email, generatedToken);
+        tokenRepository.save(token);
+    }
 
-    // TODO: 09.10.2023 check if after create user || login app create new column in database tokens
+
     public ResponseEntity<String> login(Map<String, String> json) {
         String email = json.get("email");
         String password = json.get("password");
         Optional<User> user = userRepository.findUserByEmail(email);
-        String token;
         if (user.isEmpty()) {
             return new ResponseEntity<>("We can`t find user with that email", HttpStatus.NOT_FOUND);
         }
         if (!user.get().getPassword().equals(password)) {
             return new ResponseEntity<>("Password is incorrect", HttpStatus.BAD_REQUEST);
         }
-        token = generatorToken(email);
+        String token = generatorToken(email);
+        saveTokenToDatabase(email, token);
         updateExpireTimeToken(token);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
+
+
 
     public void logout(String token) {
         tokenRepository.updateTokenToNull(token);
@@ -121,11 +127,14 @@ public class AuthService {
 
     public ResponseEntity<String> deleteUser(String email, String token) {
         Optional<User> user = userRepository.findUserByEmail(email);
+        if(user.isEmpty()){
+            return new ResponseEntity<>("We can`t user with that email", HttpStatus.OK);
+        }
         if (isEnableModifyUsers(user, token)) {
             userRepository.deleteByEmail(email);
             return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
         }
-        return new ResponseEntity<>("We can`t done operation, please try check email, or update your token", HttpStatus.OK);
+        return new ResponseEntity<>("We can`t done operation update your token", HttpStatus.OK);
     }
 
     public ResponseEntity<String> updateUser(Map<String, String> json) {
