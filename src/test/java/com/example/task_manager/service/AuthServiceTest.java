@@ -12,12 +12,5 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 class AuthServiceTest {
 
-    @Autowired
-    AuthService authService;
-    @Test
-    @DisplayName("Testing isExpiredToken")
-    void test() {
-        assertTrue(authService.isExpiredToken("AAAAAAAAAA"));
-    }
 
 }

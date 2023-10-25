@@ -26,4 +26,9 @@ public class Token {
     @Column(unique = true)
     private String generatedToken;
     private Time expireTime = new Time(System.currentTimeMillis() + 10000L);
+
+    public Token(String email, String generatedToken) {
+        this.email = email;
+        this.generatedToken = generatedToken;
+    }
 }
