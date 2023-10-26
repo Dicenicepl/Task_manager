@@ -62,13 +62,13 @@ public class AuthService {
         return token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis();
     }
 
-    // TODO: 25.10.2023 set return value to null 
+
     private String getEmailFromToken(String generatedToken) {
         Token token = tokenRepository.findTokenByGeneratedToken(generatedToken);
         if (token != null) {
             return token.getEmail();
         }
-        return "0";
+        return null;
     }
 
     private boolean isEnableModifyEvents(Optional<Event> event, String generatedToken) {
@@ -76,26 +76,27 @@ public class AuthService {
             return false;
         }
         Optional<User> user = userRepository.findUserByEmail(getEmailFromToken(generatedToken));
-        if (event.isEmpty()) {
-            return false;
+        if (event.isPresent()) {
+            Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
+            String userEmail = user.get().getEmail();
+            String eventOwnerEmail = event.get().getOwner_email();
+            updateExpireTimeToken(generatedToken);
+            return userEmail.equals(eventOwnerEmail) || userRole.equals(Role.ADMIN);
         }
-        Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
-        String userEmail = user.get().getEmail();
-        String eventOwnerEmail = event.get().getOwner_email();
-        updateExpireTimeToken(generatedToken);
-        return userEmail.equals(eventOwnerEmail) || userRole.equals(Role.ADMIN);
+        return false;
     }
 
     private boolean isEnableModifyUsers(Optional<User> user, String token) {
         if (isExpiredToken(token)) {
             return false;
         }
-        if (user.isEmpty()) {
-            return false;
+        if (user.isPresent()) {
+            Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
+            updateExpireTimeToken(token);
+            return user.get().getEmail().equals(getEmailFromToken(token)) || userRole.equals(Role.ADMIN);
+
         }
-        Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
-        updateExpireTimeToken(token);
-        return user.get().getEmail().equals(getEmailFromToken(token)) || userRole.equals(Role.ADMIN);
+        return false;
     }
 
     private void saveTokenToDatabase(String email, String generatedToken) {
@@ -122,11 +123,11 @@ public class AuthService {
 
     public void logout(String email, String generatedToken) {
         Token token = tokenRepository.findTokenByGeneratedToken(generatedToken);
-        try{
+        try {
             if (token.getEmail().equals(email)) {
                 tokenRepository.updateTokenToNull(generatedToken);
             }
-        }catch (NullPointerException e ){
+        } catch (NullPointerException e) {
             System.out.println("LOGOUT: NULL");
         }
     }
@@ -184,12 +185,14 @@ public class AuthService {
         if (eventRepository.existsEventByName(name)) {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.BAD_REQUEST);
         }
-        try {
+//        try {
+        if (owner_email != null) {
             event = new Event(owner_email, name, description);
             eventRepository.save(event);
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
+//        } catch (NullPointerException e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+//        }
         updateExpireTimeToken(generatedToken);
         return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
     }
