@@ -175,7 +175,7 @@ public class AuthService {
         return new ResponseEntity<>("You have no permission to delete event", HttpStatus.BAD_REQUEST);
     }
 
-    // TODO: 05.10.2023 test that
+
     public ResponseEntity<String> saveEvent(Map<String, String> json) {
         String generatedToken = json.get("token");
         String owner_email = getEmailFromToken(generatedToken);
@@ -185,16 +185,13 @@ public class AuthService {
         if (eventRepository.existsEventByName(name)) {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.BAD_REQUEST);
         }
-//        try {
         if (owner_email != null) {
             event = new Event(owner_email, name, description);
             eventRepository.save(event);
+            return new ResponseEntity<>("Event has been saved", HttpStatus.OK);
         }
-//        } catch (NullPointerException e) {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-//        }
         updateExpireTimeToken(generatedToken);
-        return new ResponseEntity<>("Event has been saved", HttpStatus.CREATED);
+        return new ResponseEntity<>("Check user token", HttpStatus.OK);
     }
 
     // TODO: 05.10.2023 change returned variable for more information about what`s going on
