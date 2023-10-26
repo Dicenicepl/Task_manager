@@ -182,6 +182,9 @@ public class AuthService {
         String name = json.get("name");
         String description = json.get("description");
         Event event;
+        if (name == null){
+            return new ResponseEntity<>("Retry put name", HttpStatus.BAD_REQUEST);
+        }
         if (eventRepository.existsEventByName(name)) {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.BAD_REQUEST);
         }
