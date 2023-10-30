@@ -38,6 +38,15 @@ class AuthServiceTest {
         assertEquals(new ResponseEntity<>("Check user token", HttpStatus.OK), authService.saveEvent(json));
         authService.deleteEvent("project", USER_TOKEN);
     }
-
+    @Test
+    @DisplayName("Null name")
+    public void test2(){
+        Map<String, String> json = new HashMap<>();
+        json.put("token", USER_TOKEN);
+        json.put("name", null);
+        json.put("description", "input here");
+        assertEquals(new ResponseEntity<>("Retry put name", HttpStatus.BAD_REQUEST), authService.saveEvent(json));
+        authService.deleteEvent("project", USER_TOKEN);
+    }
 
 }

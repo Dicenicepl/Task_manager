@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Time;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Service
 public class AuthService {
@@ -101,7 +102,11 @@ public class AuthService {
 
     private void saveTokenToDatabase(String email, String generatedToken) {
         Token token = new Token(email, generatedToken);
-        tokenRepository.save(token);
+        try {
+            tokenRepository.save(token);
+        }catch (Exception ignored){
+            //Catch when unique key (email) values is already exists on table 'tokens'
+        }
     }
 
 
@@ -151,7 +156,7 @@ public class AuthService {
         String token = json.get("token");
         Optional<User> previouslyUser = userRepository.findUserByEmail(email);
         if (previouslyUser.isEmpty()) {
-            return new ResponseEntity<>("User with that email is not found please check for mistakes", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("User with that email is not found please check for mistakes", HttpStatus.BAD_REQUEST);
         }
         if (isEnableModifyUsers(previouslyUser, token)) {
             User userToSave = new User(username, email, password);
@@ -186,7 +191,7 @@ public class AuthService {
             return new ResponseEntity<>("Retry put name", HttpStatus.BAD_REQUEST);
         }
         if (eventRepository.existsEventByName(name)) {
-            return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.OK);
         }
         if (owner_email != null) {
             event = new Event(owner_email, name, description);

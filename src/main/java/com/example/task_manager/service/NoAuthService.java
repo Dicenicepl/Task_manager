@@ -68,7 +68,7 @@ public class NoAuthService {
             System.out.println("GETBYEMAIL: We got exception on: "+e.getMessage());
             return new ResponseEntity<>("Error in translating to json", HttpStatus.OK);
         }
-        return new ResponseEntity<>("We can`t find user with email: " + email, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("We can`t find user with email: " + email, HttpStatus.OK);
     }
     public ResponseEntity<String> getAll(){
         try {
