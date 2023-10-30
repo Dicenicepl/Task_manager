@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Time;
 import java.util.*;
-import java.util.logging.Logger;
 
 @Service
 public class AuthService {
@@ -115,7 +114,7 @@ public class AuthService {
         String password = json.get("password");
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isEmpty()) {
-            return new ResponseEntity<>("We can`t find user with that email", HttpStatus.OK);
+            return new ResponseEntity<>("We can`t find user with that email", HttpStatus.BAD_REQUEST);
         }
         if (!user.get().getPassword().equals(password)) {
             return new ResponseEntity<>("Password is incorrect", HttpStatus.BAD_REQUEST);
