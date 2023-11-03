@@ -52,11 +52,7 @@ public class AuthService {
 
     private boolean isExpiredToken(String tokenToCheck) {
         Token token = tokenRepository.findTokenByGeneratedToken(tokenToCheck);
-        try {
-            if (token == null) {
-                return true;
-            }
-        } catch (NullPointerException e) {
+        if (token == null) {
             return true;
         }
         return token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis();
@@ -72,29 +68,33 @@ public class AuthService {
     }
 
     private boolean isEnableModifyEvents(Optional<Event> event, String generatedToken) {
+        Optional<User> user;
+        Role userRole;
+        String userEmail;
+        String eventOwnerEmail;
         if (isExpiredToken(generatedToken)) {
             return false;
         }
-        Optional<User> user = userRepository.findUserByEmail(getEmailFromToken(generatedToken));
-        if (event.isPresent()) {
-            Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
-            String userEmail = user.get().getEmail();
-            String eventOwnerEmail = event.get().getOwner_email();
-            updateExpireTimeToken(generatedToken);
+        user = userRepository.findUserByEmail(getEmailFromToken(generatedToken));
+        if (event.isPresent() && user.isPresent()) {
+            userEmail = user.get().getEmail();
+            userRole = roleRepository.findERoleByEmail(userEmail).getRole();
+            eventOwnerEmail = event.get().getOwner_email();
             return userEmail.equals(eventOwnerEmail) || userRole.equals(Role.ADMIN);
         }
         return false;
     }
 
     private boolean isEnableModifyUsers(Optional<User> user, String token) {
+        Role userRole;
+        String userEmail;
         if (isExpiredToken(token)) {
             return false;
         }
         if (user.isPresent()) {
-            Role userRole = roleRepository.findERoleByEmail(user.get().getEmail()).getRole();
-            updateExpireTimeToken(token);
-            return user.get().getEmail().equals(getEmailFromToken(token)) || userRole.equals(Role.ADMIN);
-
+            userEmail = user.get().getEmail();
+            userRole = roleRepository.findERoleByEmail(userEmail).getRole();
+            return userEmail.equals(getEmailFromToken(token)) || userRole.equals(Role.ADMIN);
         }
         return false;
     }
@@ -103,7 +103,7 @@ public class AuthService {
         Token token = new Token(email, generatedToken);
         try {
             tokenRepository.save(token);
-        }catch (Exception ignored){
+        } catch (Exception ignored) {
             //Catch when unique key (email) values is already exists on table 'tokens'
         }
     }
@@ -143,6 +143,7 @@ public class AuthService {
         }
         if (isEnableModifyUsers(user, token)) {
             userRepository.deleteByEmail(email);
+            updateExpireTimeToken(token);
             return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("We can`t done operation update your token", HttpStatus.OK);
@@ -160,6 +161,7 @@ public class AuthService {
         if (isEnableModifyUsers(previouslyUser, token)) {
             User userToSave = new User(username, email, password);
             userToSave.setUser_id(previouslyUser.get().getUser_id());
+            updateExpireTimeToken(token);
             userRepository.save(userToSave);
             return new ResponseEntity<>("Successfully updated user data", HttpStatus.OK);
         }
@@ -170,6 +172,7 @@ public class AuthService {
         Event event = eventRepository.findEventsByName(name);
         try {
             if (isEnableModifyEvents(Optional.of(event), token)) {
+                updateExpireTimeToken(token);
                 eventRepository.deleteByName(name);
                 return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
             }
@@ -186,7 +189,7 @@ public class AuthService {
         String name = json.get("name");
         String description = json.get("description");
         Event event;
-        if (name == null){
+        if (name == null) {
             return new ResponseEntity<>("Retry put name", HttpStatus.BAD_REQUEST);
         }
         if (eventRepository.existsEventByName(name)) {
@@ -226,6 +229,7 @@ public class AuthService {
         }
         if (isEnableModifyEvents(event, token)) {
             Event eventToSave = new Event(event.get().getEvent_id(), event.get().getOwner_email(), name, description);
+            updateExpireTimeToken(token);
             eventRepository.save(eventToSave);
             return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
         }
