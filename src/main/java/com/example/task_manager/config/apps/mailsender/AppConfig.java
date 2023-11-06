@@ -1,6 +1,5 @@
-package com.example.task_manager.config.apps;
+package com.example.task_manager.config.apps.mailsender;
 
-import com.example.task_manager.config.EmailData;
 import com.sun.mail.util.MailSSLSocketFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +13,9 @@ import java.util.Properties;
 @Configuration
 @ConfigurationProperties(prefix = "spring.mail")
 public class AppConfig {
-    private final EmailData emailData = new EmailData();
     @Bean
     public JavaMailSender getJavaMailSender() throws GeneralSecurityException {
+        EmailData emailData = new EmailData();
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         MailSSLSocketFactory sf = new MailSSLSocketFactory();
         sf.setTrustAllHosts(true);
