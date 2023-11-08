@@ -1,6 +1,5 @@
 package com.example.task_manager.controller;
 
-import com.example.task_manager.entity.user.User;
 import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.service.NoAuthService;
 import org.springframework.http.MediaType;

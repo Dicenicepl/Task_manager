@@ -10,6 +10,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "events")
+// TODO: 08.11.2023 add sql.Date as a variable
 public class Event {
     @Id
     @SequenceGenerator(
@@ -23,8 +24,6 @@ public class Event {
     @Column(unique = true)
     private String name;
     private String description;
-//    @OneToMany(mappedBy = "events")
-//    private Set<User> project_users;
 
     public Event(String owner_email, String name, String description){
         this.owner_email = owner_email;
