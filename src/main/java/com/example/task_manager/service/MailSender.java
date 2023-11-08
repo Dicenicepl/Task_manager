@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.security.GeneralSecurityException;
 
 @Service
-// TODO: 08.11.2023 after entity change of 'Event' add finding events by closest time and send 'owner_email' message 
+// TODO: 08.11.2023 after entity change of 'Event' add finding events by closest time and send 'owner_email' messages 
 public class MailSender {
     
     private final EventRepository eventRepository;
