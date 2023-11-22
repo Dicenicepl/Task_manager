@@ -45,14 +45,14 @@ public class NoAuthService {
             if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
                 userRepository.save(new User(username, email, password));
                 roleRepository.save(new ERole(email, "USER"));
-                return new ResponseEntity<>("User name: " + user.getUsername() + "\nUser email: " + user.getEmail() + "\nis created", HttpStatus.CREATED);
+                return new ResponseEntity<>("User name: " + user.getUsername() + "\nUser email: " + user.getEmail() + "\nis created", HttpStatus.OK);
             }
         } catch (DataIntegrityViolationException e) {
             return new ResponseEntity<>("User with this email is already exists", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Ups, we got problem" + e.getMessage(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Ups, we got problem" + e.getMessage(), HttpStatus.OK);
         }
-        return new ResponseEntity<>("Eeee, lol even server developer don`t know what happened", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("Eeee, lol even server developer don`t know what happened", HttpStatus.OK);
     }
 
     public ResponseEntity<String> getByEmail(String email) {
@@ -81,7 +81,7 @@ public class NoAuthService {
             }
             return new ResponseEntity<>("Here is your users:" + userDTOList, HttpStatus.OK);
         } catch (NullPointerException e) {
-            return new ResponseEntity<>("We can`t find any users", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("We can`t find any users", HttpStatus.OK);
         }
     }
 
@@ -93,6 +93,6 @@ public class NoAuthService {
                 return new ResponseEntity<>("Events:" + sEvent, HttpStatus.OK);
             }
         }catch (NullPointerException ignored){}
-        return new ResponseEntity<>("We can`t find any event", HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>("We can`t find any event", HttpStatus.OK);
     }
 }

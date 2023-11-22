@@ -114,10 +114,10 @@ public class AuthService {
         String password = json.get("password");
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isEmpty()) {
-            return new ResponseEntity<>("We can`t find user with that email", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("We can`t find user with that email", HttpStatus.OK);
         }
         if (!user.get().getPassword().equals(password)) {
-            return new ResponseEntity<>("Password is incorrect", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Password is incorrect", HttpStatus.OK);
         }
         String token = generatorToken(email);
         saveTokenToDatabase(email, token);
@@ -156,7 +156,7 @@ public class AuthService {
         String token = json.get("token");
         Optional<User> previouslyUser = userRepository.findUserByEmail(email);
         if (previouslyUser.isEmpty()) {
-            return new ResponseEntity<>("User with that email is not found please check for mistakes", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("User with that email is not found please check for mistakes", HttpStatus.OK);
         }
         if (isEnableModifyUsers(previouslyUser, token)) {
             User userToSave = new User(username, email, password);
@@ -165,7 +165,7 @@ public class AuthService {
             userRepository.save(userToSave);
             return new ResponseEntity<>("Successfully updated user data", HttpStatus.OK);
         }
-        return new ResponseEntity<>("You have no permission to change user data", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("You have no permission to change user data", HttpStatus.OK);
     }
 
     public ResponseEntity<String> deleteEvent(String name, String token) {
@@ -177,9 +177,9 @@ public class AuthService {
                 return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
             }
         } catch (NullPointerException e) {
-            return new ResponseEntity<>("No event with that name", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("No event with that name", HttpStatus.OK);
         }
-        return new ResponseEntity<>("You have no permission to delete event", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("You have no permission to delete event", HttpStatus.OK);
     }
 
 
@@ -190,7 +190,7 @@ public class AuthService {
         String description = json.get("description");
         Event event;
         if (name == null) {
-            return new ResponseEntity<>("Retry put name", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Retry put name", HttpStatus.OK);
         }
         if (eventRepository.existsEventByName(name)) {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.OK);
@@ -225,7 +225,7 @@ public class AuthService {
         try {
             event = Optional.of(eventRepository.findEventsByName(name));
         } catch (NullPointerException e) {
-            return new ResponseEntity<>("Event with that name didn`t exist", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Event with that name didn`t exist", HttpStatus.OK);
         }
         if (isEnableModifyEvents(event, token)) {
             Event eventToSave = new Event(event.get().getEvent_id(), event.get().getOwner_email(), name, description, null, null);
@@ -234,9 +234,9 @@ public class AuthService {
             return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
         }
         if (isExpiredToken(token)) {
-            return new ResponseEntity<>("Your token is expired, please update your token", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Your token is expired, please update your token", HttpStatus.OK);
         }
-        return new ResponseEntity<>("You don`t have permission to update this event", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>("You don`t have permission to update this event", HttpStatus.OK);
     }
 
 
