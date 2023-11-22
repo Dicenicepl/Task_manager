@@ -1,7 +1,10 @@
 package com.example.task_manager.service;
 
 import com.example.task_manager.config.apps.mailsender.AppConfig;
+import com.example.task_manager.entity.event.Event;
 import com.example.task_manager.entity.event.EventRepository;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +13,14 @@ import java.security.GeneralSecurityException;
 @Service
 // TODO: 08.11.2023 after entity change of 'Event' add finding events by closest time and send 'owner_email' message 
 public class MailSender {
-    
-    private final EventRepository eventRepository;
+    @Autowired
+    EventRepository eventRepository;
+
     AppConfig appConfig = new AppConfig();
     SimpleMailMessage message = new SimpleMailMessage();
 
-    public MailSender(EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
-    }
-
     public void sendEmail() throws GeneralSecurityException {
+
         message.setFrom("sasza.krolik@interia.pl");
         message.setTo("sasza.krolik@interia.pl");
         message.setSubject("test");
@@ -27,6 +28,6 @@ public class MailSender {
         appConfig.getJavaMailSender().send(message);
     }
     private void findUserData(){
-
+        List<Event> event = eventRepository.findAll();
     }
 }

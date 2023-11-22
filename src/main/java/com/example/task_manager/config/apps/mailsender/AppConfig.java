@@ -1,6 +1,9 @@
 package com.example.task_manager.config.apps.mailsender;
 
 import com.sun.mail.util.MailSSLSocketFactory;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,15 +18,15 @@ import java.util.Properties;
 public class AppConfig {
     @Bean
     public JavaMailSender getJavaMailSender() throws GeneralSecurityException {
-        EmailData emailData = new EmailData();
+        Dotenv data = Dotenv.configure().load(); //env file that containt data
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         MailSSLSocketFactory sf = new MailSSLSocketFactory();
-        sf.setTrustAllHosts(true);
-        mailSender.setHost(emailData.host);
-        mailSender.setPort(emailData.port);
-        mailSender.setUsername(emailData.email);
-        mailSender.setPassword(emailData.password);
 
+        sf.setTrustAllHosts(true);
+        mailSender.setHost(data.get("HOST"));
+        mailSender.setPort(Integer.parseInt(data.get("PORT")));
+        mailSender.setUsername(data.get("USERNAME"));
+        mailSender.setPassword(data.get("PASSWORD"));
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
         props.put("mail.smtp.auth", "true");

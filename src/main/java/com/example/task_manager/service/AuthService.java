@@ -196,7 +196,7 @@ public class AuthService {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.OK);
         }
         if (owner_email != null) {
-            event = new Event(owner_email, name, description);
+            event = new Event(owner_email, name, description, null, null);
             eventRepository.save(event);
             return new ResponseEntity<>("Event has been saved", HttpStatus.OK);
         }
@@ -228,7 +228,7 @@ public class AuthService {
             return new ResponseEntity<>("Event with that name didn`t exist", HttpStatus.NOT_FOUND);
         }
         if (isEnableModifyEvents(event, token)) {
-            Event eventToSave = new Event(event.get().getEvent_id(), event.get().getOwner_email(), name, description);
+            Event eventToSave = new Event(event.get().getEvent_id(), event.get().getOwner_email(), name, description, null, null);
             updateExpireTimeToken(token);
             eventRepository.save(eventToSave);
             return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);

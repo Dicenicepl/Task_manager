@@ -4,6 +4,9 @@ import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.token.Token;
 import com.example.task_manager.entity.token.TokenRepository;
 import com.example.task_manager.service.MailSender;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,22 +20,20 @@ import java.util.List;
 public class Repeater {
 
     private final TokenRepository tokenRepository;
-    private final EventRepository eventRepository;
 
 
-    public Repeater(TokenRepository tokenRepository, EventRepository eventRepository) {
+    public Repeater(TokenRepository tokenRepository) {
         this.tokenRepository = tokenRepository;
-        this.eventRepository = eventRepository;
     }
 
-    // TODO: 05.11.2023 sprawdź czemu wywala się scheduled, problem tkwi w skomentowanej linijce
     @Scheduled(fixedDelay = 1000L)
     void activeTimerTasks() throws GeneralSecurityException {
     sendEmails();
     checkToken();
     }
     public void sendEmails() throws GeneralSecurityException {
-        MailSender mailSender = new MailSender(eventRepository);
+
+        new MailSender();
     }
     public void checkToken() {
         List<Token> tokens = tokenRepository.findAllByExpireTimeBefore(new Time(System.currentTimeMillis()));

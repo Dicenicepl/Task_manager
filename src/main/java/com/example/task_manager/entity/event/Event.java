@@ -1,5 +1,8 @@
 package com.example.task_manager.entity.event;
 
+import java.sql.Date;
+import java.sql.Time;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,7 +13,6 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "events")
-// TODO: 08.11.2023 add sql.Date as a variable
 public class Event {
     @Id
     @SequenceGenerator(
@@ -24,11 +26,15 @@ public class Event {
     @Column(unique = true)
     private String name;
     private String description;
+    private Date date;
+    private Time time;
 
-    public Event(String owner_email, String name, String description){
+    public Event(String owner_email, String name, String description, Date date, Time time){
         this.owner_email = owner_email;
         this.name = name;
         this.description = description;
+        this.date = date;
+        this.time = time;
     }
 
 }
