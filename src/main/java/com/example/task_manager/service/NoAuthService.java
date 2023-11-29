@@ -2,10 +2,10 @@ package com.example.task_manager.service;
 
 import com.example.task_manager.entity.event.Event;
 import com.example.task_manager.entity.event.EventDTO;
+import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.role.ERole;
 import com.example.task_manager.entity.role.RoleRepository;
 import com.example.task_manager.entity.user.User;
-import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.entity.user.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,12 +1,8 @@
 package com.example.task_manager.schedule;
 
-import com.example.task_manager.entity.event.EventRepository;
 import com.example.task_manager.entity.token.Token;
 import com.example.task_manager.entity.token.TokenRepository;
 import com.example.task_manager.service.MailSender;
-
-import io.github.cdimascio.dotenv.Dotenv;
-
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,13 +22,12 @@ public class Repeater {
         this.tokenRepository = tokenRepository;
     }
 
-    @Scheduled(fixedDelay = 1000L)
-    void activeTimerTasks() throws GeneralSecurityException {
+//    @Scheduled(fixedDelay = 1000L)
+    void activeTimerTasks(){
     sendEmails();
     checkToken();
     }
-    public void sendEmails() throws GeneralSecurityException {
-
+    public void sendEmails(){
         new MailSender();
     }
     public void checkToken() {
