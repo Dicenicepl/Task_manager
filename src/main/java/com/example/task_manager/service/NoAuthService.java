@@ -8,6 +8,7 @@ import com.example.task_manager.entity.role.RoleRepository;
 import com.example.task_manager.entity.user.User;
 import com.example.task_manager.entity.user.UserDTO;
 import com.example.task_manager.entity.user.UserRepository;
+import com.example.task_manager.security.PasswordHasher;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -40,7 +41,7 @@ public class NoAuthService {
     public ResponseEntity<String> register(UserDTO user) {
         String username = user.getUsername();
         String email = user.getEmail();
-        String password = user.getPassword();
+        String password = new PasswordHasher().Hasher(user.getPassword());
         try {
             if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
                 userRepository.save(new User(username, email, password));
