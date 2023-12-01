@@ -3,12 +3,21 @@ body {
     background: radial-gradient(circle, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 56%, rgba(0,212,255,1) 82%);
     position: relative;
 }
+a{
+    color: black;
+}
 .login-menu{
     position: absolute;
-    top: 500px;
+    top: 505px;
     left: 50%;
+    width: 500px;
+    height: 500px;
     transform: translate(-50%, -50%);
     border: dashed white;
     color: white;
     text-align: center;
+}
+.button-menu {
+    background-color: blue;
+    width: 50%;
 }

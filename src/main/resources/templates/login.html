@@ -3,21 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/css/login-style.css">
     <script type="text/javascript" src="/js/login.js"></script>
 </head>
 <body>
 <div class="login-menu">
     <div class="email-column">
-        <label for="email">Email:</label>
-        <input type="email" name="email" id="email" placeholder="Your email...">
+        <label for="email">Email:</label><br>
+        <input type="email" name="email" id="email" placeholder="Your email..."><br>
     </div>
     <div class="password-column">
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" placeholder="Your password...">
+        <label for="password">Password:</label><br>
+        <input type="password" name="password" id="password" placeholder="Your password..."><br>
     </div>
-    <button type="button" id="login_button">Login</button>
-    <a href="http://localhost:3000/register">Register</a>
+    <button class="button-menu" type="button" id="login_button">Login</button>
+    <a class="button-menu" id="register-link"  href="http://localhost:3000/register">Register</a>
+
+
 </div>
 
 </body>

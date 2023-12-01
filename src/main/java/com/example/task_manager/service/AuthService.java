@@ -3,12 +3,15 @@ package com.example.task_manager.service;
 import com.example.task_manager.entity.event.Event;
 import com.example.task_manager.entity.event.EventDTO;
 import com.example.task_manager.entity.event.EventRepository;
+import com.example.task_manager.entity.project.Project;
+import com.example.task_manager.entity.project.ProjectRepository;
 import com.example.task_manager.entity.role.Role;
 import com.example.task_manager.entity.role.RoleRepository;
 import com.example.task_manager.entity.token.Token;
 import com.example.task_manager.entity.token.TokenRepository;
 import com.example.task_manager.entity.user.User;
 import com.example.task_manager.entity.user.UserRepository;
+import com.example.task_manager.security.PasswordHasher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,12 +25,14 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final TokenRepository tokenRepository;
+    private final ProjectRepository projectRepository;
 
-    public AuthService(EventRepository eventRepository, UserRepository userRepository, RoleRepository roleRepository, TokenRepository tokenRepository) {
+    public AuthService(EventRepository eventRepository, UserRepository userRepository, RoleRepository roleRepository, TokenRepository tokenRepository, ProjectRepository projectRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
+        this.projectRepository = projectRepository;
     }
 
 
@@ -111,7 +116,7 @@ public class AuthService {
 
     public ResponseEntity<String> login(Map<String, String> json) {
         String email = json.get("email");
-        String password = json.get("password");
+        String password = new PasswordHasher().Hasher(json.get("password"));
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isEmpty()) {
             return new ResponseEntity<>("We can`t find user with that email", HttpStatus.OK);
@@ -239,34 +244,10 @@ public class AuthService {
         return new ResponseEntity<>("You don`t have permission to update this event", HttpStatus.OK);
     }
 
-
-//    public ResponseEntity<String> addUserToProject(Map<String, String> json) {
-//        if (json.isEmpty()) {
-//            return new ResponseEntity<>("Body is empty, please fill up a body", HttpStatus.BAD_REQUEST);
-//        }
-//        String token = json.get("token");
-//        if (isExpiredToken(token)) {
-//            return new ResponseEntity<>("Token is expired, please log in again", HttpStatus.BAD_REQUEST);
-//        }
-//        String owner_email = json.get("owner_email");
-//        Optional<User> user = userRepository.findUserByEmail(owner_email);
-////        if (!user.get().getToken().equals(token)) {
-////            return new ResponseEntity<>("You have no permission to add a new person to project", HttpStatus.NOT_ACCEPTABLE);
-////        }
-//        String name = json.get("name");
-//        String user_email = json.get("user_email");
-//        Event event = eventRepository.findEventsByName(name);
-//
-//        eventRepository.save(event);
-//
-//        return new ResponseEntity<>("OK", HttpStatus.OK);
-//    }
-//
-//    public ResponseEntity<String> deleteUserFromProject(Map<String, String> json) {
-//        return null;
-//    }
-//
-//    public ResponseEntity<String> getAllUsersFromProject(String name, String token) {
-//        return null;
-//    }
+    // TODO: 01.12.2023 create api for Poject class 
+    public void createProject(String token,String name, String description){
+        String owner_email = getEmailFromToken(token);
+        Project project = new Project(owner_email, name, description);
+        projectRepository.save(project);
+    }
 }
