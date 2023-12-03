@@ -49,7 +49,9 @@ public class AuthService {
 
     private void updateExpireTimeToken(String generatedToken) {
         try {
-            tokenRepository.updateExpireTokenToActive(generatedToken, new Time(System.currentTimeMillis() + 50000L));
+            if (!isExpiredToken(generatedToken)){
+                tokenRepository.updateExpireTokenToActive(generatedToken, new Time(System.currentTimeMillis() + 50000L));
+            }
         } catch (Exception e) {
             System.out.println("updateExpireTimeToken: " + e);
         }
@@ -57,16 +59,16 @@ public class AuthService {
 
     private boolean isExpiredToken(String tokenToCheck) {
         Token token = tokenRepository.findTokenByGeneratedToken(tokenToCheck);
-        if (token == null) {
-            return true;
+        if (token != null) {
+            return token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis();
         }
-        return token.getExpireTime().getTime() + 1000L <= System.currentTimeMillis();
+        return true;
     }
 
 
     private String getEmailFromToken(String generatedToken) {
         Token token = tokenRepository.findTokenByGeneratedToken(generatedToken);
-        if (token != null) {
+        if (isExpiredToken(generatedToken)) {
             return token.getEmail();
         }
         return null;
@@ -244,10 +246,46 @@ public class AuthService {
         return new ResponseEntity<>("You don`t have permission to update this event", HttpStatus.OK);
     }
 
-    // TODO: 01.12.2023 create api for Poject class 
-    public void createProject(String token,String name, String description){
+    // TODO: 01.12.2023 create api for Project class
+    public ResponseEntity<String> createProject(Map<String, String> json){
+        String token = json.get("token");
         String owner_email = getEmailFromToken(token);
-        Project project = new Project(owner_email, name, description);
-        projectRepository.save(project);
+        String name = json.get("name");
+        String description = json.get("description");
+        if (isExpiredToken(token) ) {
+            return new ResponseEntity<>("Update your token", HttpStatus.OK);
+        }
+        if (name.isEmpty()){
+            return new ResponseEntity<>("Missing name, please try again", HttpStatus.OK);
+        }
+        projectRepository.save(new Project(owner_email, name, description));
+        return new ResponseEntity<>("Project is saved", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> updateProject(Map<String, String> json) {
+        if (json.isEmpty()){
+            return new ResponseEntity<>("Json is empty", HttpStatus.OK);
+        }
+        String token = json.get("token");
+        String owner_email = getEmailFromToken(token);
+        String projectName = json.get("name");
+        String description = json.get("description");
+        Project oldProject = projectRepository.findProjectByName(projectName);
+        if (isExpiredToken(token) ) {
+            return new ResponseEntity<>("Your token is expired." +
+                    " Use /login to ", HttpStatus.OK);
+        }
+        if (projectName.isEmpty()){
+            return new ResponseEntity<>("Missing name, please try again", HttpStatus.OK);
+        }
+        if (!oldProject.getOwner_email().equals(owner_email)){
+            return new ResponseEntity<>("You have no permission to edit", HttpStatus.OK);
+        }
+        Project newProject = new Project(oldProject.getId(),
+                oldProject.getOwner_email(),
+                oldProject.getName(),
+                description);
+        projectRepository.save(newProject);
+        return new ResponseEntity<>("Done", HttpStatus.OK);
     }
 }

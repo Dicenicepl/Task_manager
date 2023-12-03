@@ -20,18 +20,25 @@ public class Project {
             allocationSize = 1
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
-    private Long project_id;
-    private String project_owner_email; // TODO: 01.12.2023 when getting data, display with User.username
-    private String project_name;
-    private String project_description;
+    private Long id;
+    private String owner_email; // TODO: 01.12.2023 when getting data, display with User.username
+    private String name;
+    private String description;
     private int number_of_events = 0;
     private int number_of_users = 0;
     private int[] events_id;
     private int[] users_id;
 
-    public Project(String project_owner_email,String project_name, String description) {
-        this.project_owner_email = project_owner_email;
-        this.project_name = project_name;
-        this.project_description = description;
+    public Project(String owner_email,String name, String description) {
+        this.owner_email = owner_email;
+        this.name = name;
+        this.description = description;
+    }
+
+    public Project(Long id, String owner_email, String name, String description) {
+        this.id = id;
+        this.owner_email = owner_email;
+        this.name = name;
+        this.description = description;
     }
 }
