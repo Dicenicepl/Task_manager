@@ -47,12 +47,15 @@ public class AuthService {
         return token.toString();
     }
 
-    private void updateExpireTimeToken(String generatedToken) {
+    private void updateExpireTimeToken(String generatedToken, boolean force) { //temporary solution for not updating previous expireTime
         try {
+            if (force){
+                tokenRepository.updateExpireTokenToActive(generatedToken, new Time(System.currentTimeMillis() + 50000L));
+            }
             if (!isExpiredToken(generatedToken)){
                 tokenRepository.updateExpireTokenToActive(generatedToken, new Time(System.currentTimeMillis() + 50000L));
             }
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             System.out.println("updateExpireTimeToken: " + e);
         }
     }
@@ -128,7 +131,7 @@ public class AuthService {
         }
         String token = generatorToken(email);
         saveTokenToDatabase(email, token);
-        updateExpireTimeToken(token);
+        updateExpireTimeToken(token, true);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
 
@@ -150,7 +153,7 @@ public class AuthService {
         }
         if (isEnableModifyUsers(user, token)) {
             userRepository.deleteByEmail(email);
-            updateExpireTimeToken(token);
+            updateExpireTimeToken(token, false);
             return new ResponseEntity<>("User has been deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("We can`t done operation update your token", HttpStatus.OK);
@@ -168,7 +171,7 @@ public class AuthService {
         if (isEnableModifyUsers(previouslyUser, token)) {
             User userToSave = new User(username, email, password);
             userToSave.setUser_id(previouslyUser.get().getUser_id());
-            updateExpireTimeToken(token);
+            updateExpireTimeToken(token, false);
             userRepository.save(userToSave);
             return new ResponseEntity<>("Successfully updated user data", HttpStatus.OK);
         }
@@ -179,7 +182,7 @@ public class AuthService {
         Event event = eventRepository.findEventsByName(name);
         try {
             if (isEnableModifyEvents(Optional.of(event), token)) {
-                updateExpireTimeToken(token);
+                updateExpireTimeToken(token, false);
                 eventRepository.deleteByName(name);
                 return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
             }
@@ -207,7 +210,7 @@ public class AuthService {
             eventRepository.save(event);
             return new ResponseEntity<>("Event has been saved", HttpStatus.OK);
         }
-        updateExpireTimeToken(generatedToken);
+        updateExpireTimeToken(generatedToken, false);
         return new ResponseEntity<>("Check user token", HttpStatus.OK);
     }
 
@@ -220,7 +223,7 @@ public class AuthService {
         for (Event event : eventRepository.findAll()) {
             eventDTOList.add(new EventDTO(event.getOwner_email(), event.getName(), event.getDescription()));
         }
-        updateExpireTimeToken(token);
+        updateExpireTimeToken(token, false);
         return eventDTOList;
     }
 
@@ -236,7 +239,7 @@ public class AuthService {
         }
         if (isEnableModifyEvents(event, token)) {
             Event eventToSave = new Event(event.get().getEvent_id(), event.get().getOwner_email(), name, description, null, null);
-            updateExpireTimeToken(token);
+            updateExpireTimeToken(token, false);
             eventRepository.save(eventToSave);
             return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
         }
@@ -252,7 +255,7 @@ public class AuthService {
         String owner_email = getEmailFromToken(token);
         String name = json.get("name");
         String description = json.get("description");
-        if (isExpiredToken(token) ) {
+        if (!isExpiredToken(token) ) {
             return new ResponseEntity<>("Update your token", HttpStatus.OK);
         }
         if (name.isEmpty()){
@@ -271,7 +274,7 @@ public class AuthService {
         String projectName = json.get("name");
         String description = json.get("description");
         Project oldProject = projectRepository.findProjectByName(projectName);
-        if (isExpiredToken(token) ) {
+        if (!isExpiredToken(token) ) {
             return new ResponseEntity<>("Your token is expired." +
                     " Use /login to ", HttpStatus.OK);
         }
