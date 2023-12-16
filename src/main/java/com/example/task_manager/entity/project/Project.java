@@ -1,7 +1,6 @@
 package com.example.task_manager.entity.project;
 
 
-import com.example.task_manager.entity.event.Event;
 import jakarta.persistence.*;
 import lombok.*;
 

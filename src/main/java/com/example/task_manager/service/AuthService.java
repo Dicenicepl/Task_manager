@@ -146,7 +146,9 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<String> deleteUser(String email, String token) {
+    public ResponseEntity<String> deleteUser(Map<String, String> json) {
+        String email = json.get("email");
+        String token = json.get("token");
         Optional<User> user = userRepository.findUserByEmail(email);
         if (user.isEmpty()) {
             return new ResponseEntity<>("We can`t user with that email", HttpStatus.OK);

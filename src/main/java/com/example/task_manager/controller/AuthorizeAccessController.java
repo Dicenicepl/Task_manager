@@ -17,21 +17,42 @@ public class AuthorizeAccessController {
     public AuthorizeAccessController(AuthService authService) {
         this.authService = authService;
     }
-
+    
+    /*
+    json{
+        email:
+        password:
+    }
+     */
     @PostMapping("/user/login/")
     public ResponseEntity<String> login(@RequestBody Map<String, String> json) {
         return authService.login(json);
     }
+    /*
+    localhost:PORT/auth/user/logout/?email= &token= 
+     */
     @GetMapping("/user/logout/")
     public void logout(String email, String token){
         authService.logout(email, token);
     }
-
-    @DeleteMapping("/user/delete/")
-    public ResponseEntity<String> deleteUser(String email,
-                                             @RequestBody String token) {
-        return authService.deleteUser(email, token);
+    /*
+    json{
+        email:
+        token:
     }
+     */
+    @DeleteMapping("/user/delete/")
+    public ResponseEntity<String> deleteUser(@RequestBody Map<String, String> json) {
+        return authService.deleteUser(json);
+    }
+    /*
+    json{
+        username:
+        email:
+        password:
+        token:
+    }
+     */
     @PutMapping("/user/update/")
     public ResponseEntity<String> updateUser(@RequestBody Map<String, String> json){
         return authService.updateUser(json);

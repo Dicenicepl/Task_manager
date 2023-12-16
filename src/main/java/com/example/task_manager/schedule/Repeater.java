@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import java.security.GeneralSecurityException;
 import java.sql.Time;
 import java.util.List;
 
@@ -22,24 +21,12 @@ public class Repeater {
         this.tokenRepository = tokenRepository;
     }
 
-//    @Scheduled(fixedDelay = 1000L)
-    void activeTimerTasks(){
+//    @Scheduled(fixedDelay = 100000L)
+    private void activeTimerTasks(){
     sendEmails();
-    checkToken();
     }
     public void sendEmails(){
         new MailSender();
     }
-    public void checkToken() {
-        List<Token> tokens = tokenRepository.findAllByExpireTimeBefore(new Time(System.currentTimeMillis()));
-        try {
-            for (Token token : tokens) {
-                if (!token.getGeneratedToken().equals("AAAAAAAAAA")) {
-                    tokenRepository.updateTokenToNull(token.getGeneratedToken());
-                }
-            }
-        } catch (NullPointerException e) {
-            System.out.println("CHECKEXPIRETOKEN: NULL");
-        }
-    }
+    
 }
