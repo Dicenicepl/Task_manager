@@ -58,32 +58,51 @@ public class AuthorizeAccessController {
         return authService.updateUser(json);
     }
 
-    // Event controller
+    /*
+    json{
+        token:
+        owner_email:
+        name:
+        description:
+    }
+     */
     @PostMapping("/event/create/")
     public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
         return authService.saveEvent(json);
     }
 
-    // TODO: 29.09.2023 change method for sending events where current user is pinged
+    /*
+        token:
+     */
     @GetMapping("/event/get/all/")
-    public List<EventDTO> getAllEventsWhereUserIsPinged(@RequestBody String token) {
+    public List<EventDTO> getAllEvents(@RequestBody String token) {
         return authService.getAllEvents(token);
     }
-
+    /*
+        localhost:PORT/auth/event/delete/?name=
+        token:
+     */
     @DeleteMapping("/event/delete/")
     public ResponseEntity<String> deleteEvent(String name,
                                               @RequestBody String token) {
         return authService.deleteEvent(name, token);
     }
+    /*
+    json{
+        name:
+        token:
+        description:
+    }
+     */
     @PutMapping("/event/update/")
     public ResponseEntity<String> updateEvent(@RequestBody Map<String, String> json){
         return authService.updateEvent(json);
     }
     /*
     json{
-    token:
-    name:
-    description:
+        token:
+        name:
+        description:
     }
      */
     @PostMapping("/project/create/")
@@ -92,9 +111,9 @@ public class AuthorizeAccessController {
     }
     /*
     json{
-    token:
-    name:
-    description:
+        token:
+        name:
+        description:
     }
    */
     @PutMapping("/project/update/")

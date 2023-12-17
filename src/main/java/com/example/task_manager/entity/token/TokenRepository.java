@@ -29,7 +29,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
     @Query("update Token u set u.expireTime = :newExpireTime where u.generatedToken = :generatedToken")
     void updateExpireTokenToActive(String generatedToken, Time newExpireTime);
 
-    @Query("SELECT u FROM Token u WHERE u.expireTime = :expireTime OR u.expireTime IS NULL")
+    @Query("SELECT u FROM Token u WHERE u.expireTime <= :expireTime OR u.expireTime IS NULL")
     List<Token> findAllExpireTime(@Param("expireTime") Time expireTime);
     
 }
