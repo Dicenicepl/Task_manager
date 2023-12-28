@@ -139,7 +139,7 @@ public class AuthService {
         Token token = tokenRepository.findTokenByGeneratedToken(generatedToken);
         try {
             if (token.getEmail().equals(email)) {
-                tokenRepository.updateTokenToNull(generatedToken);
+                tokenRepository.deleteExpiredToken(generatedToken);
             }
         } catch (NullPointerException e) {
             System.out.println("LOGOUT: NULL");
