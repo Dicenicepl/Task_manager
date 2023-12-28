@@ -1,4 +1,4 @@
-package com.example.task_manager.entity.event;
+package com.example.task_manager.entity.task;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class EventDTO {
+public class TaskDTO {
     private String email;
     private String name;
     private String description;

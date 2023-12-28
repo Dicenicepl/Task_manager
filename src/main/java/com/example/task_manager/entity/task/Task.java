@@ -1,4 +1,4 @@
-package com.example.task_manager.entity.event;
+package com.example.task_manager.entity.task;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -13,7 +13,7 @@ import lombok.*;
 @ToString
 @Entity
 @Table(name = "events")
-public class Event {
+public class Task {
     @Id
     @SequenceGenerator(
             name = "sequence",
@@ -29,7 +29,7 @@ public class Event {
     private Date date;
     private Time time;
 
-    public Event(String owner_email, String name, String description, Date date, Time time){
+    public Task(String owner_email, String name, String description, Date date, Time time){
         this.owner_email = owner_email;
         this.name = name;
         this.description = description;

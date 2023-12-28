@@ -1,8 +1,8 @@
 package com.example.task_manager.service;
 
-import com.example.task_manager.entity.event.Event;
-import com.example.task_manager.entity.event.EventDTO;
-import com.example.task_manager.entity.event.EventRepository;
+import com.example.task_manager.entity.task.Task;
+import com.example.task_manager.entity.task.TaskDTO;
+import com.example.task_manager.entity.task.TaskRepository;
 import com.example.task_manager.entity.project.Project;
 import com.example.task_manager.entity.project.ProjectRepository;
 import com.example.task_manager.entity.role.Role;
@@ -21,14 +21,14 @@ import java.util.*;
 
 @Service
 public class AuthService {
-    private final EventRepository eventRepository;
+    private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final TokenRepository tokenRepository;
     private final ProjectRepository projectRepository;
 
-    public AuthService(EventRepository eventRepository, UserRepository userRepository, RoleRepository roleRepository, TokenRepository tokenRepository, ProjectRepository projectRepository) {
-        this.eventRepository = eventRepository;
+    public AuthService(TaskRepository taskRepository, UserRepository userRepository, RoleRepository roleRepository, TokenRepository tokenRepository, ProjectRepository projectRepository) {
+        this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.tokenRepository = tokenRepository;
@@ -77,7 +77,7 @@ public class AuthService {
         return null;
     }
 
-    private boolean isEnableModifyEvents(Optional<Event> event, String generatedToken) {
+    private boolean isEnableModifyEvents(Optional<Task> event, String generatedToken) {
         Optional<User> user;
         Role userRole;
         String userEmail;
@@ -181,11 +181,11 @@ public class AuthService {
     }
 
     public ResponseEntity<String> deleteEvent(String name, String token) {
-        Event event = eventRepository.findEventsByName(name);
+        Task task = taskRepository.findEventsByName(name);
         try {
-            if (isEnableModifyEvents(Optional.of(event), token)) {
+            if (isEnableModifyEvents(Optional.of(task), token)) {
                 updateExpireTimeToken(token, false);
-                eventRepository.deleteByName(name);
+                taskRepository.deleteByName(name);
                 return new ResponseEntity<>("Event has been deleted", HttpStatus.OK);
             }
         } catch (NullPointerException e) {
@@ -200,16 +200,16 @@ public class AuthService {
         String owner_email = getEmailFromToken(generatedToken);
         String name = json.get("name");
         String description = json.get("description");
-        Event event;
+        Task task;
         if (name == null) {
             return new ResponseEntity<>("Retry put name", HttpStatus.OK);
         }
-        if (eventRepository.existsEventByName(name)) {
+        if (taskRepository.existsEventByName(name)) {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.OK);
         }
         if (owner_email != null) {
-            event = new Event(owner_email, name, description, null, null);
-            eventRepository.save(event);
+            task = new Task(owner_email, name, description, null, null);
+            taskRepository.save(task);
             return new ResponseEntity<>("Event has been saved", HttpStatus.OK);
         }
         updateExpireTimeToken(generatedToken, false);
@@ -217,32 +217,32 @@ public class AuthService {
     }
 
     // TODO: 05.10.2023 change returned variable for more information about what`s going on
-    public List<EventDTO> getAllEvents(String token) {
-        List<EventDTO> eventDTOList = new ArrayList<>();
+    public List<TaskDTO> getAllEvents(String token) {
+        List<TaskDTO> taskDTOList = new ArrayList<>();
         if (isExpiredToken(token)) {
             return new ArrayList<>();
         }
-        for (Event event : eventRepository.findAll()) {
-            eventDTOList.add(new EventDTO(event.getOwner_email(), event.getName(), event.getDescription()));
+        for (Task task : taskRepository.findAll()) {
+            taskDTOList.add(new TaskDTO(task.getOwner_email(), task.getName(), task.getDescription()));
         }
         updateExpireTimeToken(token, false);
-        return eventDTOList;
+        return taskDTOList;
     }
 
     public ResponseEntity<String> updateEvent(Map<String, String> json) {
         String name = json.get("name");
         String token = json.get("token");
         String description = json.get("description");
-        Optional<Event> event;
+        Optional<Task> event;
         try {
-            event = Optional.of(eventRepository.findEventsByName(name));
+            event = Optional.of(taskRepository.findEventsByName(name));
         } catch (NullPointerException e) {
             return new ResponseEntity<>("Event with that name didn`t exist", HttpStatus.OK);
         }
         if (isEnableModifyEvents(event, token)) {
-            Event eventToSave = new Event(event.get().getEvent_id(), event.get().getOwner_email(), name, description, null, null);
+            Task taskToSave = new Task(event.get().getEvent_id(), event.get().getOwner_email(), name, description, null, null);
             updateExpireTimeToken(token, false);
-            eventRepository.save(eventToSave);
+            taskRepository.save(taskToSave);
             return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
         }
         if (isExpiredToken(token)) {

@@ -1,7 +1,7 @@
 package com.example.task_manager.service;
 
 import com.example.task_manager.config.apps.mailsender.AppConfig;
-import com.example.task_manager.entity.event.EventRepository;
+import com.example.task_manager.entity.task.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import java.security.GeneralSecurityException;
 @Service
 public class MailSender {
     @Autowired
-    EventRepository eventRepository;
+    TaskRepository taskRepository;
 
     AppConfig appConfig = new AppConfig();
     SimpleMailMessage message = new SimpleMailMessage();

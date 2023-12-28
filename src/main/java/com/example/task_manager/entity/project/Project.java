@@ -25,8 +25,8 @@ public class Project {
     private String description;
     private int number_of_events = 0;
     private int number_of_users = 0;
-    private int[] events_id;
-    private int[] users_id;
+//    private int[] events_id;
+//    private int[] users_id;
 
     public Project(String owner_email,String name, String description) {
         this.owner_email = owner_email;

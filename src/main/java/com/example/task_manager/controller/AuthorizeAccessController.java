@@ -1,6 +1,6 @@
 package com.example.task_manager.controller;
 
-import com.example.task_manager.entity.event.EventDTO;
+import com.example.task_manager.entity.task.TaskDTO;
 import com.example.task_manager.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -75,7 +75,7 @@ public class AuthorizeAccessController {
         token:
      */
     @GetMapping("/event/get/all/")
-    public List<EventDTO> getAllEvents(@RequestBody String token) {
+    public List<TaskDTO> getAllEvents(@RequestBody String token) {
         return authService.getAllEvents(token);
     }
     /*

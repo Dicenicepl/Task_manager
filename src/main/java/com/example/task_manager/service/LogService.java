@@ -1,7 +1,7 @@
 package com.example.task_manager.service;
 
 
-import com.example.task_manager.entity.event.Event;
+import com.example.task_manager.entity.task.Task;
 import com.example.task_manager.entity.log.LogClass;
 import com.example.task_manager.entity.log.LogRepository;
 import com.example.task_manager.entity.token.TokenRepository;
@@ -35,12 +35,12 @@ public class LogService {
                 case 'c' -> changePermissionForUser(user, moderatorEmail);
                 case 'd' -> deleteUserFromProject(user, moderatorEmail);
             }
-        } else if (object.getClass() == Event.class) {
-            Event event = (Event) object;
+        } else if (object.getClass() == Task.class) {
+            Task task = (Task) object;
             switch (selector) {
-                case 'a' -> addTaskToProject(event, moderatorEmail);
-                case 'c' -> modifyTask(event, moderatorEmail);
-                case 'd' -> deleteTaskFromProject(event, moderatorEmail);
+                case 'a' -> addTaskToProject(task, moderatorEmail);
+                case 'c' -> modifyTask(task, moderatorEmail);
+                case 'd' -> deleteTaskFromProject(task, moderatorEmail);
             }
         }
 
@@ -63,18 +63,18 @@ public class LogService {
         logRepository.save(logClass);
     }
 
-    private void addTaskToProject(Event event, String moderatorEmail) {
-        LogClass logClass = new LogClass(event.getName() + " task, is added by: ", moderatorEmail);
+    private void addTaskToProject(Task task, String moderatorEmail) {
+        LogClass logClass = new LogClass(task.getName() + " task, is added by: ", moderatorEmail);
         logRepository.save(logClass);
     }
 
-    private void modifyTask(Event event, String moderatorEmail) {
-        LogClass logClass = new LogClass(event.getName() + " is updated by: ", moderatorEmail);
+    private void modifyTask(Task task, String moderatorEmail) {
+        LogClass logClass = new LogClass(task.getName() + " is updated by: ", moderatorEmail);
         logRepository.save(logClass);
     }
 
-    private void deleteTaskFromProject(Event event, String moderatorEmail) {
-        LogClass logClass = new LogClass(event.getName() + " is deleted from project by: ", moderatorEmail);
+    private void deleteTaskFromProject(Task task, String moderatorEmail) {
+        LogClass logClass = new LogClass(task.getName() + " is deleted from project by: ", moderatorEmail);
         logRepository.save(logClass);
     }
 }

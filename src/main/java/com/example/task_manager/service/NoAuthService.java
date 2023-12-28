@@ -1,8 +1,8 @@
 package com.example.task_manager.service;
 
-import com.example.task_manager.entity.event.Event;
-import com.example.task_manager.entity.event.EventDTO;
-import com.example.task_manager.entity.event.EventRepository;
+import com.example.task_manager.entity.task.Task;
+import com.example.task_manager.entity.task.TaskDTO;
+import com.example.task_manager.entity.task.TaskRepository;
 import com.example.task_manager.entity.role.ERole;
 import com.example.task_manager.entity.role.RoleRepository;
 import com.example.task_manager.entity.user.User;
@@ -24,12 +24,12 @@ import java.util.Optional;
 public class NoAuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final EventRepository eventRepository;
+    private final TaskRepository taskRepository;
 
-    public NoAuthService(UserRepository userRepository, RoleRepository roleRepository, EventRepository eventRepository) {
+    public NoAuthService(UserRepository userRepository, RoleRepository roleRepository, TaskRepository taskRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.eventRepository = eventRepository;
+        this.taskRepository = taskRepository;
     }
     private Optional<User> getUserByEmail(String email){
         try{
@@ -87,10 +87,10 @@ public class NoAuthService {
     }
 
     public ResponseEntity<String> getEventByName(String name) {
-        Event event = eventRepository.findEventsByName(name);
+        Task task = taskRepository.findEventsByName(name);
         try {
-            if (event.getName().length() > 1) {
-                EventDTO sEvent = new EventDTO(event.getOwner_email(), event.getName(), event.getDescription());
+            if (task.getName().length() > 1) {
+                TaskDTO sEvent = new TaskDTO(task.getOwner_email(), task.getName(), task.getDescription());
                 return new ResponseEntity<>("Events:" + sEvent, HttpStatus.OK);
             }
         }catch (NullPointerException ignored){}
