@@ -94,10 +94,10 @@ public class AuthorizeAccessController {
         description:
     }
      */
-    @PutMapping("/event/update/")
-    public ResponseEntity<String> updateEvent(@RequestBody Map<String, String> json){
-        return authService.updateEvent(json);
-    }
+//    @PutMapping("/event/update/")
+//    public ResponseEntity<String> updateEvent(@RequestBody Map<String, String> json){
+//        return authService.updateEvent(json);
+//    }
     /*
     json{
         token:

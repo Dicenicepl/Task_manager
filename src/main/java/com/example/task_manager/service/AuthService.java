@@ -228,28 +228,28 @@ public class AuthService {
         updateExpireTimeToken(token, false);
         return taskDTOList;
     }
-
-    public ResponseEntity<String> updateEvent(Map<String, String> json) {
-        String name = json.get("name");
-        String token = json.get("token");
-        String description = json.get("description");
-        Optional<Task> event;
-        try {
-            event = Optional.of(taskRepository.findEventsByName(name));
-        } catch (NullPointerException e) {
-            return new ResponseEntity<>("Event with that name didn`t exist", HttpStatus.OK);
-        }
-        if (isEnableModifyEvents(event, token)) {
-            Task taskToSave = new Task(event.get().getEvent_id(), event.get().getOwner_email(), name, description, null, null);
-            updateExpireTimeToken(token, false);
-            taskRepository.save(taskToSave);
-            return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
-        }
-        if (isExpiredToken(token)) {
-            return new ResponseEntity<>("Your token is expired, please update your token", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("You don`t have permission to update this event", HttpStatus.OK);
-    }
+    //todo rechange
+//    public ResponseEntity<String> updateEvent(Map<String, String> json) {
+//        String name = json.get("name");
+//        String token = json.get("token");
+//        String description = json.get("description");
+//        Optional<Task> task;
+//        try {
+//            task = Optional.of(taskRepository.findEventsByName(name));
+//        } catch (NullPointerException e) {
+//            return new ResponseEntity<>("Event with that name didn`t exist", HttpStatus.OK);
+//        }
+//        if (isEnableModifyEvents(task, token)) {
+//            Task taskToSave = new Task();
+//            updateExpireTimeToken(token, false);
+//            taskRepository.save(taskToSave);
+//            return new ResponseEntity<>("Event is updated so you now you can chill", HttpStatus.OK);
+//        }
+//        if (isExpiredToken(token)) {
+//            return new ResponseEntity<>("Your token is expired, please update your token", HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>("You don`t have permission to update this task", HttpStatus.OK);
+//    }
 
     // TODO: 01.12.2023 create api for Project class
     public ResponseEntity<String> createProject(Map<String, String> json){

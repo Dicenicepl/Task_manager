@@ -3,6 +3,7 @@ package com.example.task_manager.entity.task;
 import java.sql.Date;
 import java.sql.Time;
 
+import com.example.task_manager.entity.project.Project;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "events")
+@Table(name = "tasks")
 public class Task {
     @Id
     @SequenceGenerator(
@@ -28,6 +29,9 @@ public class Task {
     private String description;
     private Date date;
     private Time time;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     public Task(String owner_email, String name, String description, Date date, Time time){
         this.owner_email = owner_email;
