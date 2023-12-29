@@ -23,14 +23,13 @@ public class Project {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
     private Long id;
-    private String owner_email; // TODO: 01.12.2023 when getting data, display with User.username
+    private String owner_email;
     private String name;
     private String description;
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
     private int number_of_users = 0;
-//    private int[] events_id;
-//    private int[] users_id;
+
 
     public Project(String owner_email,String name, String description) {
         this.owner_email = owner_email;

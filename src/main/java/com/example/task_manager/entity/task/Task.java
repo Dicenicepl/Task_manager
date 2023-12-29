@@ -22,23 +22,18 @@ public class Task {
             allocationSize = 1
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequence")
-    private Long event_id;
+    private Long task_id;
     private String owner_email;
     @Column(unique = true)
     private String name;
     private String description;
-    private Date date;
-    private Time time;
+    private Date createdDate = new Date(System.currentTimeMillis());
+    private Time createdTime = new Time(System.currentTimeMillis());
+    private Date deadLineDate;
+    private Time deadLineTime;
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public Task(String owner_email, String name, String description, Date date, Time time){
-        this.owner_email = owner_email;
-        this.name = name;
-        this.description = description;
-        this.date = date;
-        this.time = time;
-    }
 
 }
