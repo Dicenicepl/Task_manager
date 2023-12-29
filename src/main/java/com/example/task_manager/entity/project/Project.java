@@ -30,15 +30,7 @@ public class Project {
     private List<Task> tasks;
     private int number_of_users = 0;
 
-
-    public Project(String owner_email,String name, String description) {
-        this.owner_email = owner_email;
-        this.name = name;
-        this.description = description;
-    }
-
-    public Project(Long id, String owner_email, String name, String description) {
-        this.id = id;
+    public Project(String owner_email, String name, String description) {
         this.owner_email = owner_email;
         this.name = name;
         this.description = description;

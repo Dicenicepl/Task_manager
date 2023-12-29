@@ -35,5 +35,12 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
-
+    public Task(String owner_email, String name, String description, Date deadLineDate, Time deadLineTime, Project project) {
+        this.owner_email = owner_email;
+        this.name = name;
+        this.description = description;
+        this.deadLineDate = deadLineDate;
+        this.deadLineTime = deadLineTime;
+        this.project = project;
+    }
 }

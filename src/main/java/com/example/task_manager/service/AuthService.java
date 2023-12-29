@@ -195,7 +195,7 @@ public class AuthService {
     }
 
 
-    public ResponseEntity<String> saveEvent(Map<String, String> json) {
+    public ResponseEntity<String> saveTask(Map<String, String> json) {
         String generatedToken = json.get("token");
         String owner_email = getEmailFromToken(generatedToken);
         String name = json.get("name");
@@ -208,7 +208,7 @@ public class AuthService {
             return new ResponseEntity<>("Event with the name: " + name + " is already exists", HttpStatus.OK);
         }
         if (owner_email != null) {
-            task = new Task(owner_email, name, description, null, null);
+            task = new Task(owner_email, name, description, null, null, projectRepository.findProjectByName("Jira"));
             taskRepository.save(task);
             return new ResponseEntity<>("Event has been saved", HttpStatus.OK);
         }
@@ -286,10 +286,10 @@ public class AuthService {
         if (!oldProject.getOwner_email().equals(owner_email)){
             return new ResponseEntity<>("You have no permission to edit", HttpStatus.OK);
         }
-        Project newProject = new Project(oldProject.getId(),
+        Project newProject = new Project(
                 oldProject.getOwner_email(),
                 oldProject.getName(),
-                description);
+                oldProject.getDescription());
         projectRepository.save(newProject);
         return new ResponseEntity<>("Done", HttpStatus.OK);
     }

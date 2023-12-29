@@ -68,7 +68,7 @@ public class AuthorizeAccessController {
      */
     @PostMapping("/event/create/")
     public ResponseEntity<String> saveEvent(@RequestBody Map<String, String> json) {
-        return authService.saveEvent(json);
+        return authService.saveTask(json);
     }
 
     /*
