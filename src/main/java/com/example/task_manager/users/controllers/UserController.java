@@ -1,6 +1,7 @@
 package com.example.task_manager.users.controllers;
 
-import com.example.task_manager.users.entities.ProtectedUser;
+import com.example.task_manager.users.entities.ProtectedUserData;
+import com.example.task_manager.users.entities.RegisterData;
 import com.example.task_manager.users.entities.User;
 import com.example.task_manager.users.services.UserService;
 import org.springframework.http.ResponseEntity;
@@ -18,18 +19,18 @@ public class UserController {
     }
 
     @GetMapping("/list/users/")
-    public ResponseEntity<List<ProtectedUser>> getAllUsers(){
+    public ResponseEntity<List<ProtectedUserData>> getAllUsers(){
         return userService.getAllUsers();
     }
 
     @GetMapping("/find/user/")
-    public ResponseEntity<ProtectedUser> getUserByEmail(String email){
+    public ResponseEntity<ProtectedUserData> getUserByEmail(String email){
         return userService.getUserByEmail(email);
     }
 
     @PostMapping("/create/user/")
-    public ResponseEntity<String> createUser(User user){
-        return null;
+    public ResponseEntity<String> createUser(RegisterData registerData) {
+        return userService.createUser(registerData);
     }
 
     @PutMapping("/update/user/")
