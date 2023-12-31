@@ -7,27 +7,27 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class ProjectController {
 
-    @GetMapping
+    @GetMapping("/list/projects/")
     public ResponseEntity<String> getAllProjects(){
         return null;
     }
 
-    @GetMapping
+    @GetMapping("/find/project")
     public ResponseEntity<String> getProjectByName(String name){
         return null;
     }
 
-    @PostMapping
+    @PostMapping("/create/project/")
     public ResponseEntity<String> createProject(Project project){
         return null;
     }
 
-    @PutMapping
+    @PutMapping("/update/project/")
     public ResponseEntity<String> updateProject(Project project){
         return null;
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete/project/")
     public ResponseEntity<String> deleteProject(){
         return null;
     }

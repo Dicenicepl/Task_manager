@@ -1,33 +1,43 @@
 package com.example.task_manager.users.controllers;
 
+import com.example.task_manager.users.entities.ProtectedUser;
 import com.example.task_manager.users.entities.User;
+import com.example.task_manager.users.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class UserController {
 
-    @GetMapping
-    public ResponseEntity<String> getAllUsers(){
-        return null;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<String> getUserByName(String name){
-        return null;
+    @GetMapping("/list/users/")
+    public ResponseEntity<List<ProtectedUser>> getAllUsers(){
+        return userService.getAllUsers();
     }
 
-    @PostMapping
+    @GetMapping("/find/user/")
+    public ResponseEntity<ProtectedUser> getUserByEmail(String email){
+        return userService.getUserByEmail(email);
+    }
+
+    @PostMapping("/create/user/")
     public ResponseEntity<String> createUser(User user){
         return null;
     }
 
-    @PutMapping
+    @PutMapping("/update/user/")
     public ResponseEntity<String> updateUser(User user){
         return null;
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete/user/")
     public ResponseEntity<String> deleteUser(){
         return null;
     }

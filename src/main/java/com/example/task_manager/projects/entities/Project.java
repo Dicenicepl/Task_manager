@@ -1,10 +1,11 @@
 package com.example.task_manager.projects.entities;
 
-import com.example.task_manager.garbage.entity.task.Task;
+import com.example.task_manager.tasks.entities.Task;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
+
 
 @Setter
 @Getter

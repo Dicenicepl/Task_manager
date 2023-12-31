@@ -7,27 +7,27 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class TaskController {
 
-    @GetMapping
+    @GetMapping("/list/tasks/")
     public ResponseEntity<String> getAllTasks(){
         return null;
     }
 
-    @GetMapping
+    @GetMapping("/find/task/")
     public ResponseEntity<String> getTaskByName(String name){
         return null;
     }
 
-    @PostMapping
+    @PostMapping("/create/task/")
     public ResponseEntity<String> createTask(Task task){
         return null;
     }
 
-    @PutMapping
+    @PutMapping("/update/task/")
     public ResponseEntity<String> updateTask(Task task){
         return null;
     }
 
-    @DeleteMapping
+    @DeleteMapping("/delete/task/")
     public ResponseEntity<String> deleteTask(){
         return null;
     }
