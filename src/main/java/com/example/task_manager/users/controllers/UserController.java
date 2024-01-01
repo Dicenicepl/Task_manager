@@ -1,8 +1,6 @@
 package com.example.task_manager.users.controllers;
 
-import com.example.task_manager.users.entities.ProtectedUserData;
-import com.example.task_manager.users.entities.RegisterData;
-import com.example.task_manager.users.entities.User;
+import com.example.task_manager.users.entities.*;
 import com.example.task_manager.users.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/u/")
 public class UserController {
 
     private final UserService userService;
@@ -34,12 +33,12 @@ public class UserController {
     }
 
     @PutMapping("/update/user/")
-    public ResponseEntity<String> updateUser(User user){
-        return null;
+    public ResponseEntity<String> updateUser(UpdateUserData userData){
+        return userService.updateUser(userData);
     }
 
     @DeleteMapping("/delete/user/")
-    public ResponseEntity<String> deleteUser(){
-        return null;
+    public ResponseEntity<String> deleteUser(DeleteUserData deleteUserData){
+        return userService.deleteUser(deleteUserData);
     }
 }

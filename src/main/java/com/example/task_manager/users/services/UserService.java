@@ -1,8 +1,6 @@
 package com.example.task_manager.users.services;
 
-import com.example.task_manager.users.entities.ProtectedUserData;
-import com.example.task_manager.users.entities.RegisterData;
-import com.example.task_manager.users.entities.User;
+import com.example.task_manager.users.entities.*;
 import com.example.task_manager.users.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +34,25 @@ public class UserService {
     }
 
     public ResponseEntity<String> createUser(RegisterData registerData){
-        return null;
+        User user = new User(registerData.getName(), registerData.getEmail(), registerData.getPassword());
+        userRepository.save(user);
+        return new ResponseEntity<>("Saved", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> updateUser(UpdateUserData userData){
+        User user = userRepository.findUserByEmail(userData.getEmail());
+        user.setPassword(userData.getPassword());
+        user.setUsername(userData.getUsername());
+        userRepository.save(user);
+        return new ResponseEntity<>("Updated", HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> deleteUser(DeleteUserData deleteUserData){
+        User user = userRepository.findUserByEmail(deleteUserData.getEmail());
+        if (user.getPassword().equals(deleteUserData.getPassword())) {
+            userRepository.deleteById(user.getUser_id());
+            return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
