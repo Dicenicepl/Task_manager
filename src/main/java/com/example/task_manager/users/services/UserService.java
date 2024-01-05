@@ -18,29 +18,41 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    private ProtectedUserData convertUserToProtectedUserData(User user){
+        return new ProtectedUserData(user.getUsername(), user.getEmail());
+    }
+
     public ResponseEntity<List<ProtectedUserData>> getAllUsers(){
         List<User> usersFromDB = userRepository.findAll();
         List<ProtectedUserData> readyUsers = new ArrayList<>();
         for (User rawUser: usersFromDB){
-            readyUsers.add(new ProtectedUserData(rawUser.getUsername(), rawUser.getEmail()));
+            readyUsers.add(convertUserToProtectedUserData(rawUser));
+        }
+        if (readyUsers.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(readyUsers, HttpStatus.OK);
     }
 
-    //todo check isBlank
     public ResponseEntity<ProtectedUserData> getUserByEmail(String email){
         User rawUser = userRepository.findUserByEmail(email);
-        return new ResponseEntity<>(new ProtectedUserData(rawUser.getUsername(), rawUser.getEmail()), HttpStatus.OK);
+        if (rawUser == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(convertUserToProtectedUserData(rawUser), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> createUser(RegisterData registerData){
-        User user = new User(registerData.getName(), registerData.getEmail(), registerData.getPassword());
+        public ResponseEntity<String> createUser(RegisterData registerData){
+        User user = new User(registerData.getUsername(), registerData.getEmail(), registerData.getPassword());
         userRepository.save(user);
         return new ResponseEntity<>("Saved", HttpStatus.OK);
     }
 
     public ResponseEntity<String> updateUser(UpdateUserData userData){
         User user = userRepository.findUserByEmail(userData.getEmail());
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         user.setPassword(userData.getPassword());
         user.setUsername(userData.getUsername());
         userRepository.save(user);
@@ -53,6 +65,6 @@ public class UserService {
             userRepository.deleteById(user.getUser_id());
             return new ResponseEntity<>("Deleted", HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Bad password", HttpStatus.BAD_REQUEST);
     }
 }

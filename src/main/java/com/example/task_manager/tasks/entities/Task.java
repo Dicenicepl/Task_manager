@@ -4,9 +4,6 @@ import com.example.task_manager.projects.entities.Project;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
-import java.sql.Time;
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -27,20 +24,17 @@ public class Task {
     @Column(unique = true)
     private String name;
     private String description;
-    private Date createdDate = new Date(System.currentTimeMillis());
-    private Time createdTime = new Time(System.currentTimeMillis());
-    private Date deadLineDate;
-    private Time deadLineTime;
+    private Long creatingTimeInMinis = System.currentTimeMillis();
+    private Long endingTimeInMinis;
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public Task(String owner_email, String name, String description, Date deadLineDate, Time deadLineTime, Project project) {
+    public Task(String owner_email, String name, String description, Long endingTimeInMinis, Project project) {
         this.owner_email = owner_email;
         this.name = name;
         this.description = description;
-        this.deadLineDate = deadLineDate;
-        this.deadLineTime = deadLineTime;
+        this.endingTimeInMinis = endingTimeInMinis;
         this.project = project;
     }
 }

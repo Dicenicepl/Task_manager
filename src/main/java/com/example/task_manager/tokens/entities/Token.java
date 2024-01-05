@@ -3,9 +3,6 @@ package com.example.task_manager.tokens.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
-import java.sql.Time;
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -26,13 +23,9 @@ public class Token {
     private String token;
     @Column(unique = true)
     private String assignedEmail;
-    private Date expireDate;
-    private Time expireTime;
-
-    public Token(String token, String assignedEmail, Date expireDate, Time expireTime) {
+    private Long timeInMinis = System.currentTimeMillis();
+    public Token(String token, String assignedEmail) {
         this.token = token;
         this.assignedEmail = assignedEmail;
-        this.expireDate = expireDate;
-        this.expireTime = expireTime;
     }
 }

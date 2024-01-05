@@ -1,0 +1,33 @@
+package com.example.task_manager.tokens.services;
+
+import com.example.task_manager.tokens.entities.Token;
+import com.example.task_manager.tokens.repositories.TokenRepository;
+import org.springframework.stereotype.Service;
+
+import java.security.SecureRandom;
+
+@Service
+public class TokenService {
+    private final TokenRepository tokenRepository;
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    public TokenService(TokenRepository tokenRepository) {
+        this.tokenRepository = tokenRepository;
+    }
+
+    private String tokenGenerator(){
+        SecureRandom randomizer = new SecureRandom();
+        StringBuilder token = new StringBuilder(10);
+        for (int i = 0; i < 10; i++){
+            int randomIndex = randomizer.nextInt(CHARACTERS.length());
+            token.append(CHARACTERS.charAt(randomIndex));
+        }
+        return token.toString();
+    }
+
+    public String saveUserToken(String emailToAssignToken){
+        String generatedToken = tokenGenerator();
+        Token token = new Token(generatedToken,emailToAssignToken);
+        tokenRepository.save(token);
+        return generatedToken;
+    }
+}

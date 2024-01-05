@@ -28,17 +28,17 @@ public class UserController {
     }
 
     @PostMapping("/create/user/")
-    public ResponseEntity<String> createUser(RegisterData registerData) {
+    public ResponseEntity<String> createUser(@RequestBody RegisterData registerData) {
         return userService.createUser(registerData);
     }
 
     @PutMapping("/update/user/")
-    public ResponseEntity<String> updateUser(UpdateUserData userData){
+    public ResponseEntity<String> updateUser(@RequestBody UpdateUserData userData){
         return userService.updateUser(userData);
     }
 
     @DeleteMapping("/delete/user/")
-    public ResponseEntity<String> deleteUser(DeleteUserData deleteUserData){
+    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserData deleteUserData){
         return userService.deleteUser(deleteUserData);
     }
 }
