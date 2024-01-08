@@ -29,7 +29,7 @@ public class UserService {
             readyUsers.add(convertUserToProtectedUserData(rawUser));
         }
         if (readyUsers.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(readyUsers, HttpStatus.OK);
     }
@@ -37,7 +37,7 @@ public class UserService {
     public ResponseEntity<ProtectedUserData> getUserByEmail(String email){
         User rawUser = userRepository.findUserByEmail(email);
         if (rawUser == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(convertUserToProtectedUserData(rawUser), HttpStatus.OK);
     }
