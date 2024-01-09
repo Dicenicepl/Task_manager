@@ -2,7 +2,9 @@ package com.example.task_manager.tokens.services;
 
 import com.example.task_manager.tokens.entities.Token;
 import com.example.task_manager.tokens.repositories.TokenRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 
@@ -27,7 +29,21 @@ public class TokenService {
     public String saveUserToken(String emailToAssignToken){
         String generatedToken = tokenGenerator();
         Token token = new Token(generatedToken,emailToAssignToken);
-        tokenRepository.save(token);
-        return generatedToken;
+        if (tokenRepository.findByAssignedEmail(emailToAssignToken) == null) {
+            tokenRepository.save(token);
+            return generatedToken;
+        }
+        return null;
     }
+    public boolean isNotExpired(String tokenToCheck){
+        Token token = tokenRepository.findByToken(tokenToCheck);
+        return token.getTimeInMinis() > System.currentTimeMillis();
+    }
+
+    @Transactional
+    @Modifying
+    public void deleteToken(String token){
+        tokenRepository.deleteByToken(token);
+    }
+
 }

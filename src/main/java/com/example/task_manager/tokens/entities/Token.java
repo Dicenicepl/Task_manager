@@ -23,9 +23,11 @@ public class Token {
     private String token;
     @Column(unique = true)
     private String assignedEmail;
-    private Long timeInMinis = System.currentTimeMillis();
+    private Long timeInMinis = System.currentTimeMillis() + 600000L;
     public Token(String token, String assignedEmail) {
         this.token = token;
         this.assignedEmail = assignedEmail;
     }
+
+
 }
