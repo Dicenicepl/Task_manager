@@ -1,15 +1,31 @@
 package com.example.task_manager.security.controller;
 
 import com.example.task_manager.security.entity.LoginUser;
+import com.example.task_manager.security.service.SecurityService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class SecurityController {
+    private final SecurityService securityService;
 
-    @PostMapping("/login")
-    public AuthenticationResponse loginPage(@RequestBody LoginUser loginUser){
-        return new AuthenticationResponse("token");
+    public SecurityController(SecurityService securityService) {
+        this.securityService = securityService;
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<String> loginPage(@RequestBody LoginUser loginUser){
+        if (securityService.checkUserDataToLogin(loginUser)) {
+            String token = securityService.generateTokenAndSave(loginUser.getEmail());
+            HttpHeaders responseHeaders = new HttpHeaders();
+            responseHeaders.set("Authorization", token);
+            return ResponseEntity.ok().headers(responseHeaders).body("good");
+        }
+        return ResponseEntity.badRequest().body("bad");
     }
 }

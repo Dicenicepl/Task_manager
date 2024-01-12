@@ -28,11 +28,12 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-        // 1. Dostał token z /login -> generujesz token, swoim secretem ->
-        //2. jakiś token który musisz sparsować //  ->
-        // 4. Uwierzytelniamy ustawiając Authentication dla kontekstu Security w tym requescie
-        if (tokenService.isNotExpired(authHeader)) {
+        boolean check = true;
+        if (request.getRequestURI().equals("/login")){
+            Authentication auth = new UsernamePasswordAuthenticationToken("User", "Credentials", Collections.emptyList());
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            check = false;
+        } else if (check && tokenService.isNotExpired(request.getHeader("Authorization"))) {
             Authentication auth = new UsernamePasswordAuthenticationToken("User", "Credentials", Collections.emptyList());
             SecurityContextHolder.getContext().setAuthentication(auth);
         } else {

@@ -37,6 +37,9 @@ public class TokenService {
     }
     public boolean isNotExpired(String tokenToCheck){
         Token token = tokenRepository.findByToken(tokenToCheck);
+        if (token == null){
+            return false;
+        }
         return token.getTimeInMinis() > System.currentTimeMillis();
     }
 
