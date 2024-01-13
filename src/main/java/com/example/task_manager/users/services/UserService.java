@@ -2,6 +2,7 @@ package com.example.task_manager.users.services;
 
 import com.example.task_manager.users.entities.*;
 import com.example.task_manager.users.repositories.UserRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,10 +43,20 @@ public class UserService {
         return new ResponseEntity<>(convertUserToProtectedUserData(rawUser), HttpStatus.OK);
     }
 
-        public ResponseEntity<String> createUser(RegisterData registerData){
-        User user = new User(registerData.getUsername(), registerData.getEmail(), registerData.getPassword());
-        userRepository.save(user);
-        return new ResponseEntity<>("Saved", HttpStatus.OK);
+        public ResponseEntity<String> createUser(RegisterData registerData) {
+        try{
+            if (registerData.getEmail() == null || registerData.getPassword() == null){
+                throw new NullPointerException();
+            }
+            User user = new User(registerData.getUsername(), registerData.getEmail(), registerData.getPassword());
+            userRepository.save(user);
+            return new ResponseEntity<>("Saved", HttpStatus.OK);
+        }catch (NullPointerException e){
+            return ResponseEntity.badRequest().body("Wrong object");
+        }catch (DataIntegrityViolationException e){
+            return ResponseEntity.badRequest().body("User with that email is already exist");
+        }
+
     }
 
     public ResponseEntity<String> updateUser(UpdateUserData userData){

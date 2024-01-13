@@ -25,7 +25,7 @@ public class UserServiceTest {
     void preparing(){
         RegisterData registerData = new RegisterData(
                 "test",
-                "test@example.com",
+                "testasdas@example.com",
                 "zaq1@WSX"
         );
         userService.createUser(registerData);

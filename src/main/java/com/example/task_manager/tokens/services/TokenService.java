@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
+import java.util.List;
 
 @Service
 public class TokenService {
@@ -40,7 +41,8 @@ public class TokenService {
         if (token == null){
             return false;
         }
-        return token.getTimeInMinis() > System.currentTimeMillis();
+        boolean test = token.getTimeInMinis() > System.currentTimeMillis();
+        return test;
     }
 
     @Transactional
@@ -48,5 +50,11 @@ public class TokenService {
     public void deleteToken(String token){
         tokenRepository.deleteByToken(token);
     }
+    public void deleteTokenById(Long id) {
+        tokenRepository.deleteById(id);
+    }
 
+    public List<Token> findAllTokens(){
+        return tokenRepository.findAll();
+    }
 }

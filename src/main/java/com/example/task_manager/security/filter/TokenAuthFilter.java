@@ -28,12 +28,10 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        boolean check = true;
-        if (request.getRequestURI().equals("/login")){
+        if (request.getRequestURI().equals("/login") || request.getRequestURI().equals("/register")){
             Authentication auth = new UsernamePasswordAuthenticationToken("User", "Credentials", Collections.emptyList());
             SecurityContextHolder.getContext().setAuthentication(auth);
-            check = false;
-        } else if (check && tokenService.isNotExpired(request.getHeader("Authorization"))) {
+        } else if (tokenService.isNotExpired(request.getHeader("Authorization"))) {
             Authentication auth = new UsernamePasswordAuthenticationToken("User", "Credentials", Collections.emptyList());
             SecurityContextHolder.getContext().setAuthentication(auth);
         } else {

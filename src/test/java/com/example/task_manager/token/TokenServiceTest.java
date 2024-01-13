@@ -18,7 +18,7 @@ public class TokenServiceTest {
     String token;
     @BeforeEach
     void preparing(){
-        token = tokenService.saveUserToken("test@example.com");
+        token = tokenService.saveUserToken("test123@example.com");
     }
     @AfterEach
     void clearing(){
