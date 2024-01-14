@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class RegisterData {
+public class RegisterUserData {
     private String username;
     private String email;
     private String password;

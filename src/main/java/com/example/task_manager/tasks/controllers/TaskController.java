@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/t/")
+//todo check where is saved task (project). If is out of range then return bad request,else let continue operations
 public class TaskController {
 
     private final TaskService taskService;
@@ -18,11 +19,11 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+
     @GetMapping("/list/tasks/")
     public ResponseEntity<List<ProtectedTaskData>> getAllTasks() {
         return taskService.getAllTasks();
     }
-
     @GetMapping("/find/task/")
     public ResponseEntity<ProtectedTaskData> getTaskByName(String name) {
         return taskService.getTaskByName(name);

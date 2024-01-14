@@ -17,28 +17,32 @@ public class UserController {
         this.userService = userService;
     }
 
+
     @GetMapping("/list/users/")
-    public ResponseEntity<List<ProtectedUserData>> getAllUsers(){
+    public ResponseEntity<List<ProtectedUserData>> getAllUsers() {
         return userService.getAllUsers();
     }
 
+
+    //todo create method that will find users by part of email
     @GetMapping("/find/user/")
-    public ResponseEntity<ProtectedUserData> getUserByEmail(String email){
+    public ResponseEntity<ProtectedUserData> getUserByEmail(String email) {
         return userService.getUserByEmail(email);
     }
 
     @PostMapping("/create/user/")
-    public ResponseEntity<String> createUser(@RequestBody RegisterData registerData) {
+    public ResponseEntity<String> createUser(@RequestBody RegisterUserData registerData) {
         return userService.createUser(registerData);
     }
 
+    //todo find from object what is null if some variable is null then save previously data
     @PutMapping("/update/user/")
-    public ResponseEntity<String> updateUser(@RequestBody UpdateUserData userData){
+    public ResponseEntity<String> updateUser(@RequestBody UpdateUserData userData) {
         return userService.updateUser(userData);
     }
 
     @DeleteMapping("/delete/user/")
-    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserData deleteUserData){
+    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserData deleteUserData) {
         return userService.deleteUser(deleteUserData);
     }
 }

@@ -2,7 +2,7 @@ package com.example.task_manager;
 
 import com.example.task_manager.users.entities.DeleteUserData;
 import com.example.task_manager.users.entities.ProtectedUserData;
-import com.example.task_manager.users.entities.RegisterData;
+import com.example.task_manager.users.entities.RegisterUserData;
 import com.example.task_manager.users.services.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ public class UserServiceTest {
 
     @BeforeEach
     void preparing(){
-        RegisterData registerData = new RegisterData(
+        RegisterUserData registerData = new RegisterUserData(
                 "test",
                 "testasdas@example.com",
                 "zaq1@WSX"

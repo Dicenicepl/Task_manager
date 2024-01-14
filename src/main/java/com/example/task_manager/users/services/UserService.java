@@ -43,7 +43,7 @@ public class UserService {
         return new ResponseEntity<>(convertUserToProtectedUserData(rawUser), HttpStatus.OK);
     }
 
-        public ResponseEntity<String> createUser(RegisterData registerData) {
+        public ResponseEntity<String> createUser(RegisterUserData registerData) {
         try{
             if (registerData.getEmail() == null || registerData.getPassword() == null){
                 throw new NullPointerException();

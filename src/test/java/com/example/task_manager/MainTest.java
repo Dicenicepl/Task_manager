@@ -1,7 +1,7 @@
 package com.example.task_manager;
 
 import com.example.task_manager.users.entities.DeleteUserData;
-import com.example.task_manager.users.entities.RegisterData;
+import com.example.task_manager.users.entities.RegisterUserData;
 import com.example.task_manager.users.services.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,15 +39,15 @@ public class MainTest {
         //
         assertTrue(userService.createUser(null).getStatusCode().is4xxClientError());
 
-        assertTrue(userService.createUser(new RegisterData(null, null, null)).getStatusCode().is4xxClientError());
+        assertTrue(userService.createUser(new RegisterUserData(null, null, null)).getStatusCode().is4xxClientError());
 
-        assertTrue(userService.createUser(new RegisterData("Name", null, null)).getStatusCode().is4xxClientError());
+        assertTrue(userService.createUser(new RegisterUserData("Name", null, null)).getStatusCode().is4xxClientError());
 
-        assertTrue(userService.createUser(new RegisterData("Name", "Email", null)).getStatusCode().is4xxClientError());
+        assertTrue(userService.createUser(new RegisterUserData("Name", "Email", null)).getStatusCode().is4xxClientError());
 
-        assertTrue(userService.createUser(new RegisterData("Name", "Email2", "password")).getStatusCode().is2xxSuccessful());
+        assertTrue(userService.createUser(new RegisterUserData("Name", "Email2", "password")).getStatusCode().is2xxSuccessful());
 
-        assertTrue(userService.createUser(new RegisterData("Name", "Email2", "password")).getStatusCode().is4xxClientError());
+        assertTrue(userService.createUser(new RegisterUserData("Name", "Email2", "password")).getStatusCode().is4xxClientError());
     }
 }
 
