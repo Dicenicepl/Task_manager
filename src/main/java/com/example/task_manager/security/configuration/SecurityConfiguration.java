@@ -21,10 +21,13 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.addFilterBefore(new TokenAuthFilter(tokenService), UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests().requestMatchers("/login").permitAll()
-                .anyRequest().authenticated()
-                .and().httpBasic();
+        http.csrf().disable()
+                .authorizeHttpRequests()
+                .requestMatchers("/api/s/login").permitAll()
+                .anyRequest().authenticated().and()
+                .httpBasic()
+                .and()
+                .addFilterBefore(new TokenAuthFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

@@ -5,12 +5,10 @@ import com.example.task_manager.security.service.SecurityService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/s/")
 public class SecurityController {
     private final SecurityService securityService;
 
@@ -18,7 +16,7 @@ public class SecurityController {
         this.securityService = securityService;
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<String> loginPage(@RequestBody LoginUser loginUser){
         if (securityService.checkUserDataToLogin(loginUser)) {
             String token = securityService.generateTokenAndSave(loginUser.getEmail());
