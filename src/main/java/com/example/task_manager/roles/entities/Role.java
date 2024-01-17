@@ -21,11 +21,14 @@ public class Role {
     private Long role_id;
     @Column(unique = true)
     private String email;
-    @Enumerated(EnumType.STRING)
-    private RoleList role;
+    private String role;
 
     public Role(String email, RoleList role) {
         this.email = email;
-        this.role = role;
+        switch (role){
+            case ADMIN -> this.role = "ADMIN";
+            case USER -> this.role = "USER";
+            case GUEST -> this.role = "GUEST";
+        }
     }
 }

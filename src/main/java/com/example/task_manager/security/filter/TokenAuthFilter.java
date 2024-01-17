@@ -54,7 +54,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
 
     private Collection<? extends GrantedAuthority> convertToAuthorities(Collection<Role> roles) {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole().name()))
+                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
                 .collect(Collectors.toList());
     }
 }

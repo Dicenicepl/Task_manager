@@ -31,8 +31,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
                                 .requestMatchers("/s/***").permitAll()
-                                .requestMatchers("/api/u/list/***").hasRole("ADMIN")
-                                .anyRequest().authenticated()
+                                .requestMatchers("/api/u/list/users/").hasRole("ADMIN")
+//                                .anyRequest().hasRole("ADMIN")
+//                                .anyRequest().authenticated()
                 )
                 .addFilterBefore(new TokenAuthFilter(tokenService, roleRepository), UsernamePasswordAuthenticationFilter.class);
         return http.build();
