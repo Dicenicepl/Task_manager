@@ -56,11 +56,11 @@ public class TokenService {
     public List<Token> findAllTokens(){
         return tokenRepository.findAll();
     }
-//    public String findToken(String token){
-//        Token token1 = tokenRepository.findByToken(token);
-//        if (token1 != null) {
-//            return token1.getAssignedEmail();
-//        }
-//        return null;
-//    }
+    public String findAssignedEmailByToken(String token){
+        Token token1 = tokenRepository.findByToken(token);
+        if (token1 != null) {
+            return token1.getAssignedEmail();
+        }
+        return null;
+    }
 }
