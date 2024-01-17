@@ -1,6 +1,7 @@
 package com.example.task_manager.security.service;
 
 import com.example.task_manager.security.entity.LoginUser;
+import com.example.task_manager.security.entity.RegisterUser;
 import com.example.task_manager.tokens.services.TokenService;
 import com.example.task_manager.users.entities.User;
 import com.example.task_manager.users.repositories.UserRepository;
@@ -29,5 +30,19 @@ public class SecurityService {
 
     public String generateTokenAndSave(String email){
         return tokenService.saveUserToken(email);
+    }
+
+    public boolean checkUserDataToRegister(RegisterUser registerUser){
+        if (registerUser == null){
+            return false;
+        }
+        if (registerUser.getUsername() == null || registerUser.getEmail() == null || registerUser.getPassword() == null){
+            return false;
+        }
+        return userRepository.findUserByEmail(registerUser.getEmail()) != null;
+    }
+    public void saveUser(RegisterUser registerUser){
+        User user = new User(registerUser.getUsername(), registerUser.getEmail(), registerUser.getPassword());
+        userRepository.save(user);
     }
 }

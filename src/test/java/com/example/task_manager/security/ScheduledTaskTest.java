@@ -18,8 +18,4 @@ public class ScheduledTaskTest {
         clearAutorization.clearTokens();
     }
 
-    @Test
-    void preparing(){
-        clearAutorization.createXTokens();
-    }
 }

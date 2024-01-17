@@ -19,6 +19,7 @@ public class ClearAutorization {
 
 
     //todo repair OutOfIndexException when this.timeinminis == other.timeinminis
+    //cannot saw when its stop working, i guess its scheduled trying to create a new clearing when table is empty
     @Scheduled(fixedDelay = 60000L)
     public void clearTokens() {
         List<Token> tokenList = tokenService.findAllTokens();
@@ -29,10 +30,5 @@ public class ClearAutorization {
         }
     }
 
-    public void createXTokens(){
-        for (int i = 0; i< 10; i++){
-            tokenService.saveUserToken("test"+i);
-        }
-    }
 
 }

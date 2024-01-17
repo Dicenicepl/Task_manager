@@ -29,18 +29,21 @@ public class UserService {
         for (User rawUser: usersFromDB){
             readyUsers.add(convertUserToProtectedUserData(rawUser));
         }
-        if (readyUsers.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.OK);
+        if (!readyUsers.isEmpty()) {
+            return new ResponseEntity<>(readyUsers, HttpStatus.OK);
         }
-        return new ResponseEntity<>(readyUsers, HttpStatus.OK);
+        return ResponseEntity.ok(null);
+
     }
 
     public ResponseEntity<ProtectedUserData> getUserByEmail(String email){
-        User rawUser = userRepository.findUserByEmail(email);
-        if (rawUser == null){
-            return new ResponseEntity<>(HttpStatus.OK);
+        User rawUser = userRepository.findUserByEmailContaining(email);
+        if (rawUser != null){
+            ProtectedUserData protectedUserData = new ProtectedUserData(rawUser.getUsername(), rawUser.getEmail());
+            return ResponseEntity.ok(protectedUserData);
         }
-        return new ResponseEntity<>(convertUserToProtectedUserData(rawUser), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
+
     }
 
         public ResponseEntity<String> createUser(RegisterUserData registerData) {

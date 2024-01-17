@@ -21,10 +21,10 @@ public class UserController {
     @GetMapping("/list/users/")
     public ResponseEntity<List<ProtectedUserData>> getAllUsers() {
         return userService.getAllUsers();
+
     }
 
 
-    //todo create method that will find users by part of email
     @GetMapping("/find/user/")
     public ResponseEntity<ProtectedUserData> getUserByEmail(String email) {
         return userService.getUserByEmail(email);
@@ -35,7 +35,6 @@ public class UserController {
         return userService.createUser(registerData);
     }
 
-    //todo find from object what is null if some variable is null then save previously data
     @PutMapping("/update/user/")
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserData userData) {
         return userService.updateUser(userData);

@@ -19,15 +19,17 @@ public class SecurityConfiguration {
         this.tokenService = tokenService;
     }
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/s/login").permitAll()
-                .anyRequest().authenticated().and()
-                .httpBasic()
-                .and()
+                .authorizeHttpRequests(authorizeRequests ->
+                        authorizeRequests
+                                .requestMatchers("/s/***").permitAll()
+                                .anyRequest().authenticated()
+                )
                 .addFilterBefore(new TokenAuthFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
 }

@@ -19,7 +19,7 @@ public class MainTest {
     @Test
     @DisplayName("Get all users")
     void getAllUsersTest(){
-        assertTrue(userService.getAllUsers().getBody() == null);
+        assertNull(userService.getAllUsers().getBody());
     }
 
     @Test

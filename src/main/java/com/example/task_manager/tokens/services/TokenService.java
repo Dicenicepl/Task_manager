@@ -41,8 +41,7 @@ public class TokenService {
         if (token == null){
             return false;
         }
-        boolean test = token.getTimeInMinis() > System.currentTimeMillis();
-        return test;
+        return token.getTimeInMinis() > System.currentTimeMillis();
     }
 
     @Transactional
@@ -57,4 +56,11 @@ public class TokenService {
     public List<Token> findAllTokens(){
         return tokenRepository.findAll();
     }
+//    public String findToken(String token){
+//        Token token1 = tokenRepository.findByToken(token);
+//        if (token1 != null) {
+//            return token1.getAssignedEmail();
+//        }
+//        return null;
+//    }
 }

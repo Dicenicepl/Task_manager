@@ -1,14 +1,17 @@
 package com.example.task_manager.security.controller;
 
 import com.example.task_manager.security.entity.LoginUser;
+import com.example.task_manager.security.entity.RegisterUser;
 import com.example.task_manager.security.service.SecurityService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/s/")
+@RequestMapping("/s/")
 public class SecurityController {
     private final SecurityService securityService;
 
@@ -25,5 +28,15 @@ public class SecurityController {
             return ResponseEntity.ok().headers(responseHeaders).body("good");
         }
         return ResponseEntity.badRequest().body("bad");
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerPage(@RequestBody RegisterUser registerUser){
+        if (securityService.checkUserDataToRegister(registerUser)){
+            securityService.saveUser(registerUser);
+            return ResponseEntity.ok("Saved");
+        }
+        return ResponseEntity.badRequest().body("Bad data");
     }
 }
