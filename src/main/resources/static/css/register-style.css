@@ -7,7 +7,7 @@ body {
     align-items: center;
 }
 
-.login-menu {
+.register-menu {
     background-color: #ffffff;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -34,27 +34,12 @@ input {
     /*box-sizing: border-box;*/
 }
 
-input[type = "submit"]{
+input[type = "submit"] {
     background-color: #4caf50;
     color: #ffffff;
     cursor: pointer;
 }
 
-input[type = "submit"]:hover{
+input[type = "submit"]:hover {
     background-color: #45a049;
 }
-.redirect-button{
-    padding: 10px 20px;
-    background-color: #4caf50;
-    color: #ffffff;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    margin: 0 auto;
-    display: block;
-}
-.redirect-button:hover{
-    background-color: #45a049;
-}
-
-
