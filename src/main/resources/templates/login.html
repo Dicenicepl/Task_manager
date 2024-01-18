@@ -8,12 +8,12 @@
 </head>
 <body>
 <div class="login-menu">
-    <form method="post">
+    <form id="postData">
         <label for="email">Email:</label><br>
         <input type="email" name="email" id="email" placeholder="Your email..." required><br>
         <label for="password">Password:</label><br>
         <input type="password" name="password" id="password" placeholder="Your password..." required><br>
-        <input id="login-submit" type="submit" value="Log in">
+        <button type="button" onclick="login_api_request()">Click me</button>
     </form>
     <button class="redirect-button">Register</button>
 

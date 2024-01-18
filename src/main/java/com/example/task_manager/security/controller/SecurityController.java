@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/s/")
+@CrossOrigin(origins = "http://localhost:8080")
 public class SecurityController {
     private final SecurityService securityService;
 
@@ -16,7 +17,7 @@ public class SecurityController {
         this.securityService = securityService;
     }
 
-    @CrossOrigin
+
     @PostMapping("/login")
     public ResponseEntity<String> loginPage(@RequestBody LoginUser loginUser){
         if (securityService.checkUserDataToLogin(loginUser)) {
