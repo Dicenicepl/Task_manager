@@ -3,7 +3,6 @@ package com.example.task_manager.security.controller;
 import com.example.task_manager.security.entity.LoginUser;
 import com.example.task_manager.security.entity.RegisterUser;
 import com.example.task_manager.security.service.SecurityService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,22 +19,12 @@ public class SecurityController {
 
     @PostMapping("/login")
     public ResponseEntity<String> loginPage(@RequestBody LoginUser loginUser){
-        if (securityService.checkUserDataToLogin(loginUser)) {
-            String token = securityService.generateTokenAndSave(loginUser.getEmail());
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("Authorization", token);
-            return ResponseEntity.ok().headers(responseHeaders).body("good");
-        }
-        return ResponseEntity.badRequest().body("bad");
+        return securityService.loginUser(loginUser);
     }
 
 
     @PostMapping("/register")
     public ResponseEntity<String> registerPage(@RequestBody RegisterUser registerUser){
-        if (securityService.checkUserDataToRegister(registerUser)){
-            securityService.saveUser(registerUser);
-            return ResponseEntity.ok("Saved");
-        }
-        return ResponseEntity.badRequest().body("Bad data");
+        return securityService.saveUser(registerUser);
     }
 }

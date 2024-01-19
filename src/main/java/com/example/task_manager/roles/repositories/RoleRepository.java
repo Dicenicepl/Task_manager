@@ -8,4 +8,6 @@ import java.util.Collection;
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
     Collection<Role> findRolesByEmail(String email);
+
+    Role findRoleByEmail(String email);
 }

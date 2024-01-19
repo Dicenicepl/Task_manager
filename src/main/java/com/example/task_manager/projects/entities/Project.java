@@ -2,7 +2,10 @@ package com.example.task_manager.projects.entities;
 
 import com.example.task_manager.tasks.entities.Task;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -11,7 +14,6 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "Projects")
 public class Project {
@@ -27,6 +29,8 @@ public class Project {
     @Column(unique = true)
     private String name;
     private String description;
+    //todo create relative tables projects-users
+//    private List<Long> usersId;
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 
@@ -34,5 +38,16 @@ public class Project {
         this.owner_email = owner_email;
         this.name = name;
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "project_id=" + project_id +
+                ", owner_email='" + owner_email + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", tasks=" + tasks +
+                '}';
     }
 }

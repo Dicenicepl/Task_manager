@@ -43,17 +43,18 @@ input[type = "submit"]{
 input[type = "submit"]:hover{
     background-color: #45a049;
 }
-.redirect-button{
+button{
     padding: 10px 20px;
     background-color: #4caf50;
     color: #ffffff;
     border: none;
+    width: 50%;
     border-radius: 50px;
     cursor: pointer;
-    margin: 0 auto;
+    margin: 0 auto 10px;
     display: block;
 }
-.redirect-button:hover{
+button:hover{
     background-color: #45a049;
 }
 

@@ -1,6 +1,8 @@
 package com.example.task_manager.users.controllers;
 
-import com.example.task_manager.users.entities.*;
+import com.example.task_manager.users.entities.DeleteUserData;
+import com.example.task_manager.users.entities.ProtectedUserData;
+import com.example.task_manager.users.entities.UpdateUserData;
 import com.example.task_manager.users.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +32,6 @@ public class UserController {
         return userService.getUserByEmail(email);
     }
 
-    @PostMapping("/create/user/")
-    public ResponseEntity<String> createUser(@RequestBody RegisterUserData registerData) {
-        return userService.createUser(registerData);
-    }
 
     @PutMapping("/update/user/")
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserData userData) {

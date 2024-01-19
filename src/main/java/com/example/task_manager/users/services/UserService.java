@@ -1,6 +1,10 @@
 package com.example.task_manager.users.services;
 
-import com.example.task_manager.users.entities.*;
+import com.example.task_manager.roles.services.RoleService;
+import com.example.task_manager.users.entities.DeleteUserData;
+import com.example.task_manager.users.entities.ProtectedUserData;
+import com.example.task_manager.users.entities.UpdateUserData;
+import com.example.task_manager.users.entities.User;
 import com.example.task_manager.users.repositories.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -13,9 +17,11 @@ import java.util.List;
 @Service
 public class UserService {
 
+    private final RoleService roleService;
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(RoleService roleService, UserRepository userRepository) {
+        this.roleService = roleService;
         this.userRepository = userRepository;
     }
 
@@ -46,13 +52,10 @@ public class UserService {
 
     }
 
-        public ResponseEntity<String> createUser(RegisterUserData registerData) {
+        public ResponseEntity<String> createUser(User user) {
         try{
-            if (registerData.getEmail() == null || registerData.getPassword() == null){
-                throw new NullPointerException();
-            }
-            User user = new User(registerData.getUsername(), registerData.getEmail(), registerData.getPassword());
             userRepository.save(user);
+            roleService.addRole(user.getEmail());
             return new ResponseEntity<>("Saved", HttpStatus.OK);
         }catch (NullPointerException e){
             return ResponseEntity.badRequest().body("Wrong object");
@@ -80,5 +83,8 @@ public class UserService {
             return new ResponseEntity<>("Deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Bad password", HttpStatus.BAD_REQUEST);
+    }
+    public User getUserFromEmail(String email){
+        return userRepository.findUserByEmail(email);
     }
 }

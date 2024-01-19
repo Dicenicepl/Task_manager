@@ -1,13 +1,15 @@
 package com.example.task_manager.roles.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "Roles")
 public class Role {
@@ -21,14 +23,19 @@ public class Role {
     private Long role_id;
     @Column(unique = true)
     private String email;
-    private String role;
+    private RoleList role;
 
     public Role(String email, RoleList role) {
         this.email = email;
-        switch (role){
-            case ADMIN -> this.role = "ADMIN";
-            case USER -> this.role = "USER";
-            case GUEST -> this.role = "GUEST";
-        }
+        this.role = role;
+    }
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "role_id=" + role_id +
+                ", email='" + email + '\'' +
+                ", role='" + role + '\'' +
+                '}';
     }
 }

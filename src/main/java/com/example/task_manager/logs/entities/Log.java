@@ -1,7 +1,10 @@
 package com.example.task_manager.logs.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -10,7 +13,6 @@ import java.sql.Time;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Entity
 @Table(name = "Logs")
 public class Log {
@@ -30,5 +32,16 @@ public class Log {
     public Log(String changes, String whoUpdated) {
         this.changes = changes;
         this.whoUpdated = whoUpdated;
+    }
+
+    @Override
+    public String toString() {
+        return "Log{" +
+                "log_id=" + log_id +
+                ", dataOfUpdate=" + dataOfUpdate +
+                ", timeOfUpdate=" + timeOfUpdate +
+                ", changes='" + changes + '\'' +
+                ", whoUpdated='" + whoUpdated + '\'' +
+                '}';
     }
 }
