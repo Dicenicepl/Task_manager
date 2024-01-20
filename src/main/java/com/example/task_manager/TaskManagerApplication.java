@@ -9,10 +9,12 @@ public class TaskManagerApplication {
     //todo clear code
     //todo create user profile
     //todo connect task service with project service
-    //todo update security with checking role
-    //todo rename objects data name with DTO
-    //todo create openAPI on url v2
-    //todo secure password with 128 hasher or one of hasher
+    //update security with checking role
+    //rename objects data name with DTO
+    //todo create openAPI on url v2 - LONG TASK
+    //secure password with 128 hasher or one of hasher
+    //todo create logs - LONG TASK
+    //todo property connect services
     public static void main(String[] args) {
         SpringApplication.run(TaskManagerApplication.class, args);
     }

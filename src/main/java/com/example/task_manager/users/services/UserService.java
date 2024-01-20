@@ -1,9 +1,9 @@
 package com.example.task_manager.users.services;
 
 import com.example.task_manager.roles.services.RoleService;
-import com.example.task_manager.users.entities.DeleteUserData;
-import com.example.task_manager.users.entities.ProtectedUserData;
-import com.example.task_manager.users.entities.UpdateUserData;
+import com.example.task_manager.users.entities.DeleteUserDTO;
+import com.example.task_manager.users.entities.ProtectedUserDTO;
+import com.example.task_manager.users.entities.UpdateUserDTO;
 import com.example.task_manager.users.entities.User;
 import com.example.task_manager.users.repositories.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,13 +25,13 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    private ProtectedUserData convertUserToProtectedUserData(User user){
-        return new ProtectedUserData(user.getUsername(), user.getEmail());
+    private ProtectedUserDTO convertUserToProtectedUserData(User user){
+        return new ProtectedUserDTO(user.getUsername(), user.getEmail());
     }
 
-    public ResponseEntity<List<ProtectedUserData>> getAllUsers(){
+    public ResponseEntity<List<ProtectedUserDTO>> getAllUsers(){
         List<User> usersFromDB = userRepository.findAll();
-        List<ProtectedUserData> readyUsers = new ArrayList<>();
+        List<ProtectedUserDTO> readyUsers = new ArrayList<>();
         for (User rawUser: usersFromDB){
             readyUsers.add(convertUserToProtectedUserData(rawUser));
         }
@@ -42,16 +42,16 @@ public class UserService {
 
     }
 
-    public ResponseEntity<ProtectedUserData> getUserByEmail(String email){
+    public ResponseEntity<ProtectedUserDTO> getUserByEmail(String email){
         User rawUser = userRepository.findUserByEmailContaining(email);
         if (rawUser != null){
-            ProtectedUserData protectedUserData = new ProtectedUserData(rawUser.getUsername(), rawUser.getEmail());
-            return ResponseEntity.ok(protectedUserData);
+            ProtectedUserDTO protectedUserDTO = new ProtectedUserDTO(rawUser.getUsername(), rawUser.getEmail());
+            return ResponseEntity.ok(protectedUserDTO);
         }
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
-
+        //todo create a better data checker
         public ResponseEntity<String> createUser(User user) {
         try{
             userRepository.save(user);
@@ -65,7 +65,7 @@ public class UserService {
 
     }
 
-    public ResponseEntity<String> updateUser(UpdateUserData userData){
+    public ResponseEntity<String> updateUser(UpdateUserDTO userData){
         User user = userRepository.findUserByEmail(userData.getEmail());
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -76,9 +76,9 @@ public class UserService {
         return new ResponseEntity<>("Updated", HttpStatus.OK);
     }
 
-    public ResponseEntity<String> deleteUser(DeleteUserData deleteUserData){
-        User user = userRepository.findUserByEmail(deleteUserData.getEmail());
-        if (user.getPassword().equals(deleteUserData.getPassword())) {
+    public ResponseEntity<String> deleteUser(DeleteUserDTO deleteUserDTO){
+        User user = userRepository.findUserByEmail(deleteUserDTO.getEmail());
+        if (user.getPassword().equals(deleteUserDTO.getPassword())) {
             userRepository.deleteById(user.getUser_id());
             return new ResponseEntity<>("Deleted", HttpStatus.OK);
         }

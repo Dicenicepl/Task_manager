@@ -1,7 +1,7 @@
 package com.example.task_manager;
 
-import com.example.task_manager.users.entities.DeleteUserData;
-import com.example.task_manager.users.entities.ProtectedUserData;
+import com.example.task_manager.users.entities.DeleteUserDTO;
+import com.example.task_manager.users.entities.ProtectedUserDTO;
 import com.example.task_manager.users.entities.User;
 import com.example.task_manager.users.services.UserService;
 import org.junit.jupiter.api.AfterEach;
@@ -32,11 +32,11 @@ public class UserServiceTest {
     }
     @AfterEach
     void clearing(){
-        DeleteUserData deleteUserData = new DeleteUserData(
+        DeleteUserDTO deleteUserDTO = new DeleteUserDTO(
                 "test@example.com",
                 "zaq1@WSX"
         );
-        userService.deleteUser(deleteUserData);
+        userService.deleteUser(deleteUserDTO);
     }
     @Test
     @DisplayName("Get all users")
@@ -48,7 +48,7 @@ public class UserServiceTest {
     @Test
     @DisplayName("Get user by email")
     void getUserByEmail(){
-        ResponseEntity<ProtectedUserData> userResponse = userService.getUserByEmail("test@example.com");
+        ResponseEntity<ProtectedUserDTO> userResponse = userService.getUserByEmail("test@example.com");
         assertEquals(HttpStatus.OK, userResponse.getStatusCode());
         assertEquals("test@example.com", userResponse.getBody().getEmail());
     }

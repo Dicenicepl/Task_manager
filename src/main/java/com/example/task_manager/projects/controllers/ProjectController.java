@@ -1,9 +1,8 @@
 package com.example.task_manager.projects.controllers;
 
-import com.example.task_manager.projects.entities.DeleteProjectData;
-import com.example.task_manager.projects.entities.Project;
-import com.example.task_manager.projects.entities.ProtectedProjectData;
-import com.example.task_manager.projects.entities.RegisterProjectData;
+import com.example.task_manager.projects.entities.DeleteProjectDTO;
+import com.example.task_manager.projects.entities.ProtectedProjectDTO;
+import com.example.task_manager.projects.entities.RegisterProjectDTO;
 import com.example.task_manager.projects.services.ProjectService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,27 +19,27 @@ public class ProjectController {
     }
 
     @GetMapping("/list/projects/")
-    public ResponseEntity<List<ProtectedProjectData>> getAllProjects(){
+    public ResponseEntity<List<ProtectedProjectDTO>> getAllProjects(){
         return projectService.getAllProjects();
     }
 
     @GetMapping("/find/project")
-    public ResponseEntity<ProtectedProjectData> getProjectByName(String name){
+    public ResponseEntity<ProtectedProjectDTO> getProjectByName(String name){
         return projectService.getProjectByName(name);
     }
 
     @PostMapping("/create/project/")
-    public ResponseEntity<String> createProject(RegisterProjectData registerProjectData){
-        return projectService.createProject(registerProjectData);
+    public ResponseEntity<String> createProject(RegisterProjectDTO registerProjectDTO){
+        return projectService.createProject(registerProjectDTO);
     }
 
     @PutMapping("/update/project/")
-    public ResponseEntity<String> updateProject(RegisterProjectData registerProjectData){
-        return projectService.updateProject(registerProjectData);
+    public ResponseEntity<String> updateProject(RegisterProjectDTO registerProjectDTO){
+        return projectService.updateProject(registerProjectDTO);
     }
 
     @DeleteMapping("/delete/project/")
-    public ResponseEntity<String> deleteProject(DeleteProjectData deleteProjectData){
-        return projectService.deleteProject(deleteProjectData);
+    public ResponseEntity<String> deleteProject(DeleteProjectDTO deleteProjectDTO){
+        return projectService.deleteProject(deleteProjectDTO);
     }
 }

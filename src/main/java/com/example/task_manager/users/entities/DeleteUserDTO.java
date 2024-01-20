@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DeleteUserData {
+public class DeleteUserDTO {
     private String email;
     private String password;
 }

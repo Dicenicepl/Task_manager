@@ -2,7 +2,7 @@ package com.example.task_manager.security;
 
 import com.example.task_manager.security.entity.LoginUser;
 import com.example.task_manager.security.service.SecurityService;
-import com.example.task_manager.users.entities.DeleteUserData;
+import com.example.task_manager.users.entities.DeleteUserDTO;
 import com.example.task_manager.users.entities.User;
 import com.example.task_manager.users.services.UserService;
 import org.junit.jupiter.api.AfterEach;
@@ -28,7 +28,7 @@ class SecurityServiceTest {
     }
     @AfterEach
     void clearing(){
-        userService.deleteUser(new DeleteUserData("example@example.com", "1234"));
+        userService.deleteUser(new DeleteUserDTO("example@example.com", "1234"));
     }
     @Test
     @DisplayName("Login test")

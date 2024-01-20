@@ -21,24 +21,16 @@ public class SecurityConfiguration {
         this.tokenService = tokenService;
         this.roleRepository = roleRepository;
     }
-
-    
-
-    //todo check why role isn`t checked by Spring Security,
-    // example: user_role = ADMIN - working| user_role = USER - working
-    // needed result user_role = ADMIN - working | user_role = USER - block
+    //todo uncomment lines for role checking start working
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-//                                .requestMatchers("/api/s/***").permitAll()
-//                                .requestMatchers("/api/u/list/users/").hasRole("ADMIN")
-//                                .anyRequest().hasRole("ADMIN")
-                                .anyRequest().permitAll()
+                                .requestMatchers("/api/s/***").permitAll()
+                                .anyRequest().hasRole("USER")
                 )
                 .addFilterBefore(new TokenAuthFilter(tokenService, roleRepository), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
 }

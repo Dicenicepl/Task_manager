@@ -1,6 +1,6 @@
 package com.example.task_manager.tasks.services;
 
-import com.example.task_manager.tasks.entities.ProtectedTaskData;
+import com.example.task_manager.tasks.entities.ProtectedTaskDTO;
 import com.example.task_manager.tasks.entities.Task;
 import com.example.task_manager.tasks.repositories.TaskRepository;
 import org.springframework.http.HttpStatus;
@@ -20,8 +20,8 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    private ProtectedTaskData convertTaskToProtectedTaskData(Task task){
-        return new ProtectedTaskData(
+    private ProtectedTaskDTO convertTaskToProtectedTaskData(Task task){
+        return new ProtectedTaskDTO(
                 task.getOwner_email(),
                 task.getName(),
                 task.getDescription(),
@@ -32,16 +32,16 @@ public class TaskService {
                 task.getProject());
     }
 
-    public ResponseEntity<List<ProtectedTaskData>> getAllTasks(){
+    public ResponseEntity<List<ProtectedTaskDTO>> getAllTasks(){
         List<Task> tasks = taskRepository.findAll();
-        List<ProtectedTaskData> protectedTaskData = new ArrayList<>();
+        List<ProtectedTaskDTO> protectedTaskData = new ArrayList<>();
         for (Task task : tasks){
             protectedTaskData.add(convertTaskToProtectedTaskData(task));
         }
         return new ResponseEntity<>(protectedTaskData, HttpStatus.OK);
     }
 
-    public ResponseEntity<ProtectedTaskData> getTaskByName(String name) {
+    public ResponseEntity<ProtectedTaskDTO> getTaskByName(String name) {
         Task task = taskRepository.findTaskByName(name);
         return new ResponseEntity<>(convertTaskToProtectedTaskData(task), HttpStatus.OK);
     }

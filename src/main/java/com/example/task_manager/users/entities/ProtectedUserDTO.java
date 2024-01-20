@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UpdateUserData {
-    private String email;
+public class ProtectedUserDTO {
     private String username;
-    private String password;
+    private String email;
+
 }

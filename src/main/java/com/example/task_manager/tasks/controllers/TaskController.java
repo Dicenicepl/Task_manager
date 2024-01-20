@@ -1,6 +1,6 @@
 package com.example.task_manager.tasks.controllers;
 
-import com.example.task_manager.tasks.entities.ProtectedTaskData;
+import com.example.task_manager.tasks.entities.ProtectedTaskDTO;
 import com.example.task_manager.tasks.entities.Task;
 import com.example.task_manager.tasks.services.TaskService;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +21,11 @@ public class TaskController {
 
 
     @GetMapping("/list/tasks/")
-    public ResponseEntity<List<ProtectedTaskData>> getAllTasks() {
+    public ResponseEntity<List<ProtectedTaskDTO>> getAllTasks() {
         return taskService.getAllTasks();
     }
     @GetMapping("/find/task/")
-    public ResponseEntity<ProtectedTaskData> getTaskByName(String name) {
+    public ResponseEntity<ProtectedTaskDTO> getTaskByName(String name) {
         return taskService.getTaskByName(name);
     }
 

@@ -1,6 +1,6 @@
 package com.example.task_manager;
 
-import com.example.task_manager.users.entities.DeleteUserData;
+import com.example.task_manager.users.entities.DeleteUserDTO;
 import com.example.task_manager.users.entities.User;
 import com.example.task_manager.users.services.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +35,7 @@ public class MainTest {
     void createUser(){
         //Preparing for tests
         try {
-            userService.deleteUser(new DeleteUserData("Email2", "password"));
+            userService.deleteUser(new DeleteUserDTO("Email2", "password"));
         }catch (NullPointerException ignored){}
         //
         assertTrue(userService.createUser(null).getStatusCode().is4xxClientError());

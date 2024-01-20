@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class DeleteProjectData {
+public class DeleteProjectDTO {
 
     private String owner_email;
     private String name;

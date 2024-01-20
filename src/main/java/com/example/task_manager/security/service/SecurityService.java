@@ -7,10 +7,12 @@ import com.example.task_manager.users.entities.User;
 import com.example.task_manager.users.services.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class SecurityService {
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final UserService userService;
     private final TokenService tokenService;
 
@@ -18,7 +20,7 @@ public class SecurityService {
         this.userService = userService;
         this.tokenService = tokenService;
     }
-
+    //todo password from database doesn`t match with raw password
     private boolean checkUserDataToLogin(LoginUser loginUser) {
         if (loginUser == null) {
             return false;
@@ -27,7 +29,8 @@ public class SecurityService {
         if (user == null) {
             return false;
         }
-        return user.getEmail().equals(loginUser.getEmail()) && user.getPassword().equals(loginUser.getPassword());
+        String password = user.getPassword();
+        return passwordEncoder.matches(loginUser.getPassword(), password);
     }
 
     private boolean checkUserDataToRegister(RegisterUser registerUser) {
@@ -59,7 +62,7 @@ public class SecurityService {
             User user = new User(
                     registerUser.getUsername(),
                     registerUser.getEmail(),
-                    registerUser.getPassword()
+                    passwordEncoder.encode(registerUser.getPassword())
             );
             userService.createUser(user);
             return ResponseEntity.ok("User register successful");

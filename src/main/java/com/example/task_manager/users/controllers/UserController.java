@@ -1,8 +1,8 @@
 package com.example.task_manager.users.controllers;
 
-import com.example.task_manager.users.entities.DeleteUserData;
-import com.example.task_manager.users.entities.ProtectedUserData;
-import com.example.task_manager.users.entities.UpdateUserData;
+import com.example.task_manager.users.entities.DeleteUserDTO;
+import com.example.task_manager.users.entities.ProtectedUserDTO;
+import com.example.task_manager.users.entities.UpdateUserDTO;
 import com.example.task_manager.users.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,25 +21,25 @@ public class UserController {
 
 
     @GetMapping("/list/users/")
-    public ResponseEntity<List<ProtectedUserData>> getAllUsers() {
+    public ResponseEntity<List<ProtectedUserDTO>> getAllUsers() {
         return userService.getAllUsers();
 
     }
 
 
     @GetMapping("/find/user/")
-    public ResponseEntity<ProtectedUserData> getUserByEmail(String email) {
+    public ResponseEntity<ProtectedUserDTO> getUserByEmail(String email) {
         return userService.getUserByEmail(email);
     }
 
 
     @PutMapping("/update/user/")
-    public ResponseEntity<String> updateUser(@RequestBody UpdateUserData userData) {
+    public ResponseEntity<String> updateUser(@RequestBody UpdateUserDTO userData) {
         return userService.updateUser(userData);
     }
 
     @DeleteMapping("/delete/user/")
-    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserData deleteUserData) {
-        return userService.deleteUser(deleteUserData);
+    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserDTO deleteUserDTO) {
+        return userService.deleteUser(deleteUserDTO);
     }
 }

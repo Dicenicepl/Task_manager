@@ -1,9 +1,9 @@
 package com.example.task_manager.projects.services;
 
-import com.example.task_manager.projects.entities.DeleteProjectData;
+import com.example.task_manager.projects.entities.DeleteProjectDTO;
 import com.example.task_manager.projects.entities.Project;
-import com.example.task_manager.projects.entities.ProtectedProjectData;
-import com.example.task_manager.projects.entities.RegisterProjectData;
+import com.example.task_manager.projects.entities.ProtectedProjectDTO;
+import com.example.task_manager.projects.entities.RegisterProjectDTO;
 import com.example.task_manager.projects.repositories.ProjectRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,48 +19,48 @@ public class ProjectService {
     public ProjectService(ProjectRepository projectRepository) {
         this.projectRepository = projectRepository;
     }
-    private ProtectedProjectData converter(Project project){
-        return new ProtectedProjectData(
+    private ProtectedProjectDTO converter(Project project){
+        return new ProtectedProjectDTO(
                 project.getOwner_email(),
                 project.getName(),
                 project.getDescription(),
                 project.getTasks()
         );
     }
-    public ResponseEntity<List<ProtectedProjectData>> getAllProjects(){
-        List<ProtectedProjectData> list = new ArrayList<>();
+    public ResponseEntity<List<ProtectedProjectDTO>> getAllProjects(){
+        List<ProtectedProjectDTO> list = new ArrayList<>();
         for (Project project:projectRepository.findAll()){
             list.add(converter(project));
         }
         return ResponseEntity.ok(list);
     }
 
-    public ResponseEntity<ProtectedProjectData> getProjectByName(String name){
-        ProtectedProjectData data = converter(projectRepository.findByName(name));
+    public ResponseEntity<ProtectedProjectDTO> getProjectByName(String name){
+        ProtectedProjectDTO data = converter(projectRepository.findByName(name));
         return ResponseEntity.ok(data);
     }
 
-    public ResponseEntity<String> createProject(RegisterProjectData registerProjectData){
-        projectRepository.save(new Project(registerProjectData.getOwner_email(), registerProjectData.getName(), registerProjectData.getDescription()));
+    public ResponseEntity<String> createProject(RegisterProjectDTO registerProjectDTO){
+        projectRepository.save(new Project(registerProjectDTO.getOwner_email(), registerProjectDTO.getName(), registerProjectDTO.getDescription()));
         return ResponseEntity.ok("Done");
 
     }
 
-    public ResponseEntity<String> updateProject(RegisterProjectData registerProjectData){
-        Project project = projectRepository.findByName(registerProjectData.getName());
+    public ResponseEntity<String> updateProject(RegisterProjectDTO registerProjectDTO){
+        Project project = projectRepository.findByName(registerProjectDTO.getName());
         Project newProject = new Project(
                 project.getProject_id(),
-                registerProjectData.getOwner_email(),
-                registerProjectData.getName(),
-                registerProjectData.getDescription(),
+                registerProjectDTO.getOwner_email(),
+                registerProjectDTO.getName(),
+                registerProjectDTO.getDescription(),
                 project.getTasks()
         );
         projectRepository.save(newProject);
         return ResponseEntity.ok("Done");
     }
 
-    public ResponseEntity<String> deleteProject(DeleteProjectData deleteProjectData){
-        projectRepository.delete(projectRepository.findByName(deleteProjectData.getName()));
+    public ResponseEntity<String> deleteProject(DeleteProjectDTO deleteProjectDTO){
+        projectRepository.delete(projectRepository.findByName(deleteProjectDTO.getName()));
         return ResponseEntity.ok("Done");
     }
 }

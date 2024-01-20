@@ -11,7 +11,7 @@ import java.sql.Time;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ProtectedTaskData {
+public class ProtectedTaskDTO {
     private String owner_email;
     private String name;
     private String description;
