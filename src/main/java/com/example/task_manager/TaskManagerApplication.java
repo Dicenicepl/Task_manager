@@ -5,16 +5,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class TaskManagerApplication {
-    //todo create project service api
-    //todo clear code
-    //todo create user profile
+    //todo create a try/catch for most likely exceptions
+    //todo check if user can delete/update user
     //todo connect task service with project service
+    //todo clear code
+    //todo create openAPI on url v2 - LONG TASK
+    //todo property connect services
+    //todo create logs - LONG TASK 'log4j'
+    //(frontend)todo create frontend for Project view and Task view
+    //(frontend)todo create user profile
+    //secure password with 128 hasher or one of hasher
     //update security with checking role
     //rename objects data name with DTO
-    //todo create openAPI on url v2 - LONG TASK
-    //secure password with 128 hasher or one of hasher
-    //todo create logs - LONG TASK
-    //todo property connect services
     public static void main(String[] args) {
         SpringApplication.run(TaskManagerApplication.class, args);
     }

@@ -15,4 +15,8 @@ public class Endpoints {
     public String registerView(){
         return "register";
     }
+    @GetMapping("/task")
+    public String taskView(){
+        return "task";
+    }
 }

@@ -2,12 +2,11 @@ package com.example.task_manager.users.controllers;
 
 import com.example.task_manager.users.entities.DeleteUserDTO;
 import com.example.task_manager.users.entities.ProtectedUserDTO;
+import com.example.task_manager.users.entities.RegisterUserDTO;
 import com.example.task_manager.users.entities.UpdateUserDTO;
 import com.example.task_manager.users.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/u/")
@@ -19,20 +18,15 @@ public class UserController {
         this.userService = userService;
     }
 
-
-    @GetMapping("/list/users/")
-    public ResponseEntity<List<ProtectedUserDTO>> getAllUsers() {
-        return userService.getAllUsers();
-
-    }
-
-
     @GetMapping("/find/user/")
     public ResponseEntity<ProtectedUserDTO> getUserByEmail(String email) {
         return userService.getUserByEmail(email);
     }
 
-
+    @PostMapping("/create/user/")
+    public ResponseEntity<String> createUser(@RequestBody RegisterUserDTO registerUserDTO){
+        return userService.createUser(registerUserDTO);
+    }
     @PutMapping("/update/user/")
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserDTO userData) {
         return userService.updateUser(userData);

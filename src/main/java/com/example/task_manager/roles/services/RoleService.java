@@ -5,6 +5,8 @@ import com.example.task_manager.roles.entities.RoleList;
 import com.example.task_manager.roles.repositories.RoleRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 @Service
 public class RoleService {
     //todo create getRole for security authorization
@@ -31,5 +33,9 @@ public class RoleService {
         }catch (IllegalArgumentException e){
             return false;
         }
+    }
+
+    public Collection<Role> findRolesByEmail(String email) {
+        return roleRepository.findRolesByEmail(email);
     }
 }

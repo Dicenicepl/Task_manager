@@ -20,4 +20,18 @@ public class ProtectedTaskDTO {
     private Time timeOfEnding;
     private Date dateOfEnding;
     private Project project;
+
+    @Override
+    public String toString() {
+        return "ProtectedTaskDTO{" +
+                "owner_email='" + owner_email + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", timeOfCreating=" + timeOfCreating +
+                ", dateOfCreating=" + dateOfCreating +
+                ", timeOfEnding=" + timeOfEnding +
+                ", dateOfEnding=" + dateOfEnding +
+                ", project=" + project +
+                '}';
+    }
 }

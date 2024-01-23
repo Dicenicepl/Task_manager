@@ -1,7 +1,6 @@
 package com.example.task_manager.security.controller;
 
 import com.example.task_manager.security.entity.LoginUser;
-import com.example.task_manager.security.entity.RegisterUser;
 import com.example.task_manager.security.service.SecurityService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +22,8 @@ public class SecurityController {
     }
 
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerPage(@RequestBody RegisterUser registerUser){
-        return securityService.saveUser(registerUser);
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<String> registerPage(@RequestBody RegisterUser registerUser){
+//        return securityService.saveUser(registerUser);
+//    }
 }

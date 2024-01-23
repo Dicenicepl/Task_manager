@@ -2,7 +2,7 @@ package com.example.task_manager.security.filter;
 
 
 import com.example.task_manager.roles.entities.Role;
-import com.example.task_manager.roles.repositories.RoleRepository;
+import com.example.task_manager.roles.services.RoleService;
 import com.example.task_manager.tokens.services.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -25,12 +25,12 @@ import java.util.stream.Collectors;
 public class TokenAuthFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
 
-    public TokenAuthFilter(TokenService tokenService, RoleRepository roleRepository) {
+    public TokenAuthFilter(TokenService tokenService, RoleService roleService) {
         this.tokenService = tokenService;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
     }
 
     @Override
@@ -38,17 +38,15 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         String token = request.getHeader("Authorization");
         if (tokenService.isNotExpired(token)) {
             String email = tokenService.findAssignedEmailByToken(token);
-            Authentication auth = new UsernamePasswordAuthenticationToken(email, "Credentials", findRolesByUsername(email));
+            Authentication auth = new UsernamePasswordAuthenticationToken(email, "Credentials", findRolesByEmail(email));
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
-
         filterChain.doFilter(request, response);
     }
 
 
-    private Collection<? extends GrantedAuthority> findRolesByUsername(String username) {
-        Collection<Role> userRoles = roleRepository.findRolesByEmail(username);
-        System.out.println("Roles for user " + username + ": " + userRoles);
+    private Collection<? extends GrantedAuthority> findRolesByEmail(String email) {
+        Collection<Role> userRoles = roleService.findRolesByEmail(email);
         return convertToAuthorities(userRoles);
     }
 

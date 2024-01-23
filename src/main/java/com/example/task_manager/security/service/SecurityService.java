@@ -57,17 +57,4 @@ public class SecurityService {
         return ResponseEntity.badRequest().body("Invalid email or password");
     }
 
-    public ResponseEntity<String> saveUser(RegisterUser registerUser) {
-        if (checkUserDataToRegister(registerUser)) {
-            User user = new User(
-                    registerUser.getUsername(),
-                    registerUser.getEmail(),
-                    passwordEncoder.encode(registerUser.getPassword())
-            );
-            userService.createUser(user);
-            return ResponseEntity.ok("User register successful");
-        }
-        return ResponseEntity.badRequest().body("Invalid data, please check a form");
-
-    }
 }
