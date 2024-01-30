@@ -14,9 +14,6 @@ public class TaskManagerApplication {
     //todo create logs - LONG TASK 'log4j'
     //(frontend)todo create frontend for Project view and Task view
     //(frontend)todo create user profile
-    //secure password with 128 hasher or one of hasher
-    //update security with checking role
-    //rename objects data name with DTO
     public static void main(String[] args) {
         SpringApplication.run(TaskManagerApplication.class, args);
     }

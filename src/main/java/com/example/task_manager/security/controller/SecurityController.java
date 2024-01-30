@@ -21,9 +21,4 @@ public class SecurityController {
         return securityService.loginUser(loginUser);
     }
 
-
-//    @PostMapping("/register")
-//    public ResponseEntity<String> registerPage(@RequestBody RegisterUser registerUser){
-//        return securityService.saveUser(registerUser);
-//    }
 }

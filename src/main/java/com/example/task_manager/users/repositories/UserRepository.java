@@ -5,8 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    User findUserByEmailContaining(String email);
+    // generate SQL problem where example: %l% return first user in table
+//    User findUserByEmailContaining(String email);
 
+    User findUserByEmailStartingWith(String email);
 
     User findUserByEmail(String email);
 }

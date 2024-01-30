@@ -5,11 +5,9 @@ import com.example.task_manager.projects.entities.Project;
 import com.example.task_manager.projects.entities.ProtectedProjectDTO;
 import com.example.task_manager.projects.entities.RegisterProjectDTO;
 import com.example.task_manager.projects.repositories.ProjectRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ProjectService {
@@ -27,27 +25,34 @@ public class ProjectService {
                 project.getTasks()
         );
     }
-    public ResponseEntity<List<ProtectedProjectDTO>> getAllProjects(){
-        List<ProtectedProjectDTO> list = new ArrayList<>();
-        for (Project project:projectRepository.findAll()){
-            list.add(converter(project));
-        }
-        return ResponseEntity.ok(list);
-    }
 
     public ResponseEntity<ProtectedProjectDTO> getProjectByName(String name){
-        ProtectedProjectDTO data = converter(projectRepository.findByName(name));
-        return ResponseEntity.ok(data);
+        try {
+            ProtectedProjectDTO data = converter(projectRepository.findProjectByNameStartingWith(name));
+            return ResponseEntity.ok(data);
+        }catch (NullPointerException e){
+            return ResponseEntity.ok(null);
+        }
     }
 
-    public ResponseEntity<String> createProject(RegisterProjectDTO registerProjectDTO){
-        projectRepository.save(new Project(registerProjectDTO.getOwner_email(), registerProjectDTO.getName(), registerProjectDTO.getDescription()));
-        return ResponseEntity.ok("Done");
+    public ResponseEntity<String> createProject(RegisterProjectDTO registerProjectDTO) {
+        try {
+            if (registerProjectDTO.getOwner_email() == null || registerProjectDTO.getName() == null || registerProjectDTO.getDescription() == null) {
+                return ResponseEntity.badRequest().body("Invalid input. All fields must be provided.");
+            }
 
+            Project newProject = new Project(registerProjectDTO.getOwner_email(), registerProjectDTO.getName(), registerProjectDTO.getDescription());
+            projectRepository.save(newProject);
+
+            return ResponseEntity.ok("Project created successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("idk");
+        }
     }
+
 
     public ResponseEntity<String> updateProject(RegisterProjectDTO registerProjectDTO){
-        Project project = projectRepository.findByName(registerProjectDTO.getName());
+        Project project = projectRepository.findProjectByNameStartingWith(registerProjectDTO.getName());
         Project newProject = new Project(
                 project.getProject_id(),
                 registerProjectDTO.getOwner_email(),
@@ -60,7 +65,7 @@ public class ProjectService {
     }
 
     public ResponseEntity<String> deleteProject(DeleteProjectDTO deleteProjectDTO){
-        projectRepository.delete(projectRepository.findByName(deleteProjectDTO.getName()));
+        projectRepository.delete(projectRepository.findProjectByNameStartingWith(deleteProjectDTO.getName()));
         return ResponseEntity.ok("Done");
     }
 }

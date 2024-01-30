@@ -3,34 +3,35 @@ package com.example.task_manager.projects.controllers;
 import com.example.task_manager.projects.entities.DeleteProjectDTO;
 import com.example.task_manager.projects.entities.ProtectedProjectDTO;
 import com.example.task_manager.projects.entities.RegisterProjectDTO;
+import com.example.task_manager.projects.repositories.ProjectRepository;
 import com.example.task_manager.projects.services.ProjectService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/p/")
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final ProjectRepository projectRepository;
 
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(ProjectService projectService,
+                             ProjectRepository projectRepository) {
         this.projectService = projectService;
+        this.projectRepository = projectRepository;
     }
 
-    @GetMapping("/list/projects/")
-    public ResponseEntity<List<ProtectedProjectDTO>> getAllProjects(){
-        return projectService.getAllProjects();
-    }
 
     @GetMapping("/find/project")
     public ResponseEntity<ProtectedProjectDTO> getProjectByName(String name){
         return projectService.getProjectByName(name);
     }
 
+    //todo create a getter email from token_table and save as owner_email
     @PostMapping("/create/project/")
-    public ResponseEntity<String> createProject(RegisterProjectDTO registerProjectDTO){
+    public ResponseEntity<String> createProject(@RequestBody RegisterProjectDTO registerProjectDTO, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+        System.out.println(authorization);
         return projectService.createProject(registerProjectDTO);
     }
 
