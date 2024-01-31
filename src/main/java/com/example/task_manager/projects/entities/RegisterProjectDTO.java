@@ -8,15 +8,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class RegisterProjectDTO {
-    private String owner_email;
     private String name;
     private String description;
+
 
     @Override
     public String toString() {
         return "RegisterProjectDTO{" +
-                "owner_email='" + owner_email + '\'' +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 '}';
     }

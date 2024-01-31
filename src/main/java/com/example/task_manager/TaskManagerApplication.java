@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class TaskManagerApplication {
+    //todo clear url from update/save/delete
     //todo create a try/catch for most likely exceptions
     //todo check if user can delete/update user
     //todo connect task service with project service

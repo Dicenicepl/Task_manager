@@ -1,5 +1,6 @@
 package com.example.task_manager.tasks.services;
 
+import com.example.task_manager.projects.services.ProjectService;
 import com.example.task_manager.tasks.entities.ProtectedTaskDTO;
 import com.example.task_manager.tasks.entities.Task;
 import com.example.task_manager.tasks.repositories.TaskRepository;
@@ -9,15 +10,17 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final ProjectService projectService;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, ProjectService projectService) {
         this.taskRepository = taskRepository;
+        this.projectService = projectService;
     }
 
     private ProtectedTaskDTO convertTaskToProtectedTaskData(Task task){
@@ -32,17 +35,21 @@ public class TaskService {
                 task.getProject());
     }
 
-    public ResponseEntity<List<ProtectedTaskDTO>> getAllTasks(){
-        List<Task> tasks = taskRepository.findAll();
-        List<ProtectedTaskDTO> protectedTaskData = new ArrayList<>();
-        for (Task task : tasks){
-            protectedTaskData.add(convertTaskToProtectedTaskData(task));
+    public ResponseEntity<Set<ProtectedTaskDTO>> getAllTasks(int project){
+
+        Set<Task> tasks = taskRepository.findTaskByProject(project);
+        Set<ProtectedTaskDTO> protectedTaskData = new HashSet<>();
+        if (tasks != null) {
+            for (Task task : tasks) {
+                protectedTaskData.add(convertTaskToProtectedTaskData(task));
+            }
+            return new ResponseEntity<>(protectedTaskData, HttpStatus.OK);
         }
-        return new ResponseEntity<>(protectedTaskData, HttpStatus.OK);
+        return ResponseEntity.ok(null);
     }
 
-    public ResponseEntity<ProtectedTaskDTO> getTaskByName(String name) {
-        Task task = taskRepository.findTaskByName(name);
+    public ResponseEntity<ProtectedTaskDTO> getTaskByName(String taskName) {
+        Task task = taskRepository.findTaskByName(taskName);
         return new ResponseEntity<>(convertTaskToProtectedTaskData(task), HttpStatus.OK);
     }
 

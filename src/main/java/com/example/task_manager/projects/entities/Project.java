@@ -30,7 +30,6 @@ public class Project {
     private String name;
     private String description;
     //todo create relative tables projects-users
-//    private List<Long> usersId;
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 

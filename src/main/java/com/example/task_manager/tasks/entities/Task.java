@@ -33,17 +33,15 @@ public class Task {
     private Long endingTimeInMinis;
     @ManyToOne
     @JoinColumn(name = "project_id")
-    private Project project;
+    private Project project = new Project();
 
 
-    public Task(String owner_email, String name, String assignedTo, String description, TaskStatus status, Long creatingTimeInMinis, Project project) {
+    public Task(String owner_email, String name, String assignedTo, String description, TaskStatus status) {
         this.owner_email = owner_email;
         this.name = name;
         this.assignedTo = assignedTo;
         this.description = description;
         this.status = status;
-        this.creatingTimeInMinis = creatingTimeInMinis;
-        this.project = project;
     }
 
     @Override
