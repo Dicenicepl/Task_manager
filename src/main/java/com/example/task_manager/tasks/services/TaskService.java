@@ -32,10 +32,11 @@ public class TaskService {
                 new Date(task.getCreatingTimeInMinis()),
                 new Time(task.getEndingTimeInMinis()),
                 new Date(task.getEndingTimeInMinis()),
-                task.getProject());
+                task.getTask_id()
+        );
     }
 
-    public ResponseEntity<Set<ProtectedTaskDTO>> getAllTasks(int project){
+    public ResponseEntity<Set<ProtectedTaskDTO>> getAllTasks(Long project){
 
         Set<Task> tasks = taskRepository.findTaskByProject(project);
         Set<ProtectedTaskDTO> protectedTaskData = new HashSet<>();

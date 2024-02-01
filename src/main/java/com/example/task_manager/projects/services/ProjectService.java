@@ -24,17 +24,20 @@ public class ProjectService {
         return new ProtectedProjectDTO(
                 project.getOwner_email(),
                 project.getName(),
-                project.getDescription(),
-                project.getTasks()
+                project.getDescription()
         );
     }
 
     public ResponseEntity<ProtectedProjectDTO> getProjectByName(String name){
         try {
             Project project = projectRepository.findProjectByNameStartingWith(name);
-            ProtectedProjectDTO data = converter(project);
-            return ResponseEntity.ok(data);
-        }catch (NullPointerException e){
+            if (project != null) {
+                ProtectedProjectDTO data = converter(project);
+                return ResponseEntity.ok(data);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (NullPointerException e){
             return ResponseEntity.ok(null);
         }
     }

@@ -1,11 +1,8 @@
 package com.example.task_manager.projects.entities;
 
-import com.example.task_manager.tasks.entities.Task;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -14,5 +11,14 @@ public class ProtectedProjectDTO {
     private String owner_email;
     private String name;
     private String description;
-    private List<Task> tasks;
+
+    @Override
+    public String toString() {
+        return "ProtectedProjectDTO{" +
+                "owner_email='" + owner_email + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
+

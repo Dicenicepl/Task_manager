@@ -13,7 +13,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Task findTaskByName(String name);
 
-    @Query(value = "SELECT t.task_id, assigned_to, creating_time_in_minis, description, ending_time_in_minis, name, owner_email, status, project_id FROM tasks t WHERE t.project_id = :id", nativeQuery = true)
-//    @Query(value = "SELECT *FROM tasks t WHERE t.project_id = :id", nativeQuery = true)
-    Set<Task> findTaskByProject(@Param("id") int id);
+    @Query("SELECT t FROM Task t WHERE t.project.id = :id")
+    Set<Task> findTaskByProject(@Param("id") Long id);
+
 }

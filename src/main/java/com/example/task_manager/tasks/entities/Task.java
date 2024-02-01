@@ -14,7 +14,6 @@ import lombok.Setter;
 @Entity
 @Table(name = "Tasks")
 public class Task {
-    //todo assignedTo create a userFinder for assigning
     @Id
     @SequenceGenerator(
             name = "sequence",
@@ -31,10 +30,10 @@ public class Task {
     private TaskStatus status;
     private Long creatingTimeInMinis = System.currentTimeMillis();
     private Long endingTimeInMinis;
+
     @ManyToOne
     @JoinColumn(name = "project_id")
-    private Project project = new Project();
-
+    private Project project;
 
     public Task(String owner_email, String name, String assignedTo, String description, TaskStatus status) {
         this.owner_email = owner_email;
@@ -52,10 +51,9 @@ public class Task {
                 ", name='" + name + '\'' +
                 ", assignedTo='" + assignedTo + '\'' +
                 ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
+                ", status=" + status +
                 ", creatingTimeInMinis=" + creatingTimeInMinis +
                 ", endingTimeInMinis=" + endingTimeInMinis +
-                ", project=" + project +
                 '}';
     }
 }

@@ -9,7 +9,6 @@ import lombok.Setter;
 
 import java.util.List;
 
-
 @Setter
 @Getter
 @NoArgsConstructor
@@ -29,7 +28,7 @@ public class Project {
     @Column(unique = true)
     private String name;
     private String description;
-    //todo create relative tables projects-users
+
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 
@@ -46,7 +45,6 @@ public class Project {
                 ", owner_email='" + owner_email + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", tasks=" + tasks +
                 '}';
     }
 }

@@ -20,7 +20,7 @@ public class TaskController {
 
 
     @GetMapping("/list/tasks/")
-    public ResponseEntity<Set<ProtectedTaskDTO>> getAllTasks(int project) {
+    public ResponseEntity<Set<ProtectedTaskDTO>> getAllTasks(Long project) {
         return taskService.getAllTasks(project);
     }
     @GetMapping("/find/task/")

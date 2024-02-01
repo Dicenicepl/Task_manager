@@ -1,6 +1,5 @@
 package com.example.task_manager.tasks.entities;
 
-import com.example.task_manager.projects.entities.Project;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,8 +18,7 @@ public class ProtectedTaskDTO {
     private Date dateOfCreating;
     private Time timeOfEnding;
     private Date dateOfEnding;
-    private Project project;
-
+    private Long projectId;
     @Override
     public String toString() {
         return "ProtectedTaskDTO{" +
@@ -31,7 +29,7 @@ public class ProtectedTaskDTO {
                 ", dateOfCreating=" + dateOfCreating +
                 ", timeOfEnding=" + timeOfEnding +
                 ", dateOfEnding=" + dateOfEnding +
-                ", project=" + project +
+                ", projectId=" + projectId +
                 '}';
     }
 }
