@@ -27,7 +27,7 @@ public class Task {
     private String name;
     private String assignedTo;
     private String description;
-    private TaskStatus status;
+    private TaskStatus status = TaskStatus.TODO;
     private Long creatingTimeInMinis = System.currentTimeMillis();
     private Long endingTimeInMinis;
 
@@ -39,16 +39,27 @@ public class Task {
                 String name,
                 String assignedTo,
                 String description,
-                TaskStatus status,
                 Long endingTimeInMinis
     ) {
         this.owner_email = owner_email;
         this.name = name;
         this.assignedTo = assignedTo;
         this.description = description;
-        this.status = status;
         this.endingTimeInMinis = endingTimeInMinis;
     }
+
+    public Task(Long task_id, String owner_email, String name, String assignedTo, String description, TaskStatus status, Long creatingTimeInMinis, Long endingTimeInMinis) {
+        this.task_id = task_id;
+        this.owner_email = owner_email;
+        this.name = name;
+        this.assignedTo = assignedTo;
+        this.description = description;
+        this.status = status;
+        this.creatingTimeInMinis = creatingTimeInMinis;
+        this.endingTimeInMinis = endingTimeInMinis;
+    }
+
+
 
     @Override
     public String toString() {

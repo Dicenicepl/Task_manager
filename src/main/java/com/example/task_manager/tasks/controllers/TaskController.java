@@ -1,7 +1,9 @@
 package com.example.task_manager.tasks.controllers;
 
+import com.example.task_manager.tasks.entities.DeleteTaskDTO;
 import com.example.task_manager.tasks.entities.ProtectedTaskDTO;
-import com.example.task_manager.tasks.entities.Task;
+import com.example.task_manager.tasks.entities.RegisterTaskDTO;
+import com.example.task_manager.tasks.entities.UpdateTaskDTO;
 import com.example.task_manager.tasks.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,17 +31,17 @@ public class TaskController {
     }
 
     @PostMapping("/create/task/")
-    public ResponseEntity<String> createTask(@RequestBody Task task, Long project) {
-        return taskService.createTask(task, project);
+    public ResponseEntity<String> createTask(@RequestBody RegisterTaskDTO registerTaskDTO, Long project) {
+        return taskService.createTask(registerTaskDTO, project);
     }
 
     @PutMapping("/update/task/")
-    public ResponseEntity<String> updateTask(@RequestBody Task task, Long project) {
-        return taskService.updateTask(task, project);
+    public ResponseEntity<String> updateTask(@RequestBody UpdateTaskDTO updateTaskDTO, Long project) {
+        return taskService.updateTask(updateTaskDTO, project);
     }
 
     @DeleteMapping("/delete/task/")
-    public ResponseEntity<String> deleteTask(@RequestBody Task task, Long project) {
-        return taskService.deleteTask(task, project);
+    public ResponseEntity<String> deleteTask(@RequestBody DeleteTaskDTO deleteTaskDTO,@RequestHeader(name = "Authorization") String token, Long project) {
+        return taskService.deleteTask(deleteTaskDTO,token, project);
     }
 }

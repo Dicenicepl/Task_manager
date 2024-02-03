@@ -2,14 +2,13 @@ package com.example.task_manager.tasks.services;
 
 import com.example.task_manager.projects.entities.Project;
 import com.example.task_manager.projects.services.ProjectService;
-import com.example.task_manager.tasks.entities.ProtectedTaskDTO;
-import com.example.task_manager.tasks.entities.Task;
-import com.example.task_manager.tasks.entities.TaskStatus;
+import com.example.task_manager.tasks.entities.*;
 import com.example.task_manager.tasks.repositories.TaskRepository;
+import com.example.task_manager.tokens.services.TokenService;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -19,12 +18,16 @@ import java.util.Set;
 
 @Service
 public class TaskService {
+    //todo try catch
     private final TaskRepository taskRepository;
     private final ProjectService projectService;
+    private final TokenService tokenService;
 
-    public TaskService(TaskRepository taskRepository, ProjectService projectService) {
+
+    public TaskService(TaskRepository taskRepository, ProjectService projectService, TokenService tokenService) {
         this.taskRepository = taskRepository;
         this.projectService = projectService;
+        this.tokenService = tokenService;
     }
 
     private ProtectedTaskDTO convertTaskToProtectedTaskData(Task task) {
@@ -72,27 +75,58 @@ public class TaskService {
         return ResponseEntity.ok(null);
     }
 
-    public ResponseEntity<String> createTask(@RequestBody Task task, Long project) {
+    public ResponseEntity<String> createTask(RegisterTaskDTO register, Long project) {
         if (isProjectExists(project)) {
-            task.setProject(projectService.findProjectById(project).get());
-            //todo change
-            task.setStatus(TaskStatus.IN_PROGRESS);
-            taskRepository.save(task);
-            return ResponseEntity.ok("Created");
+            try{
+                if (register.getName() != null || register.getEndingTimeInMinis() != null) {
+                    Task task = new Task(
+                            register.getOwner_email(),
+                            register.getName(),
+                            register.getAssignedTo(),
+                            register.getDescription(),
+                            register.getEndingTimeInMinis()
+                    );
+                    task.setProject(projectService.findProjectById(project).get());
+                    taskRepository.save(task);
+                    return ResponseEntity.ok("Created");
+                }
+                return ResponseEntity.badRequest().body(null);
+            }catch (NullPointerException | DataIntegrityViolationException e){
+                return ResponseEntity.badRequest().body(null);
+            }
         }
         return ResponseEntity.ok("Project not found");
     }
 
-    public ResponseEntity<String> updateTask(Task task, Long project) {
+    public ResponseEntity<String> updateTask(UpdateTaskDTO updateTaskDTO, Long project) {
         if (isProjectExists(project)) {
+            Task oldTask = taskRepository.findTaskByName(updateTaskDTO.getName());
+            Task newTask = new Task(
+                    oldTask.getTask_id(),
+                    oldTask.getOwner_email(),
+                    oldTask.getName(),
+                    updateTaskDTO.getAssignedTo(),
+                    updateTaskDTO.getDescription(),
+                    updateTaskDTO.getStatus(),
+                    oldTask.getCreatingTimeInMinis(),
+                    updateTaskDTO.getEndingTimeInMinis()
+            );
+            taskRepository.save(newTask);
+            return ResponseEntity.ok("Saved");
         }
-        return null;
+        return ResponseEntity.ok("Nuh uh");
     }
 
-    public ResponseEntity<String> deleteTask(Task task, Long project) {
+    //todo copy permission checker
+    public ResponseEntity<String> deleteTask(DeleteTaskDTO task, String token, Long project) {
         if (isProjectExists(project)) {
-            taskRepository.delete(task);
-            return ResponseEntity.ok("Done");
+            String emailFromToken = tokenService.findAssignedEmailByToken(token);
+            Task task1 = taskRepository.findTaskByName(task.getName());
+            if (task1.getOwner_email().equals(emailFromToken)) {
+                taskRepository.delete(task1);
+                return ResponseEntity.ok("Done");
+            }
+            return ResponseEntity.ok("No permission");
         }
         return ResponseEntity.ok("Project not found");
     }
