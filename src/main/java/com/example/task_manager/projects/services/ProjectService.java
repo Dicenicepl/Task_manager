@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ProjectService {
 
@@ -87,5 +89,8 @@ public class ProjectService {
         }catch (NullPointerException e){
             return ResponseEntity.badRequest().body("Body contain null");
         }
+    }
+    public Optional<Project> findProjectById(Long id){
+        return projectRepository.findById(id);
     }
 }

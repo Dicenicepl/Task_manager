@@ -35,12 +35,19 @@ public class Task {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    public Task(String owner_email, String name, String assignedTo, String description, TaskStatus status) {
+    public Task(String owner_email,
+                String name,
+                String assignedTo,
+                String description,
+                TaskStatus status,
+                Long endingTimeInMinis
+    ) {
         this.owner_email = owner_email;
         this.name = name;
         this.assignedTo = assignedTo;
         this.description = description;
         this.status = status;
+        this.endingTimeInMinis = endingTimeInMinis;
     }
 
     @Override

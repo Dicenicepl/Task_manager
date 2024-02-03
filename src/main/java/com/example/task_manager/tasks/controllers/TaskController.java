@@ -24,22 +24,22 @@ public class TaskController {
         return taskService.getAllTasks(project);
     }
     @GetMapping("/find/task/")
-    public ResponseEntity<ProtectedTaskDTO> getTaskByName(String taskName, int project) {
-        return taskService.getTaskByName(taskName);
+    public ResponseEntity<ProtectedTaskDTO> getTaskByName(String taskName, Long project) {
+        return taskService.getTaskByName(taskName, project);
     }
 
     @PostMapping("/create/task/")
-    public ResponseEntity<String> createTask(@RequestBody Task task, int project) {
-        return taskService.createTask(task);
+    public ResponseEntity<String> createTask(@RequestBody Task task, Long project) {
+        return taskService.createTask(task, project);
     }
 
     @PutMapping("/update/task/")
-    public ResponseEntity<String> updateTask(@RequestBody Task task, int project) {
-        return taskService.updateTask(task);
+    public ResponseEntity<String> updateTask(@RequestBody Task task, Long project) {
+        return taskService.updateTask(task, project);
     }
 
     @DeleteMapping("/delete/task/")
-    public ResponseEntity<String> deleteTask(@RequestBody Task task, int project) {
-        return taskService.deleteTask(task);
+    public ResponseEntity<String> deleteTask(@RequestBody Task task, Long project) {
+        return taskService.deleteTask(task, project);
     }
 }

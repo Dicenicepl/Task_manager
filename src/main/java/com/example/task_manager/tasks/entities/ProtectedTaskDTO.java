@@ -18,7 +18,6 @@ public class ProtectedTaskDTO {
     private Date dateOfCreating;
     private Time timeOfEnding;
     private Date dateOfEnding;
-    private Long projectId;
     @Override
     public String toString() {
         return "ProtectedTaskDTO{" +
@@ -29,7 +28,6 @@ public class ProtectedTaskDTO {
                 ", dateOfCreating=" + dateOfCreating +
                 ", timeOfEnding=" + timeOfEnding +
                 ", dateOfEnding=" + dateOfEnding +
-                ", projectId=" + projectId +
                 '}';
     }
 }
