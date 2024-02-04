@@ -19,22 +19,22 @@ public class ProjectController {
     }
 
 
-    @GetMapping("/find/project")
+    @GetMapping("/find/")
     public ResponseEntity<ProtectedProjectDTO> getProjectByName(String name) {
         return projectService.getProjectByName(name);
     }
 
-    @PostMapping("/create/project/")
+    @PostMapping("/create/")
     public ResponseEntity<String> createProject(@RequestBody RegisterProjectDTO registerProjectDTO, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return projectService.createProject(registerProjectDTO, token);
     }
 
-    @PutMapping("/update/project/")
+    @PutMapping("/update/")
     public ResponseEntity<String> updateProject(@RequestBody RegisterProjectDTO registerProjectDTO) {
         return projectService.updateProject(registerProjectDTO);
     }
 
-    @DeleteMapping("/delete/project/")
+    @DeleteMapping("/delete/")
     public ResponseEntity<String> deleteProject(@RequestBody DeleteProjectDTO deleteProjectDTO, @RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
         return projectService.deleteProject(deleteProjectDTO, token);
     }

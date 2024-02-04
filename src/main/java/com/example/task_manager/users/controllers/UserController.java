@@ -18,21 +18,21 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/find/user/")
+    @GetMapping("/find/")
     public ResponseEntity<ProtectedUserDTO> getUserByEmail(String email) {
         return userService.getUserByEmail(email);
     }
 
-    @PostMapping("/create/user/")
+    @PostMapping("/create/")
     public ResponseEntity<String> createUser(@RequestBody RegisterUserDTO registerUserDTO){
         return userService.createUser(registerUserDTO);
     }
-    @PutMapping("/update/user/")
+    @PutMapping("/update/")
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserDTO userData) {
         return userService.updateUser(userData);
     }
 
-    @DeleteMapping("/delete/user/")
+    @DeleteMapping("/delete/")
     public ResponseEntity<String> deleteUser(@RequestBody DeleteUserDTO deleteUserDTO) {
         return userService.deleteUser(deleteUserDTO);
     }

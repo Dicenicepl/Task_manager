@@ -21,16 +21,16 @@ public class TaskController {
     }
 
 
-    @GetMapping("/list/tasks/")
+    @GetMapping("/list/")
     public ResponseEntity<Set<ProtectedTaskDTO>> getAllTasks(Long project) {
         return taskService.getAllTasks(project);
     }
-    @GetMapping("/find/task/")
+    @GetMapping("/find/")
     public ResponseEntity<ProtectedTaskDTO> getTaskByName(String taskName, Long project) {
         return taskService.getTaskByName(taskName, project);
     }
 
-    @PostMapping("/create/task/")
+    @PostMapping("/create/")
     public ResponseEntity<String> createTask(@RequestBody RegisterTaskDTO registerTaskDTO, Long project) {
         return taskService.createTask(registerTaskDTO, project);
     }
@@ -40,7 +40,7 @@ public class TaskController {
         return taskService.updateTask(updateTaskDTO, project);
     }
 
-    @DeleteMapping("/delete/task/")
+    @DeleteMapping("/delete/")
     public ResponseEntity<String> deleteTask(@RequestBody DeleteTaskDTO deleteTaskDTO,@RequestHeader(name = "Authorization") String token, Long project) {
         return taskService.deleteTask(deleteTaskDTO,token, project);
     }
