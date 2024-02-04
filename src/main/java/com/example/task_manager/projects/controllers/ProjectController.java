@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/p/")
+@RequestMapping("/api/project/")
 public class ProjectController {
 
     private final ProjectService projectService;

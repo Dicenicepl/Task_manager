@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/s/")
+@RequestMapping("/api/")
 @CrossOrigin(origins = "http://localhost:8080")
 public class SecurityController {
     private final SecurityService securityService;

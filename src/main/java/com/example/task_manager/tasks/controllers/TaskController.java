@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/t/")
+@RequestMapping("/api/task/")
 public class TaskController {
 
     private final TaskService taskService;

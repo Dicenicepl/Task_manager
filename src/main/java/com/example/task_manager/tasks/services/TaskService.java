@@ -42,7 +42,6 @@ public class TaskService {
         );
     }
 
-    //todo create checker that will check if user can modifying data
     private boolean isProjectExists(Long id) {
         if (id != null) {
             Optional<Project> project = projectService.findProjectById(id);
