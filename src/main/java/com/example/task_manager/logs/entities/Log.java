@@ -28,10 +28,13 @@ public class Log {
     private Time timeOfUpdate = new Time(System.currentTimeMillis());
     private String changes;
     private String whoUpdated;
+    private String urlRequest;
 
-    public Log(String changes, String whoUpdated) {
+
+    public Log(String changes, String whoUpdated, String urlRequest) {
         this.changes = changes;
         this.whoUpdated = whoUpdated;
+        this.urlRequest = urlRequest;
     }
 
     @Override
