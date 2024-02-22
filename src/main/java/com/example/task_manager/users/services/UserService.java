@@ -1,8 +1,10 @@
 package com.example.task_manager.users.services;
 
+import com.example.task_manager.logs.services.LogService;
 import com.example.task_manager.roles.services.RoleService;
 import com.example.task_manager.users.entities.*;
 import com.example.task_manager.users.repositories.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,15 +12,16 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-
+    private final LogService logService;
     private final RoleService roleService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(RoleService roleService, UserRepository userRepository, PasswordEncoder passwordEncoder, LogService logService) {
         this.roleService = roleService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.logService = logService;
     }
 
     private ProtectedUserDTO convertUserToProtectedUserData(User user) {
@@ -35,7 +38,7 @@ public class UserService {
         }
     }
 
-    public ResponseEntity<String> createUser(RegisterUserDTO registerUserDTO) {
+    public ResponseEntity<String> createUser(RegisterUserDTO registerUserDTO, HttpServletRequest request) {
         try {
             if (registerUserDTO.getUsername().isBlank()) {
                 return ResponseEntity.badRequest().body("Username blank");
@@ -57,6 +60,7 @@ public class UserService {
             );
             userRepository.save(user);
             roleService.addRole(registerUserDTO.getEmail());
+            logService.succeedRequest(user, request);
             return new ResponseEntity<>("Saved", HttpStatus.OK);
         } catch (NullPointerException e) {
             return ResponseEntity.badRequest().body("Null object");

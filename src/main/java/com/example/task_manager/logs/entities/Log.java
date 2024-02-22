@@ -27,12 +27,23 @@ public class Log {
     private Date dataOfUpdate = new Date(System.currentTimeMillis());
     private Time timeOfUpdate = new Time(System.currentTimeMillis());
     private String changes;
+    private String typeOfRequest;
     private String whoUpdated;
     private String urlRequest;
+    private boolean isSucceed;
 
 
-    public Log(String changes, String whoUpdated, String urlRequest) {
+    public Log(String changes, String typeOfRequest, String whoUpdated, String urlRequest,boolean isSucceed) {
         this.changes = changes;
+        this.typeOfRequest = typeOfRequest;
+        this.whoUpdated = whoUpdated;
+        this.urlRequest = urlRequest;
+        this.isSucceed = isSucceed;
+    }
+
+    public Log(String changes, String typeOfRequest, String whoUpdated, String urlRequest) {
+        this.changes = changes;
+        this.typeOfRequest = typeOfRequest;
         this.whoUpdated = whoUpdated;
         this.urlRequest = urlRequest;
     }

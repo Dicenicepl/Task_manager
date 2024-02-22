@@ -5,6 +5,7 @@ import com.example.task_manager.users.entities.ProtectedUserDTO;
 import com.example.task_manager.users.entities.RegisterUserDTO;
 import com.example.task_manager.users.entities.UpdateUserDTO;
 import com.example.task_manager.users.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +25,8 @@ public class UserController {
     }
 
     @PostMapping("/create/")
-    public ResponseEntity<String> createUser(@RequestBody RegisterUserDTO registerUserDTO){
-        return userService.createUser(registerUserDTO);
+    public ResponseEntity<String> createUser(@RequestBody RegisterUserDTO registerUserDTO, HttpServletRequest request){
+        return userService.createUser(registerUserDTO,request);
     }
     @PutMapping("/update/")
     public ResponseEntity<String> updateUser(@RequestBody UpdateUserDTO userData) {
