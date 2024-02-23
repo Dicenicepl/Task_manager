@@ -9,20 +9,17 @@ import java.util.Collection;
 
 @Service
 public class RoleService {
-    //todo create getRole for security authorization
     private final RoleRepository roleRepository;
 
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }
 
-    public boolean addRole(String email){
+    public void addRole(String email){
         Role role = new Role(email, RoleList.USER);
         try {
             roleRepository.save(role);
-            return true;
-        }catch (IllegalArgumentException e){
-            return false;
+        }catch (IllegalArgumentException ignored){
         }
     }
     public boolean deleteRole(String email){

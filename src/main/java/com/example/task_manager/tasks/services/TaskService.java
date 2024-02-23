@@ -18,7 +18,6 @@ import java.util.Set;
 
 @Service
 public class TaskService {
-    //todo try catch
     private final TaskRepository taskRepository;
     private final ProjectService projectService;
     private final TokenService tokenService;
@@ -116,7 +115,6 @@ public class TaskService {
         return ResponseEntity.ok("Nuh uh");
     }
 
-    //todo copy permission checker
     public ResponseEntity<String> deleteTask(DeleteTaskDTO task, String token, Long project) {
         if (isProjectExists(project)) {
             String emailFromToken = tokenService.findAssignedEmailByToken(token);
