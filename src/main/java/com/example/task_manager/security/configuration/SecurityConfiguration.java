@@ -1,5 +1,6 @@
 package com.example.task_manager.security.configuration;
 
+import com.example.task_manager.logs.services.LogService;
 import com.example.task_manager.roles.services.RoleService;
 import com.example.task_manager.security.filter.TokenAuthFilter;
 import com.example.task_manager.tokens.services.TokenService;
@@ -18,10 +19,12 @@ public class SecurityConfiguration {
 
     private final TokenService tokenService;
     private final RoleService roleService;
+    private final LogService logService;
 
-    public SecurityConfiguration(TokenService tokenService, RoleService roleService) {
+    public SecurityConfiguration(TokenService tokenService, RoleService roleService, LogService logService) {
         this.tokenService = tokenService;
         this.roleService = roleService;
+        this.logService = logService;
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,7 +37,7 @@ public class SecurityConfiguration {
 //                                .anyRequest().hasRole("USER")
                                 .anyRequest().permitAll()
                 )
-                .addFilterBefore(new TokenAuthFilter(tokenService, roleService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new TokenAuthFilter(tokenService, roleService, logService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean

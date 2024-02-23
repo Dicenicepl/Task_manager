@@ -26,27 +26,17 @@ public class Log {
     private Long log_id;
     private Date dataOfUpdate = new Date(System.currentTimeMillis());
     private Time timeOfUpdate = new Time(System.currentTimeMillis());
-    private String changes;
+    private String requestBody;
     private String typeOfRequest;
     private String whoUpdated;
     private String urlRequest;
-    private boolean isSucceed;
 
-
-    public Log(String changes, String typeOfRequest, String whoUpdated, String urlRequest,boolean isSucceed) {
-        this.changes = changes;
+    public Log(String requestBody, String typeOfRequest, String whoUpdated, String urlRequest) {
+        this.requestBody = requestBody;
         this.typeOfRequest = typeOfRequest;
         this.whoUpdated = whoUpdated;
-        this.urlRequest = urlRequest;
-        this.isSucceed = isSucceed;
-    }
+        this.urlRequest = urlRequest;}
 
-    public Log(String changes, String typeOfRequest, String whoUpdated, String urlRequest) {
-        this.changes = changes;
-        this.typeOfRequest = typeOfRequest;
-        this.whoUpdated = whoUpdated;
-        this.urlRequest = urlRequest;
-    }
 
     @Override
     public String toString() {
@@ -54,8 +44,10 @@ public class Log {
                 "log_id=" + log_id +
                 ", dataOfUpdate=" + dataOfUpdate +
                 ", timeOfUpdate=" + timeOfUpdate +
-                ", changes='" + changes + '\'' +
+                ", changes='" + requestBody + '\'' +
+                ", typeOfRequest='" + typeOfRequest + '\'' +
                 ", whoUpdated='" + whoUpdated + '\'' +
+                ", urlRequest='" + urlRequest + '\'' +
                 '}';
     }
 }
