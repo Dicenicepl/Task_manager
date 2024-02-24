@@ -3,14 +3,12 @@ package com.example.task_manager.logs.services;
 import com.example.task_manager.logs.entities.Log;
 import com.example.task_manager.logs.repositories.LogRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class LogService {
     private final LogRepository logRepository;
 
