@@ -30,7 +30,6 @@ public class TokenAuthFilter extends OncePerRequestFilter {
     private final RoleService roleService;
     private final LogService logService;
 
-
     public TokenAuthFilter(TokenService tokenService, RoleService roleService, LogService logService) {
         this.tokenService = tokenService;
         this.roleService = roleService;
@@ -46,6 +45,7 @@ public class TokenAuthFilter extends OncePerRequestFilter {
             Authentication auth = new UsernamePasswordAuthenticationToken(email, "Credentials", findRolesByEmail(email));
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
+        System.out.println("ACTIVE FILTER");
         CachedBodyHttpServletRequest cachedBodyHttpServletRequest = new CachedBodyHttpServletRequest(request);
         logService.creatingFirstConfiguration(cachedBodyHttpServletRequest, email);
         filterChain.doFilter(cachedBodyHttpServletRequest, response);

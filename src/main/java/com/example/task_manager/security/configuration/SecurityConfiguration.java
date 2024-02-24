@@ -2,7 +2,6 @@ package com.example.task_manager.security.configuration;
 
 import com.example.task_manager.logs.services.LogService;
 import com.example.task_manager.roles.services.RoleService;
-import com.example.task_manager.security.filter.TokenAuthFilter;
 import com.example.task_manager.tokens.services.TokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -31,13 +29,11 @@ public class SecurityConfiguration {
         http.csrf().disable()
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-//                                .requestMatchers("/login").permitAll()
-//                                .requestMatchers("/register").permitAll()
-//                                .requestMatchers("/api/s/***").permitAll()
-//                                .anyRequest().hasRole("USER")
+                                .requestMatchers("/api/login").permitAll()
+                                .requestMatchers("/api/*").authenticated()
                                 .anyRequest().permitAll()
-                )
-                .addFilterBefore(new TokenAuthFilter(tokenService, roleService, logService), UsernamePasswordAuthenticationFilter.class);
+                );
+//                .addFilterBefore(new TokenAuthFilter(tokenService, roleService, logService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     @Bean
