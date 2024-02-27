@@ -6,10 +6,10 @@ Java Task Manager is a simple task management application written in Java. It pr
 ## Installation Instructions
 1. Clone the repository from GitHub:
     ```
-    git clone https://github.com/Dicenicepl/java-task-manager.git
+    git clone https://github.com/Dicenicepl/Task_manager.git
     ```
 2. Make sure you have Java Development Kit (JDK) installed on your system.
-3. Navigate to the `java-task-manager` directory.
+3. Navigate to the `Task_manager` directory.
 4. Compile the Java source files:
     ```
     javac *.java
@@ -22,6 +22,8 @@ Java Task Manager is a simple task management application written in Java. It pr
 ## Features
 
 ## Known Issues
+You can`t compile file cause of: TaskManagerApplication.java:3: error: package org.springframework.boot does not exist
+
 
 ## Authors
 - Dicenicepl ([GitHub](https://github.com/Dicenicepl))
