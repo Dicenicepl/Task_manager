@@ -8,6 +8,8 @@ import com.example.task_manager.users.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/user/")
 public class UserController {
@@ -19,7 +21,7 @@ public class UserController {
     }
 
     @GetMapping("/find/")
-    public ResponseEntity<ProtectedUserDTO> getUserByEmail(String email) {
+    public ResponseEntity<List<ProtectedUserDTO>> getUserByEmail(String email) {
         return userService.getUserByEmail(email);
     }
 

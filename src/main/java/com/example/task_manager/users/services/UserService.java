@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class UserService {
     private final RoleService roleService;
@@ -24,10 +27,16 @@ public class UserService {
         return new ProtectedUserDTO(user.getUsername(), user.getEmail());
     }
 
-    public ResponseEntity<ProtectedUserDTO> getUserByEmail(String email) {
+    public ResponseEntity<List<ProtectedUserDTO>> getUserByEmail(String email) {
         try {
-            User rawUser = userRepository.findUserByEmailStartingWith(email);
-            ProtectedUserDTO protectedUserDTO = convertUserToProtectedUserData(rawUser);
+            List<User> rawUser = userRepository.findUserByEmailStartingWith(email);
+            List<ProtectedUserDTO> protectedUserDTO = new ArrayList<>();
+
+            for (User user : rawUser) {
+                protectedUserDTO.add(convertUserToProtectedUserData(user)); //converting every rawUser to protectedUserDTO
+            }
+
+
             return ResponseEntity.ok(protectedUserDTO);
         } catch (NullPointerException e) {
             return ResponseEntity.ok(null);
@@ -49,11 +58,7 @@ public class UserService {
                 return ResponseEntity.ok("User is already registered");
             }
 
-            User user = new User(
-                    registerUserDTO.getUsername(),
-                    registerUserDTO.getEmail(),
-                    passwordEncoder.encode(registerUserDTO.getPassword())
-            );
+            User user = new User(registerUserDTO.getUsername(), registerUserDTO.getEmail(), passwordEncoder.encode(registerUserDTO.getPassword()));
             userRepository.save(user);
             roleService.addRole(registerUserDTO.getEmail());
             return new ResponseEntity<>("Saved", HttpStatus.OK);
