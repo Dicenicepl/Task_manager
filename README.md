@@ -28,4 +28,4 @@ Java Task Manager is a simple task management application written in Java. It pr
 
 
 ## Support
-If you encounter any issues with the application or have suggestions for its development, please submit them to the [Java Task Manager Issues](https://github.com/Dicenicepl/java-task-manager/issues) page.
+If you encounter any issues with the application or have suggestions for its development, please submit them to the [Java Task Manager Issues](https://github.com/Dicenicepl/Task_manager/issues) page.
