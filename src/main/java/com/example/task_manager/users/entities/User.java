@@ -1,5 +1,6 @@
 package com.example.task_manager.users.entities;
 
+import com.example.task_manager.projects.entities.Project;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +27,10 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
+    @ManyToOne
+    @JoinColumn(name = "project_id")
+    private Project project;
+
 
     public User(String username, String email, String password) {
         this.username = username;

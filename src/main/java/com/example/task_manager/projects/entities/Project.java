@@ -1,6 +1,7 @@
 package com.example.task_manager.projects.entities;
 
 import com.example.task_manager.tasks.entities.Task;
+import com.example.task_manager.users.entities.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,11 +33,15 @@ public class Project {
     @OneToMany(mappedBy = "project")
     private List<Task> tasks;
 
+    @OneToMany
+    private List<User> users;
     public Project(String owner_email, String name, String description) {
         this.owner_email = owner_email;
         this.name = name;
         this.description = description;
     }
+
+
 
     @Override
     public String toString() {

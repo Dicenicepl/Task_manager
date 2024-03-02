@@ -1,5 +1,6 @@
 package com.example.task_manager.projects.controllers;
 
+import com.example.task_manager.projects.entities.AddUserToProject;
 import com.example.task_manager.projects.entities.DeleteProjectDTO;
 import com.example.task_manager.projects.entities.ProtectedProjectDTO;
 import com.example.task_manager.projects.entities.RegisterProjectDTO;
@@ -32,6 +33,10 @@ public class ProjectController {
     @PutMapping("/update/")
     public ResponseEntity<String> updateProject(@RequestBody RegisterProjectDTO registerProjectDTO) {
         return projectService.updateProject(registerProjectDTO);
+    }
+    @PutMapping("/add/user/")
+    public ResponseEntity<String> addUserToProject(@RequestBody AddUserToProject addUserToProject){
+        return projectService.addUserToProject(addUserToProject);
     }
 
     @DeleteMapping("/delete/")

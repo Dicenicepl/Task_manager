@@ -1,15 +1,16 @@
 package com.example.task_manager.projects.services;
 
-import com.example.task_manager.projects.entities.DeleteProjectDTO;
-import com.example.task_manager.projects.entities.Project;
-import com.example.task_manager.projects.entities.ProtectedProjectDTO;
-import com.example.task_manager.projects.entities.RegisterProjectDTO;
+import com.example.task_manager.projects.entities.*;
 import com.example.task_manager.projects.repositories.ProjectRepository;
 import com.example.task_manager.tokens.services.TokenService;
+import com.example.task_manager.users.entities.User;
+import com.example.task_manager.users.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,10 +18,13 @@ public class ProjectService {
 
     private final ProjectRepository projectRepository;
     private final TokenService tokenService;
+    private final UserRepository userRepository;
 
-    public ProjectService(ProjectRepository projectRepository, TokenService tokenService) {
+    public ProjectService(ProjectRepository projectRepository, TokenService tokenService,
+                          UserRepository userRepository) {
         this.projectRepository = projectRepository;
         this.tokenService = tokenService;
+        this.userRepository = userRepository;
     }
     private ProtectedProjectDTO converter(Project project){
         return new ProtectedProjectDTO(
@@ -58,6 +62,15 @@ public class ProjectService {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("idk");
         }
     }
+    public ResponseEntity<String> addUserToProject(AddUserToProject addUserToProject){
+        Project project = projectRepository.findProjectByNameStartingWith(addUserToProject.getProjectName());
+        User user = userRepository.findUserByEmail(addUserToProject.getEmail());
+        List<User> userList = new ArrayList<>();
+        userList.add(user);
+        project.setUsers(userList);
+        projectRepository.save(project);
+        return ResponseEntity.ok("Good");
+    }
 
 
     public ResponseEntity<String> updateProject(RegisterProjectDTO registerProjectDTO){
@@ -68,7 +81,8 @@ public class ProjectService {
                     project.getOwner_email(),
                     registerProjectDTO.getName(),
                     registerProjectDTO.getDescription(),
-                    project.getTasks()
+                    project.getTasks(),
+                    project.getUsers()
             );
             projectRepository.save(newProject);
             return ResponseEntity.ok("Done");
